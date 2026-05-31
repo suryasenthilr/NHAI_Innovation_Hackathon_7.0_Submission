@@ -94,7 +94,7 @@ If you want to re-export the project and push to your own server:
 
 The solution features a decoupled, modular pipeline designed to slide cleanly into the NHAI Datalake 3.0 mobile application structure:
 
-![BharatVerify System Architecture Flow](assets/docs-images/media__1780235139179.png)
+![BharatVerify System Architecture Flow](assets/docs-images/media__1780235925429.png)
 
 ### Codebase Modularity & Structure
 The components are separated inside the codebase as follows:

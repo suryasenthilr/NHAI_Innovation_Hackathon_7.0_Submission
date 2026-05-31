@@ -89,7 +89,7 @@ graph TD
     F --> G[AWS Sync Queue Service]
 ```
 
-![BharatVerify System Architecture Flow](assets/docs-images/media__1780235139179.png)
+![BharatVerify System Architecture Flow](assets/docs-images/media__1780235925429.png)
 
 ### Integration Steps into Datalake 3.0
 1. **Copy Module Files:** Drop [LivenessScanner.tsx](file:///c:/bharatverify-antigravity/src/components/LivenessScanner.tsx), [faceService.ts](file:///c:/bharatverify-antigravity/src/services/faceService.ts), and [livenessService.ts](file:///c:/bharatverify-antigravity/src/services/livenessService.ts) into the Datalake components folder.
