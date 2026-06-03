@@ -88,8 +88,11 @@ export default function HomeScreen() {
       handleLog('error', `Promise Rejection: ${e.reason}`);
     };
 
-    window.addEventListener('error', handleError);
-    window.addEventListener('unhandledrejection', handlePromiseRejection);
+    const hasWindowListeners = typeof window !== 'undefined' && typeof window.addEventListener === 'function';
+    if (hasWindowListeners) {
+      window.addEventListener('error', handleError);
+      window.addEventListener('unhandledrejection', handlePromiseRejection);
+    }
 
     console.log("BharatVerify Debug Logger Initialized.");
 
@@ -97,8 +100,10 @@ export default function HomeScreen() {
       console.log = originalLog;
       console.warn = originalWarn;
       console.error = originalError;
-      window.removeEventListener('error', handleError);
-      window.removeEventListener('unhandledrejection', handlePromiseRejection);
+      if (hasWindowListeners) {
+        window.removeEventListener('error', handleError);
+        window.removeEventListener('unhandledrejection', handlePromiseRejection);
+      }
     };
   }, []);
 
