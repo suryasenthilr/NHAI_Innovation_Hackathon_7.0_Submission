@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, Platform } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, Platform, PermissionsAndroid } from 'react-native';
 import { Shield, Smartphone, Sparkles, Lock, RefreshCw, AlertCircle, Camera, UserPlus, Info, Check, Github, Code } from 'lucide-react-native';
 import { WebView } from 'react-native-webview';
 
@@ -17,6 +17,34 @@ import { faceService } from '../services/faceService';
 type RightTab = 'telemetry' | 'sync' | 'demographics' | 'datalake';
 
 export default function HomeScreen() {
+  // Request camera permission on native Android at startup
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      const requestAndroidCameraPermission = async () => {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.CAMERA,
+            {
+              title: "Camera Permission Required",
+              message: "BharatVerify needs access to your camera to run biometric liveness checks.",
+              buttonNeutral: "Ask Me Later",
+              buttonNegative: "Cancel",
+              buttonPositive: "OK"
+            }
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            console.log("[Native] Android Camera Permission GRANTED");
+          } else {
+            console.log("[Native] Android Camera Permission DENIED");
+          }
+        } catch (err) {
+          console.warn("[Native] Camera permission request error:", err);
+        }
+      };
+      requestAndroidCameraPermission();
+    }
+  }, []);
+
   if (Platform.OS !== 'web') {
     return (
       <View style={{ flex: 1, backgroundColor: '#070A13' }}>
