@@ -480,7 +480,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#070A13', // Ultra dark blue background
-    paddingHorizontal: 24,
+    paddingHorizontal: 16,
     paddingVertical: 20,
     overflow: 'auto',
   },
@@ -492,6 +492,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#1E293B',
     marginBottom: 20,
+    flexWrap: 'wrap',
+    gap: 12,
   },
   logoRow: {
     flexDirection: 'row',
@@ -540,20 +542,20 @@ const styles = StyleSheet.create({
   },
   mainGrid: {
     flexDirection: 'row',
-    gap: 24,
+    gap: 16,
     flexWrap: 'wrap',
     alignItems: 'flex-start',
   },
   leftCol: {
     flex: 1.2,
-    minWidth: 320,
+    minWidth: 280,
     maxWidth: 440,
     alignSelf: 'stretch',
     gap: 12,
   },
   rightCol: {
     flex: 2,
-    minWidth: 460,
+    minWidth: 280,
     alignSelf: 'stretch',
     gap: 16,
   },
@@ -668,10 +670,11 @@ const styles = StyleSheet.create({
   },
   tabsContainer: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 6,
     borderBottomWidth: 1,
     borderBottomColor: '#1E293B',
-    paddingBottom: 4,
+    paddingBottom: 8,
   },
   tab: {
     flexDirection: 'row',
