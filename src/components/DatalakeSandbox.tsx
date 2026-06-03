@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import { Code, BookOpen, Terminal, ClipboardCheck } from 'lucide-react-native';
 
 export const DatalakeSandbox: React.FC = () => {
@@ -149,20 +149,18 @@ export const syncAndPurgeLogs = async () => {
         </View>
 
         <ScrollView style={styles.scrollCode} nestedScrollEnabled={true}>
-          <pre style={{
+          <Text style={{
             margin: 0, 
-            padding: '12px',
+            padding: 12,
             color: '#10B981', 
-            fontFamily: 'Courier New, monospace', 
-            fontSize: '11px',
-            lineHeight: '16px',
-            whiteSpace: 'pre-wrap',
-            wordBreak: 'break-all'
+            fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace', 
+            fontSize: 11,
+            lineHeight: 16,
           }}>
             {activeTab === 'install' && installCommand}
             {activeTab === 'native_code' && nativeCode}
             {activeTab === 'sync_api' && syncApi}
-          </pre>
+          </Text>
         </ScrollView>
       </View>
 
