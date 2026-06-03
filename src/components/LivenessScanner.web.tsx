@@ -93,6 +93,29 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
     };
   }, []);
 
+  // Trigger camera play whenever the video element and active stream are both available
+  useEffect(() => {
+    const video = videoRef.current;
+    const stream = activeStreamRef.current;
+
+    if (video && stream && scannerState === 'loading') {
+      console.log("[Camera Lifecycle] Video element and stream are both ready. Binding srcObject.");
+      
+      video.onloadedmetadata = () => {
+        video.play().catch(err => console.log("[Camera] autoplay play() call rejected or interrupted:", err));
+        startInferenceLoop();
+      };
+
+      video.srcObject = stream;
+
+      // Fallback: if metadata is already loaded (readyState >= 2) or loading completed immediately
+      if (video.readyState >= 2) {
+        video.play().catch(err => console.log("[Camera Fallback] play() call rejected:", err));
+        startInferenceLoop();
+      }
+    }
+  }, [scannerState]);
+
   const startCamera = async () => {
     setScannerState('loading');
     setModelLoadingStatus('Initializing camera...');
@@ -114,23 +137,9 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
       });
 
       activeStreamRef.current = stream;
-      if (videoRef.current) {
-        const video = videoRef.current;
-        
-        // Attach event listener BEFORE setting srcObject to avoid race conditions
-        video.onloadedmetadata = () => {
-          video.play().catch(err => console.log("[Camera] autoplay play() call rejected or interrupted:", err));
-          startInferenceLoop();
-        };
-
-        video.srcObject = stream;
-
-        // Fallback: if metadata is already loaded (readyState >= 2) or loading completed immediately
-        if (video.readyState >= 2) {
-          video.play().catch(err => console.log("[Camera Fallback] play() call rejected:", err));
-          startInferenceLoop();
-        }
-      }
+      
+      // Force a state update to trigger our useEffect since the video ref is now mounted
+      setInstruction("Initializing video feed...");
     } catch (err: any) {
       console.error(err);
       setScannerState('idle');
