@@ -153,7 +153,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }} nestedScrollEnabled={true}>
       {/* Top Hero Branding Header */}
       <View style={styles.heroHeader}>
         <View style={styles.logoRow}>
@@ -471,7 +471,7 @@ export default function HomeScreen() {
           Quantized MobileFaceNet Engine v1.0.7 (NIST compliance index 98.4) • Open-Source License
         </Text>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
