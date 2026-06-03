@@ -97,13 +97,16 @@ export default function HomeScreen() {
     return (
       <View style={{ flex: 1, backgroundColor: '#070A13' }}>
         <WebView 
-          source={{ uri: 'https://bharatverify-nhai.surge.sh' }} 
+          source={Platform.OS === 'android' ? { uri: 'file:///android_asset/web/index.html' } : { uri: 'https://bharatverify-nhai.surge.sh' }} 
           style={{ flex: 1 }}
           allowsInlineMediaPlayback={true}
           mediaPlaybackRequiresUserAction={false}
           javaScriptEnabled={true}
           domStorageEnabled={true}
           allowsProtectedMedia={true}
+          allowFileAccess={true}
+          allowUniversalAccessFromFileURLs={true}
+          allowFileAccessFromFileURLs={true}
           originWhitelist={['*']}
           injectedJavaScript={injectedJS}
           onMessage={(event) => {
