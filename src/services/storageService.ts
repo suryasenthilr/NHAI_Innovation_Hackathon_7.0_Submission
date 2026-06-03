@@ -16,6 +16,8 @@ export interface SyncLog {
     latitude: number;
     longitude: number;
   };
+  geofenceDistance?: number;
+  geofenceStatus?: 'PASS' | 'VIOLATION';
   verificationMode: 'OFFLINE';
   synced: boolean;
   deviceModel: string;
@@ -31,6 +33,7 @@ export interface UserRegistry {
   photoUrl: string;
   // Simulated 128D facial embedding vector (mocked for matching baseline)
   embedding: number[];
+  extraEmbeddings?: number[][]; // Additional angles for multi-template validation
 }
 
 const DEFAULT_REGISTRY: UserRegistry[] = [

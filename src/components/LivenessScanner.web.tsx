@@ -533,16 +533,59 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
     let bestMatch: UserRegistry | null = null;
     let highestScore = 0;
 
-    // Run similarity comparator
+    // Run similarity comparator against all registered templates (multi-template matching)
     registry.forEach(user => {
-      const { matched, score } = faceService.matchFace(liveDescriptor, user.embedding);
-      if (score > highestScore) {
-        highestScore = score;
+      const mainMatch = faceService.matchFace(liveDescriptor, user.embedding);
+      let bestScore = mainMatch.score;
+      let matched = mainMatch.matched;
+
+      // Check additional angle templates if present
+      if (user.extraEmbeddings && Array.isArray(user.extraEmbeddings)) {
+        user.extraEmbeddings.forEach(extraEmb => {
+          const extraMatch = faceService.matchFace(liveDescriptor, extraEmb);
+          if (extraMatch.score > bestScore) {
+            bestScore = extraMatch.score;
+            matched = extraMatch.matched;
+          }
+        });
+      }
+
+      if (bestScore > highestScore) {
+        highestScore = bestScore;
         bestMatch = matched ? user : null;
       }
     });
 
     const isMatchFound = bestMatch !== null;
+
+    // Real-time Geofence Haversine Formula Verification
+    const REGION_COORDINATES: Record<string, { lat: number; lon: number }> = {
+      "Delhi-NCR": { lat: 28.5355, lon: 77.3910 },
+      "Rajasthan Highway": { lat: 26.9124, lon: 75.7873 },
+      "Delhi Highway": { lat: 28.6139, lon: 77.2090 },
+    };
+
+    const targetRegion = isMatchFound ? (bestMatch as UserRegistry).region : "Delhi-NCR";
+    const targetCoords = REGION_COORDINATES[targetRegion] || REGION_COORDINATES["Delhi-NCR"];
+
+    // Device simulated GPS coords (Delhi toll plaza region with small random jitter)
+    const simulatedLat = 28.5355 + (Math.random() - 0.5) * 0.002; 
+    const simulatedLon = 77.3910 + (Math.random() - 0.5) * 0.002;
+
+    // Haversine calculation
+    const R = 6371e3; // Earth radius in meters
+    const phi1 = targetCoords.lat * Math.PI / 180;
+    const phi2 = simulatedLat * Math.PI / 180;
+    const dPhi = (simulatedLat - targetCoords.lat) * Math.PI / 180;
+    const dLambda = (simulatedLon - targetCoords.lon) * Math.PI / 180;
+
+    const haversineA = Math.sin(dPhi/2) * Math.sin(dPhi/2) +
+                       Math.cos(phi1) * Math.cos(phi2) *
+                       Math.sin(dLambda/2) * Math.sin(dLambda/2);
+    const haversineC = 2 * Math.atan2(Math.sqrt(haversineA), Math.sqrt(1 - haversineA));
+    const distanceMeters = Math.round(R * haversineC);
+
+    const geofenceStatus = distanceMeters <= 250 ? 'PASS' : 'VIOLATION';
 
     // Log this authentication transaction to offline SQLite cache
     const logEntry: Omit<SyncLog, 'id' | 'synced'> = {
@@ -553,9 +596,11 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
       livenessScore: 0.96, // Composite metric
       matchScore: highestScore,
       gpsCoords: {
-        latitude: 28.5355 + (Math.random() - 0.5) * 0.05, // Delhi region coordinates
-        longitude: 77.3910 + (Math.random() - 0.5) * 0.05
+        latitude: simulatedLat,
+        longitude: simulatedLon
       },
+      geofenceDistance: distanceMeters,
+      geofenceStatus: geofenceStatus,
       verificationMode: 'OFFLINE',
       deviceModel: 'Redmi Note 12 (4GB RAM, Android 11)',
       livenessDetails: details,
@@ -583,6 +628,18 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
       stopCamera();
     }
     startCamera();
+  };
+
+  // WebGL/CSS CLAHE Histogram Equalization filter simulation
+  const getVideoFilterStyle = () => {
+    switch (selectedLightingFilter) {
+      case 'lowlight':
+        return { filter: 'contrast(1.35) brightness(1.2) saturate(1.1)' };
+      case 'harsh':
+        return { filter: 'contrast(1.5) brightness(0.9)' };
+      default:
+        return { filter: 'none' };
+    }
   };
 
   // Lighting Filter Styles
@@ -625,7 +682,8 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
                 height: '100%',
                 objectFit: 'cover',
                 transform: 'scaleX(-1)', // Mirror video
-                zIndex: 1 // Base layer
+                zIndex: 1, // Base layer
+                ...getVideoFilterStyle()
               }}
               playsInline
               muted

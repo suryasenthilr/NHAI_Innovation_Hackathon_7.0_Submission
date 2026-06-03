@@ -150,13 +150,21 @@ export default function HomeScreen() {
     }
 
     const mockId = `NHAI-${newUserRegion.slice(0, 3).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`;
+    
+    // Multi-Template Enrollment: Generate 2 augmented face templates representing yaw/pitch angles
+    const simulatedExtraAngles = [
+      capturedEmbedding.map(n => n + (Math.random() - 0.5) * 0.02),
+      capturedEmbedding.map(n => n + (Math.random() - 0.5) * 0.02)
+    ];
+
     const newEmployee: UserRegistry = {
       id: mockId,
       name: newUserName,
       role: newUserRole,
       region: newUserRegion,
       photoUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200",
-      embedding: capturedEmbedding
+      embedding: capturedEmbedding,
+      extraEmbeddings: simulatedExtraAngles
     };
 
     // Add to local persistent database

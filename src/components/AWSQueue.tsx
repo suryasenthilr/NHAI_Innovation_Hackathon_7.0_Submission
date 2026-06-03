@@ -252,6 +252,16 @@ export const AWSQueue: React.FC<AWSQueueProps> = ({ logs, onLogsUpdated, registr
                 </View>
 
                 <View style={styles.logMetricCol}>
+                  <Text style={styles.metricLabel}>GEOFENCING</Text>
+                  <Text style={[
+                    styles.metricVal, 
+                    log.geofenceStatus === 'PASS' ? styles.textGreen : styles.textRed
+                  ]}>
+                    {log.geofenceStatus || 'PASS'} ({log.geofenceDistance !== undefined ? (log.geofenceDistance > 1000 ? `${(log.geofenceDistance / 1000).toFixed(1)}km` : `${log.geofenceDistance}m`) : '0m'})
+                  </Text>
+                </View>
+
+                <View style={styles.logMetricCol}>
                   <Text style={styles.metricLabel}>VERIFICATION</Text>
                   <Text style={[styles.metricVal, log.status === 'SUCCESS' ? styles.textGreen : styles.textRed]}>
                     {log.status} ({Math.round(log.matchScore * 100)}% Match)
@@ -302,7 +312,12 @@ export const AWSQueue: React.FC<AWSQueueProps> = ({ logs, onLogsUpdated, registr
                 </View>
               </View>
               <View style={styles.vectorBox}>
-                <Text style={styles.vectorLabel}>FACIAL EMBEDDING VECTOR (FIRST 5 / 128 FLOATS):</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
+                  <Text style={styles.vectorLabel}>FACIAL EMBEDDING VECTOR (FIRST 5 / 128 FLOATS):</Text>
+                  <Text style={{ color: '#10B981', fontSize: 7, fontWeight: 'bold' }}>
+                    {user.extraEmbeddings ? '✓ MULTI-TEMPLATE (3 ANGLES)' : 'SINGLE TEMPLATE'}
+                  </Text>
+                </View>
                 <Text style={styles.vectorVal}>
                   [{user.embedding.slice(0, 5).map(n => n.toFixed(4)).join(', ')}, ...]
                 </Text>
