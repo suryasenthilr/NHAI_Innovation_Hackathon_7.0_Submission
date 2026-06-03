@@ -568,9 +568,9 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
     const targetRegion = isMatchFound ? (bestMatch as UserRegistry).region : "Delhi-NCR";
     const targetCoords = REGION_COORDINATES[targetRegion] || REGION_COORDINATES["Delhi-NCR"];
 
-    // Device simulated GPS coords (Delhi toll plaza region with small random jitter)
-    const simulatedLat = 28.5355 + (Math.random() - 0.5) * 0.002; 
-    const simulatedLon = 77.3910 + (Math.random() - 0.5) * 0.002;
+    // Device simulated GPS coords (Delhi toll plaza region with small random jitter matching 5-15m accuracy)
+    const simulatedLat = 28.5355 + (Math.random() - 0.5) * 0.0002; 
+    const simulatedLon = 77.3910 + (Math.random() - 0.5) * 0.0002;
 
     // Haversine calculation
     const R = 6371e3; // Earth radius in meters
