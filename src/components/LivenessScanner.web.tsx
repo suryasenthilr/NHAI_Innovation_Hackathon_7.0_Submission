@@ -115,11 +115,21 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
 
       activeStreamRef.current = stream;
       if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        videoRef.current.onloadedmetadata = () => {
-          videoRef.current?.play();
+        const video = videoRef.current;
+        
+        // Attach event listener BEFORE setting srcObject to avoid race conditions
+        video.onloadedmetadata = () => {
+          video.play().catch(err => console.log("[Camera] autoplay play() call rejected or interrupted:", err));
           startInferenceLoop();
         };
+
+        video.srcObject = stream;
+
+        // Fallback: if metadata is already loaded (readyState >= 2) or loading completed immediately
+        if (video.readyState >= 2) {
+          video.play().catch(err => console.log("[Camera Fallback] play() call rejected:", err));
+          startInferenceLoop();
+        }
       }
     } catch (err: any) {
       console.error(err);
@@ -712,7 +722,9 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
                 ...getVideoFilterStyle()
               }}
               playsInline
+              webkit-playsinline="true"
               muted
+              autoPlay
             />
             
             {/* Dark/Lowlight Overlay Simulator */}
