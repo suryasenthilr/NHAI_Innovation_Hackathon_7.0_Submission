@@ -4,8 +4,6 @@
 
 BharatVerify is a secure, lightweight, and entirely offline facial recognition and liveness detection system designed for the **NHAI Datalake 3.0** mobile application. It ensures seamless personnel authentication in zero-network remote zones, processing biometric validation locally in under 200ms without sending any raw face data to the cloud.
 
-![BharatVerify App Screenshot](assets/docs-images/media__1779870263255.png)
-
 ---
 
 ## ⚡ Live Demo (Hosted PWA)
@@ -54,9 +52,9 @@ The application has been successfully compiled and hosted for testing. You can r
 3. Tap **Register Face** to capture your local biometric template.
 4. Tap **Verify Identity** to test the liveness challenge sequence and matching algorithm.
 5. Tap **AWS Sync Center**:
-   * Click the **⚙️ Gear settings** icon in the Sync Center.
-   * Paste **your own AWS Lambda URL** and click **Save**.
-   * Click **Sync Logs** to verify records sync directly to your AWS S3 bucket/CloudWatch logs.
+   * Paste **your own AWS Lambda URL** into the configuration input at the top and click **Save Endpoint**.
+   * Toggle the network status to **Online**.
+   * Click **Sync Logs to AWS** to verify records sync directly to your AWS S3 bucket/CloudWatch logs.
 
 ### Option 2: Running the Development Server Locally
 1. Clone this repository and navigate to the project directory:
@@ -94,7 +92,15 @@ If you want to re-export the project and push to your own server:
 
 The solution features a decoupled, modular pipeline designed to slide cleanly into the NHAI Datalake 3.0 mobile application structure:
 
-![BharatVerify System Architecture Flow](assets/docs-images/media__1780235925429.png)
+```mermaid
+graph TD
+    A[NHAI Datalake 3.0 App] --> B[LivenessScanner React Component]
+    B --> C[FaceService Engine]
+    B --> D[LivenessService Heuristics]
+    C --> E[TensorFlow JS WebGL / WASM Backend]
+    E --> F[(Local Secure Storage)]
+    F --> G[AWS Sync Queue Service]
+```
 
 ### Codebase Modularity & Structure
 The components are separated inside the codebase as follows:

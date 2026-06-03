@@ -18,6 +18,7 @@ type RightTab = 'telemetry' | 'sync' | 'demographics' | 'datalake';
 export default function HomeScreen() {
   // Sync state
   const [logs, setLogs] = useState<SyncLog[]>([]);
+  const [registry, setRegistry] = useState<UserRegistry[]>([]);
   const [telemetry, setTelemetry] = useState({ fps: 0, latency: 0, loadTime: 10.7 });
   const [activeRightTab, setActiveRightTab] = useState<RightTab>('telemetry');
   
@@ -38,6 +39,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     loadLogs();
+    loadRegistry();
 
     // Hook console logs to capture errors
     const handleLog = (type: string, ...args: any[]) => {
@@ -105,6 +107,10 @@ export default function HomeScreen() {
     setLogs(list);
   };
 
+  const loadRegistry = () => {
+    setRegistry(storageService.getMockUsers());
+  };
+
   const [capturedEmbedding, setCapturedEmbedding] = useState<number[] | null>(null);
 
   const handleRegisterEmployee = () => {
@@ -127,9 +133,9 @@ export default function HomeScreen() {
       embedding: capturedEmbedding
     };
 
-    // Add directly to mock database
-    const currentRegistry = storageService.getMockUsers();
-    currentRegistry.push(newEmployee);
+    // Add to local persistent database
+    storageService.addCustomUser(newEmployee);
+    loadRegistry();
 
     setRegistrationMessage(`Success! Registered employee with ID: ${mockId}`);
     setNewUserName('');
@@ -384,7 +390,7 @@ export default function HomeScreen() {
             )}
 
             {activeRightTab === 'sync' && (
-              <AWSQueue logs={logs} onLogsUpdated={loadLogs} />
+              <AWSQueue logs={logs} onLogsUpdated={loadLogs} registry={registry} />
             )}
 
             {activeRightTab === 'demographics' && (

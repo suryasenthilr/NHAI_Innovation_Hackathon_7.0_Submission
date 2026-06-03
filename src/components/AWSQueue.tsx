@@ -3,19 +3,21 @@ import { StyleSheet, Text, View, TouchableOpacity, ScrollView, ActivityIndicator
 import { Wifi, WifiOff, CloudLightning, Trash2, Cloud, FileText, Check, Database, MapPin, Settings } from 'lucide-react';
 import { storageService, SyncLog } from '../services/storageService';
 
+import { UserRegistry } from '../services/storageService';
+
 interface AWSQueueProps {
   logs: SyncLog[];
   onLogsUpdated: () => void;
+  registry: UserRegistry[];
 }
 
-export const AWSQueue: React.FC<AWSQueueProps> = ({ logs, onLogsUpdated }) => {
+export const AWSQueue: React.FC<AWSQueueProps> = ({ logs, onLogsUpdated, registry }) => {
   const [isOnline, setIsOnline] = useState<boolean>(false);
   const [syncingState, setSyncingState] = useState<'idle' | 'encrypting' | 'uploading' | 'purging' | 'done'>('idle');
   const [syncedLogsInfo, setSyncedLogsInfo] = useState<{ success: number } | null>(null);
   
   // Custom AWS settings state
   const [customAwsUrl, setCustomAwsUrl] = useState<string>('');
-  const [showSettings, setShowSettings] = useState<boolean>(false);
 
   useEffect(() => {
     const savedUrl = storageService.getCustomAwsUrl() || '';
@@ -25,7 +27,6 @@ export const AWSQueue: React.FC<AWSQueueProps> = ({ logs, onLogsUpdated }) => {
   const handleSaveAwsUrl = () => {
     storageService.setCustomAwsUrl(customAwsUrl.trim() || null);
     alert("AWS Configuration Saved Successfully!");
-    setShowSettings(false);
   };
 
   const pendingCount = logs.filter(l => !l.synced).length;
@@ -89,56 +90,39 @@ export const AWSQueue: React.FC<AWSQueueProps> = ({ logs, onLogsUpdated }) => {
       <View style={styles.header}>
         <Text style={styles.title}>AWS Server Sync & Purge Hub</Text>
         
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          {/* Settings Trigger Gear */}
-          <TouchableOpacity 
-            style={[styles.settingsToggle, showSettings && styles.settingsToggleActive]}
-            onPress={() => setShowSettings(!showSettings)}
-            title="Configure Live AWS Endpoint"
-          >
-            <Settings size={14} color={showSettings ? '#F59E0B' : '#94A3B8'} />
-          </TouchableOpacity>
-
-          {/* Toggle Mode */}
-          <TouchableOpacity 
-            style={[styles.networkToggle, isOnline ? styles.networkOnline : styles.networkOffline]}
-            onPress={handleToggleNetwork}
-          >
-            {isOnline ? <Wifi size={14} color="#1E293B" /> : <WifiOff size={14} color="#F8FAFC" />}
-            <Text style={[styles.networkToggleText, isOnline ? styles.textSlate : styles.textWhite]}>
-              {isOnline ? 'Online' : 'Offline'}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {/* Toggle Mode */}
+        <TouchableOpacity 
+          style={[styles.networkToggle, isOnline ? styles.networkOnline : styles.networkOffline]}
+          onPress={handleToggleNetwork}
+        >
+          {isOnline ? <Wifi size={14} color="#1E293B" /> : <WifiOff size={14} color="#F8FAFC" />}
+          <Text style={[styles.networkToggleText, isOnline ? styles.textSlate : styles.textWhite]}>
+            {isOnline ? 'Online' : 'Offline'}
+          </Text>
+        </TouchableOpacity>
       </View>
 
-      {/* Settings Configuration Card */}
-      {showSettings && (
-        <View style={styles.settingsCard}>
-          <Text style={styles.settingsTitle}>⚙️ AWS Lambda Function URL</Text>
-          <Text style={styles.settingsSub}>
-            Pushes biometric payloads live to AWS. If empty, the app uses offline-first local simulation.
-          </Text>
+      {/* AWS Settings Configuration Panel (Always Visible & Exposed) */}
+      <View style={styles.settingsCard}>
+        <Text style={styles.settingsTitle}>⚙️ AWS Lambda Function URL Configuration</Text>
+        <Text style={styles.settingsSub}>
+          Evaluators: Paste your custom AWS Lambda URL here to route biometric check-in sync queues live to your cloud console. If empty, local simulation mode is used.
+        </Text>
+        <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
           <TextInput
-            style={styles.settingsInput}
+            style={[styles.settingsInput, { flex: 1, marginBottom: 0 }]}
             value={customAwsUrl}
             onChangeText={setCustomAwsUrl}
-            placeholder="https://xxxx.lambda-url.region.on.aws/"
+            placeholder="Paste AWS Lambda URL (https://xxxx.lambda-url.region.on.aws/)"
             placeholderTextColor="#475569"
             autoCapitalize="none"
             autoCorrect={false}
           />
-          <View style={styles.settingsButtons}>
-            <TouchableOpacity style={styles.saveBtn} onPress={handleSaveAwsUrl}>
-              <Text style={styles.saveBtnText}>Save Endpoint</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.cancelBtn} onPress={() => setShowSettings(false)}>
-              <Text style={styles.cancelBtnText}>Close</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity style={[styles.saveBtn, { height: 32, justifyContent: 'center' }]} onPress={handleSaveAwsUrl}>
+            <Text style={styles.saveBtnText}>Save Endpoint</Text>
+          </TouchableOpacity>
         </View>
-      )}
-
+      </View>
       {/* Sync Telemetry */}
       <View style={styles.statsBar}>
         <View style={styles.statBox}>
@@ -291,27 +275,41 @@ export const AWSQueue: React.FC<AWSQueueProps> = ({ logs, onLogsUpdated }) => {
 
       {/* Local Personnel Registry Database */}
       <Text style={[styles.tableTitle, { marginTop: 20 }]}>Local Personnel Registry Database</Text>
+      <Text style={{ color: '#94A3B8', fontSize: 11, marginBottom: 10, lineHeight: 14 }}>
+        When you register a face via the "Register Face" panel, the new user will show up here in real-time with their extracted biometric embedding. The initial profile below is a fake mock example.
+      </Text>
       <ScrollView style={styles.registryList} nestedScrollEnabled={true}>
-        {storageService.getMockUsers().map((user) => (
-          <View key={user.id} style={styles.personCard}>
-            <View style={styles.personHeader}>
-              <View style={styles.avatarCircle}>
-                <Text style={styles.avatarText}>{user.name.charAt(0)}</Text>
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.personName}>{user.name}</Text>
-                <Text style={styles.personId}>ID: {user.id} • {user.role}</Text>
-                <Text style={styles.personRegion}>Region: {user.region}</Text>
-              </View>
-            </View>
-            <View style={styles.vectorBox}>
-              <Text style={styles.vectorLabel}>FACIAL EMBEDDING VECTOR (FIRST 5 / 128 FLOATS):</Text>
-              <Text style={styles.vectorVal}>
-                [{user.embedding.slice(0, 5).map(n => n.toFixed(4)).join(', ')}, ...]
-              </Text>
-            </View>
+        {registry.length === 0 ? (
+          <View style={{ padding: 16, backgroundColor: '#0F172A', borderRadius: 8, borderWidth: 1, borderColor: '#334155', alignItems: 'center' }}>
+            <Text style={{ color: '#94A3B8', fontSize: 11, fontWeight: 'bold' }}>No registered users found.</Text>
+            <Text style={{ color: '#64748B', fontSize: 9, marginTop: 4, textAlign: 'center' }}>
+              When you enroll a face via the Register Face panel, the persistent biometric template will appear here in real-time.
+            </Text>
           </View>
-        ))}
+        ) : (
+          registry.map((user) => (
+            <View key={user.id} style={styles.personCard}>
+              <View style={styles.personHeader}>
+                <View style={styles.avatarCircle}>
+                  <Text style={styles.avatarText}>{user.name.charAt(0)}</Text>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.personName}>{user.name}</Text>
+                  <Text style={styles.personId}>
+                    ID: {user.id} • {user.role} {user.id === 'NHAI-DEL-EXAMPLE' ? '(Example - Mock)' : ''}
+                  </Text>
+                  <Text style={styles.personRegion}>Region: {user.region}</Text>
+                </View>
+              </View>
+              <View style={styles.vectorBox}>
+                <Text style={styles.vectorLabel}>FACIAL EMBEDDING VECTOR (FIRST 5 / 128 FLOATS):</Text>
+                <Text style={styles.vectorVal}>
+                  [{user.embedding.slice(0, 5).map(n => n.toFixed(4)).join(', ')}, ...]
+                </Text>
+              </View>
+            </View>
+          ))
+        )}
       </ScrollView>
     </View>
   );

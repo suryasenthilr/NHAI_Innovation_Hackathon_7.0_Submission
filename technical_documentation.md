@@ -17,8 +17,6 @@ To develop a highly accurate, lightweight, and entirely offline facial recogniti
 ### Solution Overview
 **BharatVerify** is a lightweight, edge-native facial verification and liveness detection system. It operates 100% locally on standard mid-range mobile devices (minimum 3GB RAM) without requiring server connections or cloud GPUs. By deploying a heavily optimized Deep Neural Network pipeline, the app processes camera frames locally in **under 200ms**, executing face detection, 68-point facial mesh mapping, active/passive liveness evaluation, and mathematical template matching against a local secure database. Once network access is restored, cached logs with GPS telemetry sync to AWS S3/Lambda and purge locally to satisfy strict data privacy mandates.
 
-![BharatVerify App Screenshot](assets/docs-images/media__1779870263255.png)
-
 ---
 
 ## 2. Edge AI Model Optimization & Liveness Heuristics
@@ -89,7 +87,7 @@ graph TD
     F --> G[AWS Sync Queue Service]
 ```
 
-![BharatVerify System Architecture Flow](assets/docs-images/media__1780235925429.png)
+
 
 ### Integration Steps into Datalake 3.0
 1. **Copy Module Files:** Drop [LivenessScanner.tsx](file:///c:/bharatverify-antigravity/src/components/LivenessScanner.tsx), [faceService.ts](file:///c:/bharatverify-antigravity/src/services/faceService.ts), and [livenessService.ts](file:///c:/bharatverify-antigravity/src/services/livenessService.ts) into the Datalake components folder.
@@ -147,8 +145,8 @@ If you want to test the responsive mobile application instantly on a computer or
 2. **PWA Mobile Installation (Optional):** On iOS (Safari) or Android (Chrome), click **"Add to Home Screen"** to install the prototype. It will place an icon on your device and launch in immersive, full-screen mobile app mode.
 3. **Local/Cloud Integration testing:** 
    * Open the **AWS Sync Center** tab inside the app.
-   * Click the **⚙️ Gear settings** icon, paste **your own AWS Lambda Function URL**, and click **Save**.
-   * Run a local face registration/verification. Click **Sync Logs to AWS** to watch the logs appear live inside your own AWS CloudWatch/S3 console!
+   * Paste **your own AWS Lambda Function URL** into the configuration input at the top and click **Save Endpoint**.
+   * Toggle the network status to **Online** and click **Sync Logs to AWS** to watch the logs appear live inside your own AWS CloudWatch/S3 console!
 
 ### Option 2: Sideloading or Building the Standalone Mobile App (.APK)
 To test or build the native package directly on an Android physical device:
