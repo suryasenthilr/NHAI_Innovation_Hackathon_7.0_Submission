@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Activity, HardDrive, Cpu, Percent } from 'lucide-react';
+import { Activity, HardDrive, Cpu, Percent } from 'lucide-react-native';
 
 interface TelemetryDashboardProps {
   fps: number;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, ActivityIndicator, TextInput } from 'react-native';
-import { Wifi, WifiOff, CloudLightning, Trash2, Cloud, FileText, Check, Database, MapPin, Settings } from 'lucide-react';
+import { Wifi, WifiOff, CloudLightning, Trash2, Cloud, FileText, Check, Database, MapPin, Settings } from 'lucide-react-native';
 import { storageService, SyncLog } from '../services/storageService';
 
 import { UserRegistry } from '../services/storageService';

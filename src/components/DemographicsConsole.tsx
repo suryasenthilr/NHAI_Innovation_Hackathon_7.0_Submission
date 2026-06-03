@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { Sun, Moon, Shovel, Users, CheckCircle, HelpCircle } from 'lucide-react';
+import { Sun, Moon, Shovel, Users, CheckCircle, HelpCircle } from 'lucide-react-native';
 
 interface DemographicsConsoleProps {
   selectedFilter: 'normal' | 'lowlight' | 'harsh';

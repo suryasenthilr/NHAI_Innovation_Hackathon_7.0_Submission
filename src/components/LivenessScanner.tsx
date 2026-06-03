@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
-import { Camera, Shield, User, CheckCircle2, XCircle, AlertTriangle, RefreshCw, Eye, Smile, Navigation, HelpCircle } from 'lucide-react';
+import { Camera, Shield, User, CheckCircle2, XCircle, AlertTriangle, RefreshCw, Eye, Smile, Navigation, HelpCircle } from 'lucide-react-native';
 import { faceService } from '../services/faceService';
 import { LivenessService, LivenessResult } from '../services/livenessService';
 import { storageService, UserRegistry, SyncLog } from '../services/storageService';

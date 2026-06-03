@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput } from 'react-native';
-import { Shield, Smartphone, Sparkles, Lock, RefreshCw, AlertCircle, Camera, UserPlus, Info, Check, Github, Code } from 'lucide-react';
+import { Shield, Smartphone, Sparkles, Lock, RefreshCw, AlertCircle, Camera, UserPlus, Info, Check, Github, Code } from 'lucide-react-native';
 
 // Import components
 import { LivenessScanner } from '../components/LivenessScanner';

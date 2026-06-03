@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
-import { Code, BookOpen, Terminal, ClipboardCheck } from 'lucide-react';
+import { Code, BookOpen, Terminal, ClipboardCheck } from 'lucide-react-native';
 
 export const DatalakeSandbox: React.FC = () => {
   const [copiedText, setCopiedText] = useState<string | null>(null);
