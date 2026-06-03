@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, Platform } from 'react-native';
 import { Shield, Smartphone, Sparkles, Lock, RefreshCw, AlertCircle, Camera, UserPlus, Info, Check, Github, Code } from 'lucide-react-native';
+import { WebView } from 'react-native-webview';
 
 // Import components
 import { LivenessScanner } from '../components/LivenessScanner';
@@ -16,6 +17,25 @@ import { faceService } from '../services/faceService';
 type RightTab = 'telemetry' | 'sync' | 'demographics' | 'datalake';
 
 export default function HomeScreen() {
+  if (Platform.OS !== 'web') {
+    return (
+      <View style={{ flex: 1, backgroundColor: '#070A13' }}>
+        <WebView 
+          source={{ uri: 'https://bharatverify-nhai.surge.sh' }} 
+          style={{ flex: 1 }}
+          allowsInlineMediaPlayback={true}
+          mediaPlaybackRequiresUserAction={false}
+          javaScriptEnabled={true}
+          domStorageEnabled={true}
+          originWhitelist={['*']}
+          onPermissionRequest={(event) => {
+            event.request.grant(event.request.resources);
+          }}
+        />
+      </View>
+    );
+  }
+
   const ContainerComponent = Platform.OS === 'web' ? View : ScrollView;
   // Sync state
   const [logs, setLogs] = useState<SyncLog[]>([]);
