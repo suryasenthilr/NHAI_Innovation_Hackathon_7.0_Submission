@@ -104,20 +104,40 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
       // Bind stream
       video.srcObject = cameraStream;
       
-      // Kickstart playback immediately to prevent mobile browser loading deadlock
-      video.play()
-        .then(() => {
-          console.log("[Camera Lifecycle] Playback started successfully.");
-          startInferenceLoop();
-        })
-        .catch(err => {
-          console.log("[Camera Lifecycle] Immediate play rejected, setting fallback listener:", err);
-          // Fallback listener if direct play was blocked by browser policies
-          video.onloadedmetadata = () => {
-            video.play().catch(e => console.log("[Camera Fallback] play failed:", e));
+      const handlePlay = () => {
+        console.log("[Camera Lifecycle] Attempting video play...");
+        video.play()
+          .then(() => {
+            console.log("[Camera Lifecycle] Playback started successfully.");
             startInferenceLoop();
-          };
-        });
+          })
+          .catch(err => {
+            console.warn("[Camera Lifecycle] Play failed, bypassing to loop anyway:", err);
+            // Bypass block and force start loop so the engine doesn't get stuck loading
+            startInferenceLoop();
+          });
+      };
+
+      // Check if metadata is already loaded (readyState >= 1: HAVE_METADATA)
+      if (video.readyState >= 1) {
+        console.log("[Camera Lifecycle] Metadata already present, playing video.");
+        handlePlay();
+      } else {
+        console.log("[Camera Lifecycle] Waiting for metadata...");
+        video.onloadedmetadata = () => {
+          console.log("[Camera Lifecycle] onloadedmetadata fired.");
+          handlePlay();
+        };
+        // Safety timeout to guarantee startInferenceLoop is called after 2 seconds
+        // in case the browser never fires the loadedmetadata event.
+        const timer = setTimeout(() => {
+          if (scannerStateRef.current === 'loading') {
+            console.warn("[Camera Lifecycle] Loadedmetadata timeout reached. Bypassing load screen.");
+            handlePlay();
+          }
+        }, 2000);
+        return () => clearTimeout(timer);
+      }
     }
   }, [scannerState, cameraStream]);
 

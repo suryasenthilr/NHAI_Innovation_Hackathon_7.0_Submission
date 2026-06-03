@@ -1,6 +1,6 @@
 import * as faceapi from '@vladmandic/face-api/dist/face-api.esm.js';
 
-const MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/';
+const MODEL_URL = '/models/';
 
 class FaceService {
   private modelsLoaded = false;
