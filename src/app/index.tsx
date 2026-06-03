@@ -46,6 +46,52 @@ export default function HomeScreen() {
   }, []);
 
   if (Platform.OS !== 'web') {
+    const injectedJS = `
+      (function() {
+        function logToNative(type, args) {
+          try {
+            const message = args.map(arg => {
+              if (arg instanceof Error) {
+                return arg.message + '\\nStack: ' + arg.stack;
+              }
+              if (typeof arg === 'object') {
+                try { return JSON.stringify(arg); } catch(e) { return String(arg); }
+              }
+              return String(arg);
+            }).join(' ');
+            window.ReactNativeWebView.postMessage(JSON.stringify({ type: type, message: message }));
+          } catch(e) {}
+        }
+
+        const _log = console.log;
+        const _warn = console.warn;
+        const _error = console.error;
+
+        console.log = function(...args) {
+          _log.apply(console, args);
+          logToNative('log', args);
+        };
+        console.warn = function(...args) {
+          _warn.apply(console, args);
+          logToNative('warn', args);
+        };
+        console.error = function(...args) {
+          _error.apply(console, args);
+          logToNative('error', args);
+        };
+
+        window.addEventListener('error', function(e) {
+          logToNative('error', ['Uncaught Exception:', e.message, 'at', e.filename, ':', e.lineno]);
+        });
+        window.addEventListener('unhandledrejection', function(e) {
+          logToNative('error', ['Unhandled Rejection:', e.reason]);
+        });
+        
+        console.log("WebView Log Bridge Injected successfully.");
+      })();
+      true;
+    `;
+
     return (
       <View style={{ flex: 1, backgroundColor: '#070A13' }}>
         <WebView 
@@ -55,9 +101,47 @@ export default function HomeScreen() {
           mediaPlaybackRequiresUserAction={false}
           javaScriptEnabled={true}
           domStorageEnabled={true}
+          allowsProtectedMedia={true}
           originWhitelist={['*']}
+          injectedJavaScript={injectedJS}
+          onMessage={(event) => {
+            try {
+              const data = JSON.parse(event.nativeEvent.data);
+              if (data && data.type) {
+                console.log(`[WebView ${data.type.toUpperCase()}] ${data.message}`);
+              } else {
+                console.log("[WebView Event]", event.nativeEvent.data);
+              }
+            } catch (e) {
+              console.log("[WebView Raw Message]", event.nativeEvent.data);
+            }
+          }}
           onPermissionRequest={(event) => {
-            event.request.grant(event.request.resources);
+            console.log("[WebView Permission Request]", event);
+            try {
+              // React Native WebView can pass event or request depending on the platform/library version
+              if (event.request && typeof event.request.grant === 'function') {
+                event.request.grant(event.request.resources);
+                console.log("[WebView Permission] Granted via event.request.grant");
+              } else if (event.grant && typeof event.grant === 'function') {
+                event.grant(event.resources);
+                console.log("[WebView Permission] Granted via event.grant");
+              } else if (event.nativeEvent && event.nativeEvent.grant && typeof event.nativeEvent.grant === 'function') {
+                event.nativeEvent.grant(event.nativeEvent.resources);
+                console.log("[WebView Permission] Granted via event.nativeEvent.grant");
+              } else {
+                // If it doesn't match standard patterns, try nativeEvent attributes directly
+                const requestObj = event.nativeEvent || event;
+                if (requestObj.grant && typeof requestObj.grant === 'function') {
+                  requestObj.grant(requestObj.resources);
+                  console.log("[WebView Permission] Granted via fallback object grant");
+                } else {
+                  console.warn("[WebView Permission] Could not find grant function on event object structure");
+                }
+              }
+            } catch (err) {
+              console.error("[WebView Permission Error] Failed to grant permissions:", err);
+            }
           }}
         />
       </View>
