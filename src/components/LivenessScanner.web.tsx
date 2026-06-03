@@ -85,6 +85,7 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
   const challengeMaxEARRef = useRef<number>(0);
   const challengeMinSmileRef = useRef<number>(1.0);
   const consecutiveFramesNoFaceRef = useRef<number>(0);
+  const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
 
   useEffect(() => {
     // Clean up camera stream and loops on unmount
@@ -96,9 +97,8 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
   // Trigger camera play whenever the video element and active stream are both available
   useEffect(() => {
     const video = videoRef.current;
-    const stream = activeStreamRef.current;
 
-    if (video && stream && scannerState === 'loading') {
+    if (video && cameraStream && scannerState === 'loading') {
       console.log("[Camera Lifecycle] Video element and stream are both ready. Binding srcObject.");
       
       video.onloadedmetadata = () => {
@@ -106,7 +106,7 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
         startInferenceLoop();
       };
 
-      video.srcObject = stream;
+      video.srcObject = cameraStream;
 
       // Fallback: if metadata is already loaded (readyState >= 2) or loading completed immediately
       if (video.readyState >= 2) {
@@ -114,7 +114,7 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
         startInferenceLoop();
       }
     }
-  }, [scannerState]);
+  }, [scannerState, cameraStream]);
 
   const startCamera = async () => {
     setScannerState('loading');
@@ -137,6 +137,7 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
       });
 
       activeStreamRef.current = stream;
+      setCameraStream(stream);
       
       // Force a state update to trigger our useEffect since the video ref is now mounted
       setInstruction("Initializing video feed...");
@@ -163,6 +164,7 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
       videoRef.current.srcObject = null;
     }
 
+    setCameraStream(null);
     setScannerState('idle');
     setInstruction('Scanner stopped. Press "Start Scanner" to verify.');
   };
