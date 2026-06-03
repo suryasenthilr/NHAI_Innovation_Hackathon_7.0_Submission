@@ -44,7 +44,7 @@ export class LivenessService {
     const averageEAR = (leftEAR + rightEAR) / 2.0;
     return {
       averageEAR,
-      blinking: averageEAR < 0.25 // Relaxed from 0.21 to accommodate glasses, shadows, and low-FPS webcams
+      blinking: averageEAR < 0.26 // Relaxed to accommodate glasses, shadows, and low-FPS webcams
     };
   }
 

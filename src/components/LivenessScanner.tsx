@@ -430,10 +430,10 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
               let challengeSuccess = false;
 
               if (currentChallenge === 'blink') {
-                // Eye Aspect Ratio drops by 11% from calibrated neutral baseline (or absolute below 0.235)
-                // Relaxed to improve responsiveness under lower frame rates/low-light webcams
-                const blinkThreshold = neutralEARRef.current * 0.89;
-                const isBlinkingCheck = averageEAR < blinkThreshold || averageEAR < 0.235;
+                // Eye Aspect Ratio drops by 7% from calibrated neutral baseline (or absolute below 0.255)
+                // Relaxed to improve responsiveness under lower frame rates, glasses, or low-light webcams
+                const blinkThreshold = neutralEARRef.current * 0.93;
+                const isBlinkingCheck = averageEAR < blinkThreshold || averageEAR < 0.255;
                 if (isBlinkingCheck) {
                   challengeSuccess = true;
                   setLivenessDetails(prev => ({ ...prev, blinkPassed: true }));
