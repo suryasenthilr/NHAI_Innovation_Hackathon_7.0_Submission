@@ -17,31 +17,33 @@ import { faceService } from '../services/faceService';
 type RightTab = 'telemetry' | 'sync' | 'demographics' | 'datalake';
 
 export default function HomeScreen() {
-  // Request camera permission on native Android at startup
+  // Request camera and record audio permissions on native Android at startup
   useEffect(() => {
     if (Platform.OS === 'android') {
-      const requestAndroidCameraPermission = async () => {
+      const requestAndroidPermissions = async () => {
         try {
-          const granted = await PermissionsAndroid.request(
+          const granted = await PermissionsAndroid.requestMultiple([
             PermissionsAndroid.PERMISSIONS.CAMERA,
-            {
-              title: "Camera Permission Required",
-              message: "BharatVerify needs access to your camera to run biometric liveness checks.",
-              buttonNeutral: "Ask Me Later",
-              buttonNegative: "Cancel",
-              buttonPositive: "OK"
-            }
-          );
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            console.log("[Native] Android Camera Permission GRANTED");
+            PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
+          ]);
+          if (
+            granted[PermissionsAndroid.PERMISSIONS.CAMERA] === PermissionsAndroid.RESULTS.GRANTED &&
+            granted[PermissionsAndroid.PERMISSIONS.RECORD_AUDIO] === PermissionsAndroid.RESULTS.GRANTED
+          ) {
+            console.log("[Native] Android Camera & Audio Permissions GRANTED");
           } else {
-            console.log("[Native] Android Camera Permission DENIED");
+            console.log(
+              "[Native] Android Permissions status - Camera:",
+              granted[PermissionsAndroid.PERMISSIONS.CAMERA],
+              "Audio:",
+              granted[PermissionsAndroid.PERMISSIONS.RECORD_AUDIO]
+            );
           }
         } catch (err) {
-          console.warn("[Native] Camera permission request error:", err);
+          console.warn("[Native] Permissions request error:", err);
         }
       };
-      requestAndroidCameraPermission();
+      requestAndroidPermissions();
     }
   }, []);
 
