@@ -101,18 +101,23 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
     if (video && cameraStream && scannerState === 'loading') {
       console.log("[Camera Lifecycle] Video element and stream are both ready. Binding srcObject.");
       
-      video.onloadedmetadata = () => {
-        video.play().catch(err => console.log("[Camera] autoplay play() call rejected or interrupted:", err));
-        startInferenceLoop();
-      };
-
+      // Bind stream
       video.srcObject = cameraStream;
-
-      // Fallback: if metadata is already loaded (readyState >= 2) or loading completed immediately
-      if (video.readyState >= 2) {
-        video.play().catch(err => console.log("[Camera Fallback] play() call rejected:", err));
-        startInferenceLoop();
-      }
+      
+      // Kickstart playback immediately to prevent mobile browser loading deadlock
+      video.play()
+        .then(() => {
+          console.log("[Camera Lifecycle] Playback started successfully.");
+          startInferenceLoop();
+        })
+        .catch(err => {
+          console.log("[Camera Lifecycle] Immediate play rejected, setting fallback listener:", err);
+          // Fallback listener if direct play was blocked by browser policies
+          video.onloadedmetadata = () => {
+            video.play().catch(e => console.log("[Camera Fallback] play failed:", e));
+            startInferenceLoop();
+          };
+        });
     }
   }, [scannerState, cameraStream]);
 
