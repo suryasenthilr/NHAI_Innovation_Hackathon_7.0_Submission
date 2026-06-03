@@ -2,6 +2,11 @@ const { getDefaultConfig } = require('expo/metro-config');
 
 const config = getDefaultConfig(__dirname);
 
+// Ensure 'web' is registered as a valid platform for extension resolution (.web.tsx)
+if (!config.resolver.platforms.includes('web')) {
+  config.resolver.platforms.push('web');
+}
+
 // Custom resolver to handle Node.js SSR builds of face-api
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   // Redirect @tensorflow/tfjs-node to empty module during bundling
