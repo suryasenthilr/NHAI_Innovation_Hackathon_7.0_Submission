@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, Platform } from 'react-native';
 import { Shield, Smartphone, Sparkles, Lock, RefreshCw, AlertCircle, Camera, UserPlus, Info, Check, Github, Code } from 'lucide-react-native';
 
 // Import components
@@ -16,6 +16,7 @@ import { faceService } from '../services/faceService';
 type RightTab = 'telemetry' | 'sync' | 'demographics' | 'datalake';
 
 export default function HomeScreen() {
+  const ContainerComponent = Platform.OS === 'web' ? View : ScrollView;
   // Sync state
   const [logs, setLogs] = useState<SyncLog[]>([]);
   const [registry, setRegistry] = useState<UserRegistry[]>([]);
@@ -153,7 +154,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }} nestedScrollEnabled={true}>
+    <ContainerComponent style={styles.container} contentContainerStyle={Platform.OS !== 'web' ? { paddingBottom: 40 } : undefined} nestedScrollEnabled={true}>
       {/* Top Hero Branding Header */}
       <View style={styles.heroHeader}>
         <View style={styles.logoRow}>
@@ -471,7 +472,7 @@ export default function HomeScreen() {
           Quantized MobileFaceNet Engine v1.0.7 (NIST compliance index 98.4) • Open-Source License
         </Text>
       </View>
-    </ScrollView>
+    </ContainerComponent>
   );
 }
 
