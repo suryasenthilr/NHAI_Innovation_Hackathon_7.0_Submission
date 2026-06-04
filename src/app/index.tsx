@@ -111,7 +111,7 @@ export default function HomeScreen() {
           allowUniversalAccessFromFileURLs={true}
           allowFileAccessFromFileURLs={true}
           originWhitelist={['*']}
-          injectedJavaScript={injectedJS}
+          injectedJavaScriptBeforeContentLoaded={injectedJS}
           onMessage={(event) => {
             try {
               const data = JSON.parse(event.nativeEvent.data);
@@ -139,24 +139,6 @@ export default function HomeScreen() {
             }
           }}
         />
-        <View style={{ height: 140, backgroundColor: '#1E293B', borderTopWidth: 2, borderTopColor: '#F59E0B', padding: 8 }}>
-          <Text style={{ color: '#F59E0B', fontSize: 10, fontWeight: 'bold', marginBottom: 4 }}>
-            [NATIVE DEBUG LOGS (SCROLLABLE)]
-          </Text>
-          <ScrollView style={{ flex: 1 }}>
-            {nativeLogs.length === 0 ? (
-              <Text style={{ color: '#94A3B8', fontSize: 9, fontFamily: 'monospace' }}>
-                Waiting for WebView logs...
-              </Text>
-            ) : (
-              nativeLogs.map((log, idx) => (
-                <Text key={idx} style={{ color: log.includes('ERR') || log.includes('FAIL') || log.includes('error') ? '#EF4444' : '#F8FAFC', fontSize: 9, fontFamily: 'monospace', marginBottom: 2 }}>
-                  {log}
-                </Text>
-              ))
-            )}
-          </ScrollView>
-        </View>
       </View>
     );
   }
