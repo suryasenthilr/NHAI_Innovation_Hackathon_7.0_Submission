@@ -1,4 +1,20 @@
 import * as faceapi from '@vladmandic/face-api/dist/face-api.esm.js';
+import { faceModelsData } from './faceModelsData';
+
+// Intercept fetch calls for local face-api model weights and redirect to inline base64 data URIs
+if (typeof window !== 'undefined') {
+  const originalFetch = window.fetch;
+  window.fetch = function(input, init) {
+    const url = typeof input === 'string' ? input : (input.url || String(input));
+    const filename = url.substring(url.lastIndexOf('/') + 1);
+    
+    if (faceModelsData && faceModelsData[filename]) {
+      console.log(`[Diagnostic] Intercepted load for local model weights file: ${filename}`);
+      return originalFetch(faceModelsData[filename]);
+    }
+    return originalFetch.apply(this, arguments);
+  };
+}
 
 const MODEL_URL = './models/';
 
