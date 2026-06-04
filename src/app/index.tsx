@@ -126,6 +126,68 @@ export default function HomeScreen() {
         } catch (e) {
           logToNative('error', ['Failed to patch history APIs:', e.message]);
         }
+
+        // Polyfill window.fetch for file:// scheme using XMLHttpRequest
+        try {
+          const originalFetch = window.fetch;
+          window.fetch = function(input, init) {
+            const url = typeof input === 'string' ? input : (input.url || String(input));
+            
+            // If it's a local asset request (file:// or relative path that isn't external http/https/data)
+            if (url.startsWith('file://') || (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('data:'))) {
+              return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                const lowercaseUrl = url.toLowerCase();
+                
+                if (lowercaseUrl.includes('.json')) {
+                  xhr.responseType = 'json';
+                } else if (lowercaseUrl.includes('.bin') || lowercaseUrl.includes('.weights')) {
+                  xhr.responseType = 'arraybuffer';
+                } else {
+                  xhr.responseType = 'text';
+                }
+                
+                xhr.onload = function() {
+                  if (xhr.status === 0 || (xhr.status >= 200 && xhr.status < 300)) {
+                    const responseData = xhr.response;
+                    resolve({
+                      ok: true,
+                      status: 200,
+                      statusText: 'OK',
+                      url: url,
+                      json: function() {
+                        return Promise.resolve(typeof responseData === 'string' ? JSON.parse(responseData) : responseData);
+                      },
+                      arrayBuffer: function() {
+                        return Promise.resolve(responseData);
+                      },
+                      text: function() {
+                        return Promise.resolve(typeof responseData === 'string' ? responseData : new TextDecoder().decode(responseData));
+                      },
+                      blob: function() {
+                        return Promise.resolve(new Blob([responseData]));
+                      }
+                    });
+                  } else {
+                    reject(new TypeError('Failed to fetch local file: ' + url + ' (status: ' + xhr.status + ')'));
+                  }
+                };
+                
+                xhr.onerror = function() {
+                  reject(new TypeError('Failed to fetch local file: ' + url));
+                };
+                
+                xhr.open('GET', url, true);
+                xhr.send();
+              });
+            }
+            
+            return originalFetch.apply(this, arguments);
+          };
+          logToNative('log', ['window.fetch polyfilled for local files.']);
+        } catch (e) {
+          logToNative('error', ['Failed to polyfill window.fetch:', e.message]);
+        }
         
         console.log("WebView Log Bridge Injected successfully.");
       })();
