@@ -153,8 +153,8 @@ $$\beta = \frac{M \cdot N}{L} \left(1 + \frac{\alpha}{100} (S_{\text{max}} - 1)\
 Where $M \cdot N$ is the tile dimensions, $L$ is the number of gray levels, $S_{\text{max}}$ is the maximum slope of the transformation function, and $\alpha$ is the clip factor. Excess pixels above $\beta$ are redistributed uniformly across the gray levels before compiling the mapping function, generating high-contrast face textures for detection in direct sunlight or dark highway gates.
 
 #### 3. Multi-Template Matching (Euclidean Profile Indices)
-To handle facial hair changes, spectacles, and varying verification angles, BharatVerify stores a primary frontal template $v_{\text{reg\_front}}$ and a secondary profile template $v_{\text{reg\_profile}}$ for each worker. The matching score $d_{\text{min}}$ is computed as:
-$$d_{\text{min}} = \min\left(d(v_{\text{verify}}, v_{\text{reg\_front}}), d(v_{\text{verify}}, v_{\text{reg\_profile}})\right)$$
+To handle facial hair changes, spectacles, and varying verification angles, BharatVerify stores a primary frontal template $v_{\text{reg,front}}$ and a secondary profile template $v_{\text{reg,profile}}$ for each worker. The matching score $d_{\text{min}}$ is computed as:
+$$d_{\text{min}} = \min\left(d(v_{\text{verify}}, v_{\text{reg,front}}), d(v_{\text{verify}}, v_{\text{reg,profile}})\right)$$
 A match is confirmed if $d_{\text{min}} < 0.60$. This prevents False Rejections caused by head tilts or spectacles, maintaining the False Rejection Rate (FRR) under $1.5\%$ while requiring minimal local storage overhead.
 
 ---
@@ -232,7 +232,8 @@ sequenceDiagram
     Device->>DB: Write encrypted transaction payload (status, telemetry, GPS)
     Device->>Worker: Display "Authentication Successful"
     Note over Device, DB: Device operates offline. Transaction queued.
-    ... Network Connectivity Restored ...
+    ...
+    Note over Device, S3: Network Connectivity Restored
     Device->>DB: Fetch pending encrypted transactions
     Device->>Lambda: Push transaction payload batch (POST)
     Lambda->>S3: Stream hash logs & archive audit metadata
@@ -245,95 +246,70 @@ sequenceDiagram
 ---
 
 ### Diagram 3: Multi-Tier Liveness State Machine
-This diagram shows the routing logic between active gesture challenges and passive monitors.
+This diagram shows the routing logic between active gesture challenges and passive monitors, rendered as a vertical, highly legible flowchart.
 
 ```mermaid
-stateDiagram-v2
-    [*] --> Idle: Mount Scanner
-    Idle --> FaceDetection: Capture Frame
-    FaceDetection --> FaceDetection: No Face Found (Confidence < 0.25)
-    FaceDetection --> PassiveLiveness: Face Located (Confidence >= 0.25)
+flowchart TD
+    Start([Start: Mount Scanner]) --> Idle["Idle: Wait for Face"]
+    Idle --> Detect{Face Detected?}
+    Detect -- No --> Detect
+    Detect -- "Yes: Confidence >= 0.25" --> PassiveCheck{Run Passive Liveness}
     
-    state PassiveLiveness {
-        [*] --> TextureAnalysis: Extract Face Grayscale Bounding Box
-        TextureAnalysis --> LaplacianCheck: Compute Grayscale Variance
-        LaplacianCheck --> RejectSpoof: Variance < 15.0 (Printed Photo)
-        LaplacianCheck --> SpectralCheck: Variance >= 15.0 (Passed Texture)
-        SpectralCheck --> RejectSpoof: RGB Red-to-Blue Ratio < 1.02 (Screen Replay)
-        SpectralCheck --> [*]: Passed Passive Layer
-    }
+    subgraph Passive_Liveness ["Passive Anti-Spoofing Filters"]
+        Texture["Laplacian Grayscale<br>Texture Filter"] -->|Variance < 15.0| SpoofLock["Spoof Rejection"]
+        Texture -->|Variance >= 15.0| Glow["Spectral Blue<br>Glow Filter"]
+        Glow -->|Ratio < 1.02| SpoofLock
+        Glow -->|Ratio >= 1.02| PassivePass["Pass Passive Layer"]
+    end
     
-    PassiveLiveness --> RejectSpoof: Any Passive Filter Fails
-    PassiveLiveness --> ActiveChallengeSelection: All Passive Filters Pass
+    PassiveCheck -->|Fail| SpoofLock
+    PassiveCheck -->|Pass| ActiveSelection{Select Active Challenge}
     
-    state ActiveChallengeSelection {
-        [*] --> SelectChallenge: Randomize Choice {Blink, Smile, Yaw}
-        SelectChallenge --> EyeBlink: Select Blink Check
-        SelectChallenge --> SmileCheck: Select Smile Check
-        SelectChallenge --> YawCheck: Select Yaw Check
+    subgraph Active_Challenges ["Active Dynamic Gesture Challenges"]
+        ActiveSelection -->|Blink| BlinkCheck["Verify Eye Blink:<br>EAR < 0.25"]
+        ActiveSelection -->|Smile| SmileCheck["Verify Smile:<br>Ratio > 0.75"]
+        ActiveSelection -->|Yaw| YawCheck["Verify Turn:<br>Yaw < 0.72 or > 1.40"]
         
-        EyeBlink --> CompleteActive: EAR < 0.25
-        SmileCheck --> CompleteActive: Smile Ratio > 0.75
-        YawCheck --> CompleteActive: Yaw Ratio < 0.72 or > 1.40
-        
-        EyeBlink --> ChallengeTimeout: Seconds > 6.0
-        SmileCheck --> ChallengeTimeout: Seconds > 6.0
-        YawCheck --> ChallengeTimeout: Seconds > 6.0
-        
-        ChallengeTimeout --> SelectChallenge: Try Next Challenge
-        CompleteActive --> [*]
-    }
+        BlinkCheck & SmileCheck & YawCheck -->|Timeout > 6s| ActiveSelection
+        BlinkCheck -->|Success| ActivePass["Active Verified"]
+        SmileCheck -->|Success| ActivePass
+        YawCheck -->|Success| ActivePass
+    end
     
-    ActiveChallengeSelection --> FaceEmbeddingGeneration: Challenges Verified
-    FaceEmbeddingGeneration --> VectorMatching: 128-D Vector Extracted
-    VectorMatching --> AuthenticationSuccess: Euclidean Distance d < 0.60
-    VectorMatching --> AuthenticationFailure: Euclidean Distance d >= 0.60
+    ActivePass --> Recognition["Face Recognition<br>Network"]
+    Recognition --> Embed["Extract 128-D<br>Euclidean Vector"]
+    Embed --> Match{Match Local DB?}
+    Match -- "Yes: d < 0.60" --> Success(["Auth Success:<br>Wiped Local DB"])
+    Match -- "No: d >= 0.60" --> AccessDenied["Access Denied"]
     
-    RejectSpoof --> Lockout: Set Attempt Blocked
-    AuthenticationFailure --> Lockout: Set Access Denied
+    SpoofLock & AccessDenied --> Lockout([Blocked Lockout])
 ```
 
 ---
 
 ### Diagram 4: Thread Execution Pipeline (UI Thread vs WebGL Worker Thread)
-Demonstrates how the main React Native UI thread remains lightweight, offloading frame convolutional processing to the WebGL GPU worker context inside the WebView shell.
+Demonstrates how the main React Native UI thread remains lightweight, offloading frame convolutional processing to the WebGL GPU worker context inside the WebView shell, rendered as a highly legible vertical flowchart.
 
 ```mermaid
-sequenceDiagram
-    autonumber
-    participant UI as Main UI Thread (React Native)
-    participant WV as WebView Container (System UI)
-    participant Engine as WebGL/WASM Engine Thread (WebView JS context)
-    participant GPU as Hardware GPU (WebGL acceleration)
-
-    UI->>WV: Render <LivenessScanner /> component
-    WV->>Engine: Mount HTML5 Camera Stream & Load Scripts
-    Engine->>Engine: Load Quantized Models (10.65MB) in transient RAM
-    Engine->>WV: Stream active UI overlay (guide ring & frame counter)
+flowchart TD
+    subgraph UI_Thread ["Main UI Thread: React Native App"]
+        U1["attendance_screen.tsx"] -->|Render Component| U2["System WebView<br>Container"]
+        U3[("Secure SQLite<br>Cache DB")] <-->|Save/Fetch<br>Telemetry| U1
+        U1 -->|POST Encrypted<br>JSON Payload| U4["AWS API Gateway"]
+    end
     
-    loop Frame Ingestion Loop (30 FPS)
-        WV->>Engine: Send frame video buffer
-        Engine->>GPU: Upload frame buffer (WebGL Texture binding)
-        GPU->>GPU: Parallel convolutional execution (SSDMobileNetV1)
-        GPU-->>Engine: Face bounding boxes coordinates
-        
-        alt Face Detected (Confidence >= 0.25)
-            Engine->>GPU: Run Landmark Predictor (68-point mesh extraction)
-            GPU-->>Engine: 3D Coordinate Float Array
-            Engine->>Engine: Calculate EAR, Smile, Yaw ratios, Laplacian texture, RGB spectral glow
-            
-            alt Liveness Criteria Met
-                Engine->>GPU: Run FaceRecognitionNet (Extract 128-D vector)
-                GPU-->>Engine: 128 Float Embedding
-                Engine->>Engine: Match against SQLite local vector database (d < 0.60)
-                Engine->>WV: Send "Verification Passed" + payload
-                WV->>UI: Post message: window.ReactNativeWebView.postMessage(payload)
-            else Liveness Fails
-                Engine->>WV: Update UI: "Position Face / Perform Challenge"
-            end
-        else No Face
-            Engine->>WV: Update UI: "No Face Detected"
-        end
+    subgraph WebView_Thread ["WebGL/WASM WebView Context"]
+        U2 -->|Initialize<br>getUserMedia| W1["HTML5 Video<br>Capture Stream"]
+        W2[("In-Memory<br>Base64 Models")] -->|Decoded<br>JSON/Bin| W3["TensorFlow.js<br>WebGL Engine"]
+        W1 -->|Raw Frame<br>Buffer| W3
+        W3 -->|PostMessage<br>Verification| U2
+    end
+    
+    subgraph Hardware_GPU ["Device Hardware GPU"]
+        W3 <-->|Parallel<br>Tensor Comp| G1["Mobile GPU WebGL<br>Acceleration"]
+        G1 -->|Execute<br>SSDMobileNetV1| G2["Bounding Box<br>Localizer"]
+        G1 -->|Execute<br>FaceLandmark68| G3["68-Point<br>Coordinate Mesh"]
+        G1 -->|Execute<br>FaceRecognition| G4["128-D Vector<br>Hashing"]
     end
 ```
 
@@ -419,27 +395,30 @@ stateDiagram-v2
 ---
 
 ### Diagram 7: Hybrid WebView Sandbox vs. Native C++ Wrapper Architecture
-Highlights the cross-platform portability advantages of our sandboxed engine compared to the compilation-heavy native wrappers.
+Highlights the cross-platform portability advantages of our sandboxed engine compared to compilation-heavy native wrappers, stacked vertically for full-screen legibility.
 
+#### Paradigm A: Compile-Heavy C++ Native Wrapper
 ```mermaid
-graph TD
-    subgraph Architecture-A [Alternative Compile-Heavy C++ Native Wrapper]
-        N1[React Native JavaScript Core] -->|Async Native Bridge Serialization| N2[C++/JNI Wrapper Layer]
-        N2 -->|Kotlin/Swift glue code| N3[Native C++ ONNX Runtime Engine]
-        N3 -->|Direct OS Hardware bindings| N4[Platform Device Camera]
-        N3 -->|Compiled Platform Libraries| N5[Platform CPU/GPU Accelerators]
-        
-        style Architecture-A fill:#331a1a,stroke:#ff6666,stroke-width:1px
+flowchart TD
+    subgraph Architecture-A ["Alternative Compile-Heavy C++ Native Wrapper"]
+        N1["React Native<br>JavaScript Core"] -->|Bridge Serialization| N2["C++/JNI<br>Wrapper Layer"]
+        N2 -->|Kotlin/Swift Glue| N3["Native C++<br>ONNX Runtime Engine"]
+        N3 -->|Direct OS Bindings| N4["Platform Device<br>Camera"]
+        N3 -->|Compiled Libraries| N5["Platform CPU/GPU<br>Accelerators"]
     end
-    
-    subgraph Architecture-B [BharatVerify Hybrid WebGL/WASM WebView Sandbox]
-        B1[React Native Container] -->|Instant Native Web Render| B2[System WebView Shell context]
-        B2 -->|Isolated Sandboxed Environment| B3[WebGL/WASM Accelerated JS Engine]
-        B3 -->|Direct HTML5 stream ingestion| B4[System browser getUserMedia camera]
-        B3 -->|Native Browser Engine GL calls| B5[System Hardware GPU]
-        
-        style Architecture-B fill:#1a331a,stroke:#66ff66,stroke-width:2px
+    style Architecture-A fill:#331a1a,stroke:#ff6666,stroke-width:1px
+```
+
+#### Paradigm B: BharatVerify Hybrid WebGL/WASM WebView Sandbox
+```mermaid
+flowchart TD
+    subgraph Architecture-B ["BharatVerify Hybrid WebGL/WASM WebView Sandbox"]
+        B1["React Native<br>Container"] -->|Instant Web Render| B2["System WebView<br>Shell Context"]
+        B2 -->|Isolated Sandbox| B3["WebGL/WASM<br>Accelerated JS Engine"]
+        B3 -->|Direct HTML5 Stream| B4["System Browser<br>getUserMedia Camera"]
+        B3 -->|Browser GL Calls| B5["System Hardware<br>GPU"]
     end
+    style Architecture-B fill:#1a331a,stroke:#66ff66,stroke-width:2px
 ```
 
 ---
