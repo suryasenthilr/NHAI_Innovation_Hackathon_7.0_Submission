@@ -7,7 +7,27 @@
 [![Inference Speed: <200ms](https://img.shields.io/badge/Latency-%3C200ms-brightgreen.svg)]()
 [![Compliance: India DPDP 2023](https://img.shields.io/badge/Compliance-DPDP%20Act%202023-blueviolet.svg)]()
 
-An enterprise-grade, lightweight, and entirely offline facial recognition and liveness detection system designed for seamless integration into the **NHAI Datalake 3.0** mobile application. BharatVerify ensures uninterrupted personnel authentication in zero-network remote zones, processing 100% of machine learning inference locally on standard mobile devices in **under 200ms** without sending raw biometrics to the cloud.
+---
+
+## 🔑 Note for EAS Build Account Reset
+If you hit the free-tier build limit on your current Expo account, follow these quick steps to switch to a new account and resume building:
+1. Open your terminal in the project directory (`c:\bharatverify-antigravity`).
+2. Run the logout command to clear credentials:
+   ```bash
+   npx eas-cli logout
+   ```
+3. Run the login command to sign into your new Expo account:
+   ```bash
+   npx eas-cli login
+   ```
+4. Re-configure the project under the new account:
+   ```bash
+   npx eas-cli project:init
+   ```
+5. Trigger the cloud APK preview build:
+   ```bash
+   npx eas-cli build -p android --profile preview
+   ```
 
 ---
 
@@ -38,19 +58,29 @@ NHAI's rapid digitization efforts (such as Bhoomirashi, Infracon, and AI-based F
    * *NHAI Pain Point:* Centralized face databases or caching raw worker photos locally on contractor tablets poses severe data compliance liabilities under India's DPDP Act 2023.
    * *Our Solution:* We utilize a **Sync-and-Purge Protocol**. Raw images are processed in volatile RAM buffers and instantly destroyed—only one-way 128-float mathematical vectors are saved. Upon AWS synchronization, the local SQLite database executes `DELETE FROM SyncLog WHERE synced = 1`, leaving zero biometric data on the device.
 5. **Seamless Ingestion into NHAI Data Lake 3.0:**
-   * *NHAI Pain Point:* Standard biometric logs are stored in siloed databases, requiring complex ETL pipelines to ingest into the centralized Data Lake.
+   * *NHAI Pain Point:* Standard biometric attendance logs are stored in siloed databases, requiring complex ETL pipelines to ingest into the centralized Data Lake.
    * *Our Solution:* BharatVerify outputs structured JSON payloads containing encrypted vectors, GPS coordinate stamps, liveness metrics, and timestamps, mapping directly to Data Lake 3.0 automated API ingestion endpoints.
 
 ---
 
-## 🔗 Live Demo & PWA Sandbox
-To demonstrate the offline-first web capability, the application is compiled and hosted:
+## ⚡ Comprehensive Architectural Benchmarking
 
-### **[bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh)**
+To demonstrate the design advantages of **BharatVerify**, the table below evaluates our hybrid sandboxed design against the five alternative architectures commonly deployed for mobile offline facial biometrics.
 
-> [!TIP]
-> **Install as Progressive Web App (PWA):**
-> Open the link in **Chrome (Android)** or **Safari (iOS)**, and tap **"Add to Home Screen"**. It will install a native-app launcher, allowing you to run the complete interface in full-screen, hardware-accelerated offline mode.
+| Architectural Criteria | Centralized Cloud APIs | Heavy Native C++ Modules (C++ / ONNX) | Hardware-Locked TEE Enclave (StrongBox) | Local Python Server (On-Device FastAPI) | Rust-WASM Native Bridge | **BharatVerify (Our Hybrid JS Engine)** |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Offline Capability** | ❌ **Failed.** Non-functional in zero-network zones. | ✔️ **Functional.** Local inference. | ✔️ **Functional.** Enclave-locked. | ✔️ **Functional.** Runs local web ports. | ✔️ **Functional.** Native compiled rust. | ⭐ **Exceptional.** 100% offline local model inference and verification. |
+| **Model Package Size** | ⭐ **1.2 MB** (No local weights). | ❌ **25MB - 50MB** (Raw models bloat app). | ❌ **30MB - 60MB** (Enclave firmware/weights). | ❌ **120MB+** (Embedded Python env + models). | ⚠️ **18MB - 25MB** (Rust compiled runtime). | ⭐ **10.65 MB** (90.2% Quantized MobileNet+Landmark+FaceNet). |
+| **Inference Latency** | ❌ **1.2s - 3.5s** (Network roundtrips). | ✔️ **~80ms - 300ms** (CPU/GPU compiled). | ⚠️ **300ms - 700ms** (Enclave cryptography overhead). | ❌ **800ms - 2.5s** (Process startup & IPC serialization). | ✔️ **~100ms - 250ms** (WASM bytecode execution). | ⭐ **~190ms** loop (**<800ms** total liveness to match flow). |
+| **Cross-Platform Portability** | ✔️ **Universal** API calls. | ❌ **Fragmented.** Platform crashes (Gradle/iOS build splits). | ❌ **Highly Restricted.** Requires hardware chipsets (N/A on older devices). | ❌ **Failed.** Extremely complex cross-compiling for Android/iOS. | ⚠️ **Complex.** Requires native C-bridges for React Native. | ⭐ **Standardized WebView Sandbox.** Runs identically on iOS & Android. |
+| **Over-the-Air (OTA) Updates** | ⭐ **Immediate.** (Server-side update). | ❌ **High Friction.** Requires full app store updates. | ❌ **Blocked.** Locked to OS/firmware rollouts. | ❌ **High Friction.** Code updates require rebuilding app bundles. | ❌ **High Friction.** Compiled binary updates require store approval. | ⭐ **Instant OTA.** Core scripts and model weights update dynamically. |
+| **Liveness Anti-Spoofing** | ❌ **None** or high network lag. | ⚠️ **Single-Stage.** Blink-only active check. | ⚠️ **Platform-Dependent.** Mostly facial presence. | ✔️ **Multi-Stage.** Capable of running deep models. | ⚠️ **Basic.** Hard to link camera streams to WASM. | ⭐ **Dual-Layer.** 3 randomized active checks + 2 passive sensors. |
+| **DPDP Act 2023 Compliance** | ❌ **Non-compliant.** Transmits raw biometrics over networks. | ⚠️ **Unsecured.** Frequently logs raw photos in local storage. | ⚠️ **System-Locked.** Logs stored deep inside Android directories. | ❌ **Severe Risk.** Open local TCP port leaves system open to interception. | ⚠️ **Partial.** Complex custom encryption structures to maintain. | ⭐ **100% Compliant.** Transient-RAM only. One-way vectors + Auto-Purge. |
+| **Local Geofencing Validation** | ❌ **Blocked.** Requires network mapping APIs. | ⚠️ **Incomplete.** Coordinates captured without validation gates. | ⚠️ **Incomplete.** Coordinates logged raw without haversine comparison. | ✔️ **Capable.** Runs local routing. | ⚠️ **Basic.** Math must be compiled to WASM. | ⭐ **Integrated.** Runs local offline Haversine formula calculation. |
+| **Low-Light / Fog Adaptability** | ❌ **Depends on Cloud.** Low-contrast uploads fail. | ⚠️ **Raw processing.** No adaptive equalizers. | ⚠️ **Raw processing.** Lacks dynamic contrast boosters. | ✔️ **Capable.** Runs Python-CV2. | ⚠️ **Complex.** Canvas texture manipulation in WASM is slow. | ⭐ **CLAHE Processing.** GPU-accelerated histogram equalization. |
+| **Multi-Template Angle Support** | ✔️ **Yes.** Supported by heavy cloud indexes. | ⚠️ **Restricted.** Storing multiple binary templates bloats native caches. | ⚠️ **Restricted.** Local registers limited to single templates. | ✔️ **Capable.** Local DB. | ⚠️ **Complex.** Multi-template indexing in WASM increases heap load. | ⭐ **Dual-Profile.** Frontal + Yaw Profile reference templates stored. |
+| **Battery & CPU Efficiency** | ⭐ **Highly Efficient.** Offloaded to server. | ⚠️ **Medium.** CPU intensive without GPU hooks. | ⚠️ **Medium.** Cryptographic chip calls. | ❌ **Extremely Poor.** Running background Python process drains battery. | ✔️ **High.** Optimized WASM compilation. | ⭐ **Exceptional.** Uses native WebGL GPU-acceleration via system WebView. |
+| **NHAI Server & API Bills (100k staff)** | ❌ **Heavy Cost.** ~73,000,000 INR ($870k USD) annually. | ⭐ **0 INR.** | ⭐ **0 INR.** | ⭐ **0 INR.** | ⭐ **0 INR.** | ⭐ **0 INR.** (100% client-side CPU/GPU processing). |
 
 ---
 
@@ -137,24 +167,6 @@ sequenceDiagram
 
 ---
 
-## ⚡ Comprehensive Architectural Benchmarking
-
-To demonstrate the design advantages of **BharatVerify**, the table below evaluates our hybrid sandboxed design against the five alternative architectures commonly deployed for mobile offline facial biometrics.
-
-| Architectural Criteria | Centralized Cloud APIs | Heavy Native C++ Modules (C++ / ONNX) | Hardware-Locked TEE Enclave (StrongBox) | Local Python Server (On-Device FastAPI) | Rust-WASM Native Bridge | **BharatVerify (Our Hybrid JS Engine)** |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Offline Capability** | ❌ **Failed.** Non-functional in zero-network zones. | ✔️ **Functional.** Local inference. | ✔️ **Functional.** Enclave-locked. | ✔️ **Functional.** Runs local web ports. | ✔️ **Functional.** Native compiled rust. | ⭐ **Exceptional.** 100% offline local model inference and verification. |
-| **Model Package Size** | ⭐ **1.2 MB** (No local weights). | ❌ **25MB - 50MB** (Raw models bloat app). | ❌ **30MB - 60MB** (Enclave firmware/weights). | ❌ **120MB+** (Embedded Python env + models). | ⚠️ **18MB - 25MB** (Rust compiled runtime). | ⭐ **10.65 MB** (90.2% Quantized MobileNet+Landmark+FaceNet). |
-| **Inference Latency** | ❌ **1.2s - 3.5s** (Network roundtrips). | ✔️ **~80ms - 300ms** (CPU/GPU compiled). | ⚠️ **300ms - 700ms** (Enclave cryptography overhead). | ❌ **800ms - 2.5s** (Process startup & IPC serialization). | ✔️ **~100ms - 250ms** (WASM bytecode execution). | ⭐ **~190ms** loop (**<800ms** total liveness to match flow). |
-| **Cross-Platform Portability** | ✔️ **Universal** API calls. | ❌ **Fragmented.** Platform crashes (Gradle/iOS build splits). | ❌ **Highly Restricted.** Requires hardware chipsets (N/A on older devices). | ❌ **Failed.** Extremely complex cross-compiling for Android/iOS. | ⚠️ **Complex.** Requires native C-bridges for React Native. | ⭐ **Standardized WebView Sandbox.** Runs identically on iOS & Android. |
-| **Over-the-Air (OTA) Updates** | ⭐ **Immediate.** (Server-side update). | ❌ **High Friction.** Requires full app store updates. | ❌ **Blocked.** Locked to OS/firmware rollouts. | ❌ **High Friction.** Code updates require rebuilding app bundles. | ❌ **High Friction.** Compiled binary updates require store approval. | ⭐ **Instant OTA.** Core scripts and model weights update dynamically. |
-| **Liveness Anti-Spoofing** | ❌ **None** or high network lag. | ⚠️ **Single-Stage.** Blink-only active check. | ⚠️ **Platform-Dependent.** Mostly facial presence. | ✔️ **Multi-Stage.** Capable of running deep models. | ⚠️ **Basic.** Hard to link camera streams to WASM. | ⭐ **Dual-Layer.** 3 randomized active checks + 2 passive sensors. |
-| **DPDP Act 2023 Compliance** | ❌ **Non-compliant.** Transmits raw biometrics over networks. | ⚠️ **Unsecured.** Frequently logs raw photos in local storage. | ⚠️ **System-Locked.** Logs stored deep inside Android directories. | ❌ **Severe Risk.** Open local TCP port leaves system open to interception. | ⚠️ **Partial.** Complex custom encryption structures to maintain. | ⭐ **100% Compliant.** Transient-RAM only. One-way vectors + Auto-Purge. |
-| **Battery & CPU Efficiency** | ⭐ **Highly Efficient.** Offloaded to server. | ⚠️ **Medium.** CPU intensive without GPU hooks. | ⚠️ **Medium.** Cryptographic chip calls. | ❌ **Extremely Poor.** Running background Python process drains battery. | ✔️ **High.** Optimized WASM compilation. | ⭐ **Exceptional.** Uses native WebGL GPU-acceleration via system WebView. |
-| **NHAI Server & API Bills (100k staff)** | ❌ **Heavy Cost.** ~73,000,000 INR ($870k USD) annually. | ⭐ **0 INR.** | ⭐ **0 INR.** | ⭐ **0 INR.** | ⭐ **0 INR.** | ⭐ **0 INR.** (100% client-side CPU/GPU processing). |
-
----
-
 ## 🛠️ Key Technical Enhancements
 
 ### 1. Offline Haversine Geofencing
@@ -162,6 +174,9 @@ To prevent workers from checking in when away from their assigned sites while op
 
 ### 2. Low-Light CLAHE Contrast Enhancement
 Construction sites and toll plazas are often poorly lit at night or suffer from extreme solar shadows during midday. BharatVerify implements a local offscreen canvas-based **CLAHE (Contrast Limited Adaptive Histogram Equalization)** preprocessing filter. The raw video frame is equalized in real-time before model ingestion, boosting the Face Detection rate by **34%** in low-light environments.
+
+### 3. Multi-Template Profile Enrollment
+To handle facial hair changes, spectacles, and various head angles, BharatVerify stores a primary frontal template and a secondary yaw profile template. During authentication, similarity is evaluated against both templates, which drastically reduces False Rejections while keeping storage overhead negligible.
 
 ---
 
@@ -229,28 +244,6 @@ import { LivenessScanner } from '../components/LivenessScanner';
 3. Run the prototype:
    * Press **`w`** in the terminal to load the local Web Simulator in your browser.
    * Scan the terminal's QR code using the **Expo Go** app on a physical Android/iOS phone.
-
-### Option 3: Compile and Host the Web Assets
-1. Export static web assets:
-   ```bash
-   npx expo export --platform web
-   ```
-   *(This builds all compressed TypeScript files, model assets, and styles into the `dist/` directory).*
-2. Host `dist/` contents using your server (e.g. Surge):
-   ```bash
-   npx surge dist
-   ```
-
-### Option 4: Compiling the Standalone Mobile App (.APK)
-BharatVerify is built with full support for Expo Application Services (EAS). To compile the standalone Android package:
-1. Initialize the configuration:
-   ```bash
-   npx eas-cli build:configure
-   ```
-2. Build the Android APK in the cloud:
-   ```bash
-   npx eas-cli build -p android --profile preview
-   ```
 
 ---
 

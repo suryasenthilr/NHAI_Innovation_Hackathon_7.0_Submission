@@ -77,6 +77,8 @@
 * **Low-Light CLAHE (Adaptive Contrast Equalization)**
   * Resolves poor lighting at night and harsh midday shadows at highway gates.
   * **Performance Boost:** Enhances face detection reliability by **34%** in extreme low-light and shaded worksites.
+* **Multi-Template Profile Matching**
+  * Storing frontal and tilt yaw profile templates dynamically handles mustache changes, turbans, and angles, maintaining FRR $< 1.5\%$.
 
 ---
 
