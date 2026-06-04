@@ -92,16 +92,30 @@ export default function HomeScreen() {
           logToNative('error', ['Unhandled Rejection:', e.reason]);
         });
 
-        // Patch Location pathname to force '/' for local WebView file scheme
+        // Virtualize Location.prototype to simulate running on a secure domain at route '/'
         try {
-          Object.defineProperty(Location.prototype, 'pathname', {
-            get: function() {
-              return '/';
-            },
-            configurable: true
-          });
+          const mockLocation = {
+            href: 'https://bharatverify.nhai/',
+            origin: 'https://bharatverify.nhai',
+            protocol: 'https:',
+            host: 'bharatverify.nhai',
+            hostname: 'bharatverify.nhai',
+            port: '',
+            pathname: '/',
+            search: '',
+            hash: ''
+          };
+
+          for (const key in mockLocation) {
+            Object.defineProperty(Location.prototype, key, {
+              get: function() {
+                return mockLocation[key];
+              },
+              configurable: true
+            });
+          }
         } catch (e) {
-          logToNative('error', ['Failed to override Location.prototype.pathname:', e.message]);
+          logToNative('error', ['Failed to fully mock Location.prototype:', e.message]);
         }
 
         // Patch History APIs to prevent security exceptions on file:// scheme
