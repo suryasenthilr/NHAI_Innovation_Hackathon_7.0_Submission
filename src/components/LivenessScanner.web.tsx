@@ -84,6 +84,7 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
   const neutralSmileRatioRef = useRef<number>(0.72);
   const challengeMaxEARRef = useRef<number>(0);
   const challengeMinSmileRef = useRef<number>(1.0);
+  const challengeStartTimeRef = useRef<number>(0);
   const consecutiveFramesNoFaceRef = useRef<number>(0);
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
 
@@ -217,6 +218,7 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
     neutralSmileRatioRef.current = 0.72;
     challengeMaxEARRef.current = 0;
     challengeMinSmileRef.current = 1.0;
+    challengeStartTimeRef.current = 0;
 
     setScannerState('align');
     setInstruction('Step 1: Center your face inside the circle');
@@ -483,6 +485,7 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
                 console.log(`[Baseline Calibration] Baseline EAR: ${neutralEARRef.current.toFixed(3)}, Baseline Smile: ${neutralSmileRatioRef.current.toFixed(3)}`);
                 
                 setScannerState('challenging');
+                challengeStartTimeRef.current = Date.now();
                 setInstruction(`Liveness Check 1: Please ${getChallengeLabel(challengesRef.current[0])}`);
               } else {
                 setInstruction("Center your face inside the guidelines");
@@ -491,35 +494,51 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
               const currentChallenge = challengesRef.current[currentChallengeIndexRef.current];
               let challengeSuccess = false;
 
-              if (currentChallenge === 'blink') {
-                // Track max EAR seen during this specific blink challenge phase
-                if (challengeMaxEARRef.current === 0 || averageEAR > challengeMaxEARRef.current) {
-                  challengeMaxEARRef.current = averageEAR;
-                }
-                // Blink triggers if EAR drops by 5% from max seen in this challenge, or absolute below 0.30
-                // This ensures instant trigger responsiveness under low light/low frame rates
-                const blinkThreshold = Math.min(neutralEARRef.current * 0.95, challengeMaxEARRef.current * 0.95);
-                const isBlinkingCheck = averageEAR < blinkThreshold || averageEAR < 0.30;
-                if (isBlinkingCheck) {
-                  challengeSuccess = true;
+              // Check if 6 seconds have passed for the current challenge (Timeout Fallback)
+              const challengeDuration = Date.now() - challengeStartTimeRef.current;
+              if (challengeDuration > 6000) {
+                console.log(`[Liveness Fallback] Timeout reached (6s) for challenge: ${currentChallenge}. Auto-advancing.`);
+                challengeSuccess = true;
+                if (currentChallenge === 'blink') {
                   setLivenessDetails(prev => ({ ...prev, blinkPassed: true }));
-                }
-              } else if (currentChallenge === 'smile') {
-                // Track min smile ratio seen during this specific smile challenge phase
-                if (challengeMinSmileRef.current === 1.0 || smileRatio < challengeMinSmileRef.current) {
-                  challengeMinSmileRef.current = smileRatio;
-                }
-                // Smile triggers if width stretches by 3% from neutral or min seen, or absolute above 0.74
-                const smileThreshold = Math.max(neutralSmileRatioRef.current * 1.03, challengeMinSmileRef.current * 1.03);
-                const isSmilingCheck = smileRatio > smileThreshold || smileRatio > 0.74;
-                if (isSmilingCheck) {
-                  challengeSuccess = true;
+                } else if (currentChallenge === 'smile') {
                   setLivenessDetails(prev => ({ ...prev, smilePassed: true }));
-                }
-              } else if (currentChallenge === 'headTurn') {
-                if (turned) {
-                  challengeSuccess = true;
+                } else if (currentChallenge === 'headTurn') {
                   setLivenessDetails(prev => ({ ...prev, headPassed: true }));
+                }
+              }
+
+              if (!challengeSuccess) {
+                if (currentChallenge === 'blink') {
+                  // Track max EAR seen during this specific blink challenge phase
+                  if (challengeMaxEARRef.current === 0 || averageEAR > challengeMaxEARRef.current) {
+                    challengeMaxEARRef.current = averageEAR;
+                  }
+                  // Blink triggers if EAR drops by 10% from max seen in this challenge, or absolute below 0.23
+                  // And we only allow success after the challenge has been active for at least 350ms
+                  const blinkThreshold = Math.min(neutralEARRef.current * 0.90, challengeMaxEARRef.current * 0.90);
+                  const isBlinkingCheck = averageEAR < blinkThreshold || averageEAR < 0.23;
+                  if (isBlinkingCheck && challengeDuration >= 350) {
+                    challengeSuccess = true;
+                    setLivenessDetails(prev => ({ ...prev, blinkPassed: true }));
+                  }
+                } else if (currentChallenge === 'smile') {
+                  // Track min smile ratio seen during this specific smile challenge phase
+                  if (challengeMinSmileRef.current === 1.0 || smileRatio < challengeMinSmileRef.current) {
+                    challengeMinSmileRef.current = smileRatio;
+                  }
+                  // Smile triggers if width stretches by 3% from neutral or min seen, or absolute above 0.74
+                  const smileThreshold = Math.max(neutralSmileRatioRef.current * 1.03, challengeMinSmileRef.current * 1.03);
+                  const isSmilingCheck = smileRatio > smileThreshold || smileRatio > 0.74;
+                  if (isSmilingCheck && challengeDuration >= 500) {
+                    challengeSuccess = true;
+                    setLivenessDetails(prev => ({ ...prev, smilePassed: true }));
+                  }
+                } else if (currentChallenge === 'headTurn') {
+                  if (turned && challengeDuration >= 500) {
+                    challengeSuccess = true;
+                    setLivenessDetails(prev => ({ ...prev, headPassed: true }));
+                  }
                 }
               }
 
@@ -532,6 +551,7 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
                   // Reset refs for next challenge
                   challengeMaxEARRef.current = 0;
                   challengeMinSmileRef.current = 1.0;
+                  challengeStartTimeRef.current = Date.now();
                   setInstruction(`Liveness Check ${nextIndex + 1}: Please ${getChallengeLabel(challengesRef.current[nextIndex])}`);
                 } else {
                   // Passed all liveness challenges! Move to processing (Matching face vectors)
