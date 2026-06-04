@@ -141,11 +141,18 @@ export default function HomeScreen() {
           logToNative('error', ['Failed to patch history APIs:', e.message]);
         }
 
-        // Polyfill window.fetch for file:// scheme using XMLHttpRequest
+        // Polyfill window.fetch for file:// scheme and base64 models
         try {
           const originalFetch = window.fetch;
           window.fetch = function(input, init) {
             const url = typeof input === 'string' ? input : (input.url || String(input));
+            const filename = url.substring(url.lastIndexOf('/') + 1);
+            
+            // Check if it's one of our local face-api models and we have its Base64 data
+            if (window.faceModelsData && window.faceModelsData[filename]) {
+              logToNative('log', ['Intercepted local model weights file in WebView fetch:', filename]);
+              return originalFetch(window.faceModelsData[filename]);
+            }
             
             // If it's a local asset request (file:// or relative path that isn't external http/https/data)
             if (url.startsWith('file://') || (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('data:'))) {
@@ -198,7 +205,7 @@ export default function HomeScreen() {
             
             return originalFetch.apply(this, arguments);
           };
-          logToNative('log', ['window.fetch polyfilled for local files.']);
+          logToNative('log', ['window.fetch polyfilled for local files and base64 models.']);
         } catch (e) {
           logToNative('error', ['Failed to polyfill window.fetch:', e.message]);
         }
