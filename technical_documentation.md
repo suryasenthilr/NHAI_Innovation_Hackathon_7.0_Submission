@@ -170,7 +170,7 @@ sequenceDiagram
     Device->>DB: Write encrypted transaction payload (status, telemetry, GPS)
     Device->>Worker: Display "Authentication Successful"
     Note over Device, DB: Device operates offline. Transaction queued.
-    ... Network Connectivity Restored ...
+    == Network Connectivity Restored ==
     Device->>DB: Fetch pending encrypted transactions
     Device->>Lambda: Push transaction payload batch (POST)
     Lambda->>S3: Stream hash logs & archive audit metadata
