@@ -47,6 +47,9 @@ export default function HomeScreen() {
     }
   }, []);
 
+  // Native logging state
+  const [nativeLogs, setNativeLogs] = useState<string[]>([]);
+
   if (Platform.OS !== 'web') {
     const injectedJS = `
       (function() {
@@ -113,42 +116,47 @@ export default function HomeScreen() {
             try {
               const data = JSON.parse(event.nativeEvent.data);
               if (data && data.type) {
-                console.log(`[WebView ${data.type.toUpperCase()}] ${data.message}`);
-              } else {
-                console.log("[WebView Event]", event.nativeEvent.data);
+                const logLine = `[${data.type.toUpperCase()}] ${data.message}`;
+                setNativeLogs(prev => [...prev, logLine].slice(-15));
+                console.log(logLine);
               }
             } catch (e) {
-              console.log("[WebView Raw Message]", event.nativeEvent.data);
+              setNativeLogs(prev => [...prev, `Raw: ${event.nativeEvent.data}`].slice(-15));
             }
           }}
           onPermissionRequest={(event) => {
             console.log("[WebView Permission Request]", event);
             try {
-              // React Native WebView can pass event or request depending on the platform/library version
               if (event.request && typeof event.request.grant === 'function') {
                 event.request.grant(event.request.resources);
-                console.log("[WebView Permission] Granted via event.request.grant");
               } else if (event.grant && typeof event.grant === 'function') {
                 event.grant(event.resources);
-                console.log("[WebView Permission] Granted via event.grant");
               } else if (event.nativeEvent && event.nativeEvent.grant && typeof event.nativeEvent.grant === 'function') {
                 event.nativeEvent.grant(event.nativeEvent.resources);
-                console.log("[WebView Permission] Granted via event.nativeEvent.grant");
-              } else {
-                // If it doesn't match standard patterns, try nativeEvent attributes directly
-                const requestObj = event.nativeEvent || event;
-                if (requestObj.grant && typeof requestObj.grant === 'function') {
-                  requestObj.grant(requestObj.resources);
-                  console.log("[WebView Permission] Granted via fallback object grant");
-                } else {
-                  console.warn("[WebView Permission] Could not find grant function on event object structure");
-                }
               }
             } catch (err) {
               console.error("[WebView Permission Error] Failed to grant permissions:", err);
             }
           }}
         />
+        <View style={{ height: 140, backgroundColor: '#1E293B', borderTopWidth: 2, borderTopColor: '#F59E0B', padding: 8 }}>
+          <Text style={{ color: '#F59E0B', fontSize: 10, fontWeight: 'bold', marginBottom: 4 }}>
+            [NATIVE DEBUG LOGS (SCROLLABLE)]
+          </Text>
+          <ScrollView style={{ flex: 1 }}>
+            {nativeLogs.length === 0 ? (
+              <Text style={{ color: '#94A3B8', fontSize: 9, fontFamily: 'monospace' }}>
+                Waiting for WebView logs...
+              </Text>
+            ) : (
+              nativeLogs.map((log, idx) => (
+                <Text key={idx} style={{ color: log.includes('ERR') || log.includes('FAIL') || log.includes('error') ? '#EF4444' : '#F8FAFC', fontSize: 9, fontFamily: 'monospace', marginBottom: 2 }}>
+                  {log}
+                </Text>
+              ))
+            )}
+          </ScrollView>
+        </View>
       </View>
     );
   }
