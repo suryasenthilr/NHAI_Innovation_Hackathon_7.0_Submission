@@ -91,8 +91,8 @@ $$\beta = \frac{M \cdot N}{L} \left(1 + \frac{\alpha}{100} (S_{\text{max}} - 1)\
 Where $M \cdot N$ is the tile dimensions, $L$ is the number of gray levels, $S_{\text{max}}$ is the maximum slope of the transformation function, and $\alpha$ is the clip factor. Excess pixels above $\beta$ are redistributed uniformly across the gray levels before compiling the mapping function, generating high-contrast face textures for detection in direct sunlight or dark highway gates.
 
 #### 3. Multi-Template Matching (Euclidean Profile Indices)
-To handle facial hair changes, spectacles, and varying verification angles, BharatVerify stores a primary frontal template $v_{\text{reg\_front}}$ and a secondary profile template $v_{\text{reg\_profile}}$ for each worker. The matching score $d_{\text{min}}$ is computed as:
-$$d_{\text{min}} = \min\left(d(v_{\text{verify}}, v_{\text{reg\_front}}), d(v_{\text{verify}}, v_{\text{reg\_profile}})\right)$$
+To handle facial hair changes, spectacles, and varying verification angles, BharatVerify stores a primary frontal template $v_{\text{reg,front}}$ and a secondary profile template $v_{\text{reg,profile}}$ for each worker. The matching score $d_{\text{min}}$ is computed as:
+$$d_{\text{min}} = \min\left(d(v_{\text{verify}}, v_{\text{reg,front}}), d(v_{\text{verify}}, v_{\text{reg,profile}})\right)$$
 A match is confirmed if $d_{\text{min}} < 0.60$. This prevents False Rejections caused by head tilts or spectacles, maintaining the False Rejection Rate (FRR) under $1.5\%$ while requiring minimal local storage overhead.
 
 ---
@@ -170,7 +170,7 @@ sequenceDiagram
     Device->>DB: Write encrypted transaction payload (status, telemetry, GPS)
     Device->>Worker: Display "Authentication Successful"
     Note over Device, DB: Device operates offline. Transaction queued.
-    == Network Connectivity Restored ==
+    Note over Device, S3: Network Connectivity Restored
     Device->>DB: Fetch pending encrypted transactions
     Device->>Lambda: Push transaction payload batch (POST)
     Lambda->>S3: Stream hash logs & archive audit metadata
