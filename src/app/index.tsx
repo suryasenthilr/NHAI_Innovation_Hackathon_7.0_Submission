@@ -91,6 +91,41 @@ export default function HomeScreen() {
         window.addEventListener('unhandledrejection', function(e) {
           logToNative('error', ['Unhandled Rejection:', e.reason]);
         });
+
+        // Patch Location pathname to force '/' for local WebView file scheme
+        try {
+          Object.defineProperty(Location.prototype, 'pathname', {
+            get: function() {
+              return '/';
+            },
+            configurable: true
+          });
+        } catch (e) {
+          logToNative('error', ['Failed to override Location.prototype.pathname:', e.message]);
+        }
+
+        // Patch History APIs to prevent security exceptions on file:// scheme
+        try {
+          const originalPushState = window.history.pushState;
+          window.history.pushState = function(state, title, url) {
+            try {
+              return originalPushState.apply(this, arguments);
+            } catch (e) {
+              logToNative('warn', ['history.pushState blocked:', e.message]);
+            }
+          };
+          
+          const originalReplaceState = window.history.replaceState;
+          window.history.replaceState = function(state, title, url) {
+            try {
+              return originalReplaceState.apply(this, arguments);
+            } catch (e) {
+              logToNative('warn', ['history.replaceState blocked:', e.message]);
+            }
+          };
+        } catch (e) {
+          logToNative('error', ['Failed to patch history APIs:', e.message]);
+        }
         
         console.log("WebView Log Bridge Injected successfully.");
       })();

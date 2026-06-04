@@ -32,7 +32,8 @@ class FaceService {
       } catch (e) {
         this.loadingPromise = null;
         console.error("Failed to load face-api models", e);
-        throw new Error("Edge AI models could not be loaded offline. Verify your local assets/CDN path.");
+        const errMsg = e instanceof Error ? `${e.name}: ${e.message}\n${e.stack}` : String(e);
+        throw new Error(`Edge AI models load failed: ${errMsg}`);
       }
     })();
 
