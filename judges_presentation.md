@@ -2,7 +2,7 @@
 ## Edge-Native, 100% Offline Facial Verification & Liveness Module for Datalake 3.0
 
 > [!IMPORTANT]
-> **READ ON GITHUB PREFERRED:** For the best reading and evaluation experience, we highly recommend viewing these slides directly on GitHub: **[Read Pitch Slide Deck on GitHub](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/judges_presentation.md)**.
+> **READ ON GITHUB PREFERRED:** For the best reading and evaluation experience, we highly recommend viewing these slides directly on GitHub: **[Presentation on GitHub](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/judges_presentation.md)**.
 
 ### 🇮🇳 An Atmanirbhar Bharat Engineering Initiative | Zero-Network Remote Highway Security
 
@@ -12,8 +12,9 @@
 * **📥 Standalone Android APK (Primary Production Submission):** **[Download Standalone APK](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)** (Native build compiled via EAS under package ID `com.suryasenthilr.bharatverifyantigravity`).
 * **🎥 Demonstration Video:** **[Watch Demo Video](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4)** (Inline player also embedded in [README.md](./README.md)).
 * **🌐 Web PWA Sandbox (Convenience Simulator):** **[Access Web Sandbox](https://bharatverify-nhai.surge.sh)** (Hosted browser companion for instant evaluation).
-* **📘 Product documentation:** **[README.md](./README.md)** (Full quick-start and installation guide).
+* **📘 Product Documentation:** **[README.md](./README.md)** (Full quick-start and installation guide).
 * **📘 Engineering Whitepaper:** **[technical_documentation.md](./technical_documentation.md)** (Mathematical and architectural specification).
+* **💼 Pitch Slide Deck:** **[judges_presentation.md](./judges_presentation.md)** (Pitch slides for the evaluation committee).
 
 ---
 

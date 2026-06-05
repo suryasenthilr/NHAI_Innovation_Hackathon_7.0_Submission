@@ -419,9 +419,9 @@ def postprocess_html(html, mermaid_blocks, display_math, inline_math):
         
     return html
 
-def compile_spec():
+def compile_spec(theme='light'):
     md_path = 'technical_documentation.md'
-    html_path = 'technical_documentation_print.html'
+    html_path = 'technical_documentation_print.html' if theme == 'light' else 'technical_documentation_dark_print.html'
     
     if not os.path.exists(md_path):
         print(f"Error: {md_path} not found.")
@@ -430,7 +430,7 @@ def compile_spec():
     with open(md_path, 'r', encoding='utf-8') as f:
         md_content = f.read()
         
-    print(f"Compiling {md_path}...")
+    print(f"Compiling {md_path} (theme={theme})...")
     
     # Preprocess
     text, mermaid_blocks, display_math, inline_math = preprocess_markdown(md_content)
@@ -444,7 +444,7 @@ def compile_spec():
     html_body = postprocess_html(html_body, mermaid_blocks, display_math, inline_math)
     
     # Recommendation bar (User requested specific preference text and direct links)
-    header_html = """
+    header_html = f"""
     <div class="screen-only-header">
         <div class="header-notice">
             <strong>⚠️ Important Notice (GitHub Preference)</strong>: For the best reading and evaluation experience, <strong>we highly prefer and recommend that you read these documents directly on GitHub</strong> (or download the compiled PDF versions). The GitHub repository natively renders all interactive zoomable diagrams, full vector schemas, code block formatting, and dark mode controls.
@@ -453,10 +453,120 @@ def compile_spec():
             <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission" target="_blank">📂 View Full Repository on GitHub</a>
             <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/README.md" target="_blank">📄 Read README.md on GitHub</a>
             <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/technical_documentation.md" target="_blank">📘 Read Technical Specification on GitHub</a>
-            <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/judges_presentation.md" target="_blank">🏆 Read Pitch Slide Deck on GitHub</a>
+            <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/judges_presentation.md" target="_blank">🏆 Presentation on GitHub</a>
         </div>
     </div>
     """
+    
+    # Theme parameters
+    if theme == 'light':
+        primary_color = "#0284c7"
+        text_color_val = "#334155"
+        heading_color_val = "#0f172a"
+        bg_color_val = "#ffffff"
+        sidebar_bg_val = "#f8fafc"
+        border_color_val = "#e2e8f0"
+        link_color = "#0284c7"
+        link_hover_color = "#0369a1"
+        sidebar_hover_bg = "#f1f5f9"
+        header_bg = "#f0f9ff"
+        header_border = "#bae6fd"
+        header_text = "#0369a1"
+        header_strong_color = ""
+        code_bg = "#f1f5f9"
+        code_color = "#e11d48"
+        pre_bg = "#0f172a"
+        pre_color = "#f8fafc"
+        pre_border = "#1e293b"
+        table_th_bg = "#f8fafc"
+        table_tr_bg = "#fff"
+        table_tr_stripe = "#f8fafc"
+        blockquote_bg = "#f8fafc"
+        blockquote_border = "#cbd5e1"
+        blockquote_color = "#475569"
+        mermaid_container_bg = "#ffffff"
+        mermaid_container_shadow = "rgba(0,0,0,0.02)"
+        
+        # alerts
+        alert_note_bg = "#f0f9ff"
+        alert_note_border = "#0284c7"
+        alert_note_color = "#0369a1"
+        alert_imp_bg = "#fef2f2"
+        alert_imp_border = "#ef4444"
+        alert_imp_color = "#991b1b"
+        alert_warn_bg = "#fffbeb"
+        alert_warn_border = "#f59e0b"
+        alert_warn_color = "#92400e"
+        alert_tip_bg = "#f0fdf4"
+        alert_tip_border = "#22c55e"
+        alert_tip_color = "#166534"
+        
+        # print specific
+        print_body_bg = "#fff"
+        print_body_color = "#000"
+        print_mermaid_container = """
+        .mermaid-container {
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            background: transparent !important;
+            margin: 20px 0 !important;
+        }
+        """
+    else: # dark theme
+        primary_color = "#58a6ff"
+        text_color_val = "#c9d1d9"
+        heading_color_val = "#f0f6fc"
+        bg_color_val = "#0d1117"
+        sidebar_bg_val = "#090d16"
+        border_color_val = "#30363d"
+        link_color = "#58a6ff"
+        link_hover_color = "#79c0ff"
+        sidebar_hover_bg = "#161b22"
+        header_bg = "#161b22"
+        header_border = "#30363d"
+        header_text = "#8892b0"
+        header_strong_color = "color: #ffffff;"
+        code_bg = "rgba(110,118,129,0.3)"
+        code_color = "#ff7b72"
+        pre_bg = "#161b22"
+        pre_color = "#c9d1d9"
+        pre_border = "#30363d"
+        table_th_bg = "#161b22"
+        table_tr_bg = "#0d1117"
+        table_tr_stripe = "#161b22"
+        blockquote_bg = "#161b22"
+        blockquote_border = "#30363d"
+        blockquote_color = "#8892b0"
+        mermaid_container_bg = "#161b22"
+        mermaid_container_shadow = "rgba(0,0,0,0.2)"
+        
+        # alerts
+        alert_note_bg = "#1f2a3c"
+        alert_note_border = "#1f6feb"
+        alert_note_color = "#58a6ff"
+        alert_imp_bg = "#3c1f24"
+        alert_imp_border = "#f85149"
+        alert_imp_color = "#ff7b72"
+        alert_warn_bg = "#342a18"
+        alert_warn_border = "#d29922"
+        alert_warn_color = "#d29922"
+        alert_tip_bg = "#1f3c24"
+        alert_tip_border = "#3fb950"
+        alert_tip_color = "#56d364"
+        
+        # print specific
+        print_body_bg = "#0d1117"
+        print_body_color = "#c9d1d9"
+        print_mermaid_container = """
+        .mermaid-container {
+            border: 1px solid #30363d !important;
+            box-shadow: none !important;
+            padding: 20px !important;
+            background: #161b22 !important;
+            margin: 20px 0 !important;
+        }
+        """
     
     # HTML Template
     full_html = f"""<!DOCTYPE html>
@@ -485,12 +595,12 @@ window.MathJax = {{
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <style>
     :root {{
-        --primary: #0284c7;
-        --text-color: #334155;
-        --heading-color: #0f172a;
-        --bg-color: #ffffff;
-        --sidebar-bg: #f8fafc;
-        --border-color: #e2e8f0;
+        --primary: {primary_color};
+        --text-color: {text_color_val};
+        --heading-color: {heading_color_val};
+        --bg-color: {bg_color_val};
+        --sidebar-bg: {sidebar_bg_val};
+        --border-color: {border_color_val};
     }}
     
     body {{
@@ -503,12 +613,12 @@ window.MathJax = {{
     }}
     
     a {{
-        color: #0284c7;
+        color: {link_color};
         text-decoration: underline;
     }}
     
     a:hover {{
-        color: #0369a1;
+        color: {link_hover_color};
     }}
     
     .container {{
@@ -563,7 +673,7 @@ window.MathJax = {{
     
     .sidebar a:hover {{
         color: var(--primary);
-        background-color: #f1f5f9;
+        background-color: {sidebar_hover_bg};
         padding-left: 14px;
     }}
     
@@ -581,18 +691,21 @@ window.MathJax = {{
     
     /* Recommendation Bar Styles */
     .screen-only-header {{
-        background-color: #f0f9ff;
-        border: 1px solid #bae6fd;
+        background-color: {header_bg};
+        border: 1px solid {header_border};
         border-radius: 8px;
         padding: 20px;
         margin-bottom: 30px;
         font-size: 0.95em;
-        color: #0369a1;
+        color: {header_text};
         font-family: 'Inter', sans-serif;
     }}
     .header-notice {{
         margin-bottom: 12px;
         line-height: 1.5;
+    }}
+    .header-notice strong {{
+        {header_strong_color}
     }}
     .header-links {{
         display: flex;
@@ -600,15 +713,15 @@ window.MathJax = {{
         flex-wrap: wrap;
     }}
     .header-links a {{
-        color: #0284c7;
+        color: {link_color};
         text-decoration: none;
         font-weight: 600;
-        border-bottom: 1px dashed #0284c7;
+        border-bottom: 1px dashed {link_color};
         padding-bottom: 2px;
         transition: all 0.15s ease;
     }}
     .header-links a:hover {{
-        color: #0369a1;
+        color: {link_hover_color};
         border-bottom-style: solid;
     }}
     
@@ -626,7 +739,7 @@ window.MathJax = {{
     h1 {{ font-size: 2.2em; border-bottom: 2px solid var(--border-color); margin-top: 20px; }}
     h2 {{ font-size: 1.6em; }}
     h3 {{ font-size: 1.3em; border-bottom: none; padding-bottom: 0; }}
-    h4 {{ font-size: 1.15em; border-bottom: none; padding-bottom: 0; color: #0f172a; }}
+    h4 {{ font-size: 1.15em; border-bottom: none; padding-bottom: 0; color: var(--heading-color); }}
     
     p {{ margin-top: 0; margin-bottom: 18px; }}
     
@@ -635,24 +748,24 @@ window.MathJax = {{
     
     code {{
         font-family: 'Fira Code', monospace;
-        background-color: #f1f5f9;
+        background-color: {code_bg};
         padding: 0.2em 0.4em;
         border-radius: 4px;
         font-size: 85%;
-        color: #e11d48;
+        color: {code_color};
         font-weight: 500;
     }}
     
     pre {{
         font-family: 'Fira Code', monospace;
-        background-color: #0f172a;
-        color: #f8fafc;
+        background-color: {pre_bg};
+        color: {pre_color};
         padding: 18px;
         border-radius: 8px;
         overflow: auto;
         font-size: 90%;
         line-height: 1.5;
-        border: 1px solid #1e293b;
+        border: 1px solid {pre_border};
         margin: 20px 0;
     }}
     
@@ -660,7 +773,7 @@ window.MathJax = {{
         background-color: transparent;
         padding: 0;
         border-radius: 0;
-        color: #f8fafc;
+        color: {pre_color};
     }}
     
     table {{
@@ -678,25 +791,25 @@ window.MathJax = {{
     }}
     
     table th {{
-        background-color: #f8fafc;
+        background-color: {table_th_bg};
         font-weight: 600;
         color: var(--heading-color);
     }}
     
     table tr {{
-        background-color: #fff;
+        background-color: {table_tr_bg};
     }}
     
     table tr:nth-child(2n) {{
-        background-color: #f8fafc;
+        background-color: {table_tr_stripe};
     }}
     
     blockquote {{
         padding: 10px 20px;
-        color: #475569;
-        border-left: 4px solid #cbd5e1;
+        color: {blockquote_color};
+        border-left: 4px solid {blockquote_border};
         margin: 0 0 20px 0;
-        background-color: #f8fafc;
+        background-color: {blockquote_bg};
         border-top-right-radius: 6px;
         border-bottom-right-radius: 6px;
     }}
@@ -711,14 +824,14 @@ window.MathJax = {{
     }}
     
     .mermaid-container {{
-        background: #ffffff;
+        background: {mermaid_container_bg};
         display: flex;
         justify-content: center;
         margin: 30px 0;
         padding: 20px;
         border-radius: 10px;
         border: 1px solid var(--border-color);
-        box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        box-shadow: 0 4px 20px {mermaid_container_shadow};
     }}
     
     .mermaid-svg {{
@@ -735,27 +848,27 @@ window.MathJax = {{
     }}
     
     .alert-note {{
-        background-color: #f0f9ff;
-        border-color: #0284c7;
-        color: #0369a1;
+        background-color: {alert_note_bg};
+        border-color: {alert_note_border};
+        color: {alert_note_color};
     }}
     
     .alert-important, .alert-caution {{
-        background-color: #fef2f2;
-        border-color: #ef4444;
-        color: #991b1b;
+        background-color: {alert_imp_bg};
+        border-color: {alert_imp_border};
+        color: {alert_imp_color};
     }}
     
     .alert-warning {{
-        background-color: #fffbeb;
-        border-color: #f59e0b;
-        color: #92400e;
+        background-color: {alert_warn_bg};
+        border-color: {alert_warn_border};
+        color: {alert_warn_color};
     }}
     
     .alert-tip {{
-        background-color: #f0fdf4;
-        border-color: #22c55e;
-        color: #166534;
+        background-color: {alert_tip_bg};
+        border-color: {alert_tip_border};
+        color: {alert_tip_color};
     }}
     
     .alert-note p, .alert-important p, .alert-tip p, .alert-warning p, .alert-caution p {{
@@ -795,8 +908,10 @@ window.MathJax = {{
             max-width: 100%;
         }}
         body {{
-            color: #000;
-            background-color: #fff;
+            color: {print_body_color} !important;
+            background-color: {print_body_bg} !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }}
         pre, table, .alert-note, .alert-important, .alert-tip, .alert-warning, .alert-caution, .mermaid-container {{
             page-break-inside: avoid;
@@ -817,16 +932,10 @@ window.MathJax = {{
         h2 + .diagram-header {{
             page-break-before: avoid !important;
         }}
-        .mermaid-container {{
-            border: none !important;
-            box-shadow: none !important;
-            padding: 0 !important;
-            background: transparent !important;
-            margin: 20px 0 !important;
-        }}
+        {print_mermaid_container}
         a {{
             text-decoration: underline;
-            color: #0284c7 !important;
+            color: {link_color} !important;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
         }}
@@ -855,7 +964,7 @@ window.MathJax = {{
     with open(html_path, 'w', encoding='utf-8') as f:
         f.write(full_html)
         
-    print(f"Successfully generated static HTML at: {html_path}")
+    print(f"Successfully generated static HTML ({theme}) at: {html_path}")
 
 def compile_slides():
     md_path = 'judges_presentation.md'
@@ -908,7 +1017,7 @@ def compile_slides():
             <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission" target="_blank">📂 View Full Repository on GitHub</a>
             <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/README.md" target="_blank">📄 Read README.md on GitHub</a>
             <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/technical_documentation.md" target="_blank">📘 Read Technical Specification on GitHub</a>
-            <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/judges_presentation.md" target="_blank">🏆 Read Pitch Slide Deck on GitHub</a>
+            <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/judges_presentation.md" target="_blank">🏆 Presentation on GitHub</a>
         </div>
     </div>
     """
@@ -1263,5 +1372,6 @@ window.MathJax = {{
     print(f"Successfully generated static slides HTML at: {html_path}")
 
 if __name__ == '__main__':
-    compile_spec()
+    compile_spec(theme='light')
+    compile_spec(theme='dark')
     compile_slides()

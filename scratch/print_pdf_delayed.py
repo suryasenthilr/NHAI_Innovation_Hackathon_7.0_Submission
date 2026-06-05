@@ -36,7 +36,7 @@ class DelayedHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             print("[Server] Delay script sent.")
             return
             
-        if self.path in ['/technical_documentation_print.html', '/judges_presentation_print.html']:
+        if self.path in ['/technical_documentation_print.html', '/technical_documentation_dark_print.html', '/judges_presentation_print.html']:
             # Read original print HTML
             file_path = self.translate_path(self.path)
             with open(file_path, 'r', encoding='utf-8') as f:
@@ -92,8 +92,28 @@ cmd_spec = [
 res1 = subprocess.run(cmd_spec, capture_output=True, text=True)
 print("[PDF] Spec Print completed. Exit code:", res1.returncode)
 print("[PDF] Spec PDF exists:", os.path.exists(spec_pdf))
-if os.path.exists(spec_pdf):
-    print("[PDF] Spec size:", os.path.getsize(spec_pdf), "bytes")
+# 1B. Compile Dark Spec PDF
+print("[PDF] Printing Dark Spec PDF (technical_documentation_dark.pdf)...")
+spec_dark_url = f"http://localhost:{PORT}/technical_documentation_dark_print.html"
+spec_dark_pdf = r"C:\bharatverify-antigravity\technical_documentation_dark.pdf"
+
+# Remove old PDF if exists
+if os.path.exists(spec_dark_pdf):
+    os.remove(spec_dark_pdf)
+
+cmd_spec_dark = [
+    chrome_path,
+    "--headless",
+    "--disable-gpu",
+    f"--print-to-pdf={spec_dark_pdf}",
+    "--include-background",
+    spec_dark_url
+]
+res1b = subprocess.run(cmd_spec_dark, capture_output=True, text=True)
+print("[PDF] Dark Spec Print completed. Exit code:", res1b.returncode)
+print("[PDF] Dark Spec PDF exists:", os.path.exists(spec_dark_pdf))
+if os.path.exists(spec_dark_pdf):
+    print("[PDF] Dark Spec size:", os.path.getsize(spec_dark_pdf), "bytes")
 
 # 2. Compile Slides PDF
 print("[PDF] Printing Slides PDF (judges_presentation.pdf)...")
