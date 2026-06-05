@@ -28,11 +28,13 @@
 
 ### Slide 3: The Solution - BharatVerify
 #### **Decentralized Zero-Trust Biometrics**
-* **The Concept:** BharatVerify moves the entire biometric pipeline—face detection, landmark mapping, liveness verification, and similarity matching—directly to the user's mobile device CPU/GPU.
-* **Core Pillars:**
-  * **WebGL & WASM Acceleration:** Delivers GPU-like performance on mid-range devices inside WebViews.
-  * **In-Memory Loader:** Compiles model weights into Base64 format, loading models in milliseconds without filesystem access delays.
-  * **Sync-and-Purge Workflow:** Attendance logs are cached locally and synchronized to AWS. Once a `200 OK` handshake is received, local data is completely purged.
+* **Core Concept:** BharatVerify moves the entire biometric pipeline—face detection, landmark mapping, liveness verification, and similarity matching—directly to the user's mobile device CPU/GPU.
+* **Core Technical Pillars:**
+  * **WebGL & WASM Acceleration:** Delivers GPU-like parallelized tensor execution on mid-range devices inside WebViews, achieving sub-200ms processing.
+  * **In-Memory Loader:** Compiles model weights into Base64 format, loading models in milliseconds directly in transient RAM without filesystem access delays.
+  * **Sync-and-Purge Workflow:** Attendance logs are cached locally in an encrypted database and synchronized to AWS. Once a `200 OK` handshake is received, local data is completely purged.
+  * **Dual-Layer Defense:** Integrates both passive texture/screen glow filters and dynamic gesture checks in a single pipeline.
+  * **Serverless Backend:** AWS Lambda, S3, and API Gateway (Serverless) that scales automatically and costs 0 INR when idle.
 
 ---
 
@@ -44,6 +46,7 @@
   * **FaceLandmark68Net:** Compressed to **0.35 MB** (68-point 3D structural mesh)
   * **FaceRecognitionNet:** Compressed to **5.20 MB** (128-D vector extractor)
 * **Performance:** Retained **98.8%** of the original classification accuracy with a sub-200ms processing loop.
+* **Permissive Licenses:** Built on Apache 2.0 / MIT licensed engines (TensorFlow.js), meaning zero licensing risk or royalties.
 
 ---
 
@@ -63,7 +66,7 @@
 * **Layer 3: Randomized Active Challenges**
   * The system randomly requests eye blinks, smiles, or slight head turns to prevent static-spoofing bypasses.
   * **Adaptive Eye Blink (EAR):** Tracks vertical eyelid closure: $\text{EAR} = \frac{||p_2 - p_6|| + ||p_3 - p_5||}{2 \times ||p_1 - p_4||}$. Triggers when ratio drops below **`0.25`**.
-  * **Lip Stretching (Smile Ratio):** Triggers when the mouth width ratio stretches past **`0.75`**.
+  * **Lip Stretching (Smile Ratio):** Triggers when the mouth width ratio stretches past **`0.75`**: $\text{MAR} = \frac{||p_{51} - p_{59}|| + ||p_{53} - p_{57}||}{2 \times ||p_{49} - p_{55}||}$.
   * **Head Yaw Rotation (Yaw Symmetry Ratio):** Triggers when head turns left ($< 0.72$) or right ($> 1.40$).
 * **Failsafe:** Added a **6-second safety timeout** per challenge to auto-advance, preventing user lockout.
 
@@ -76,6 +79,7 @@
   * **The Math:** Calculates $d = R \cdot 2 \cdot \text{atan2}(\sqrt{a}, \sqrt{1-a})$ to prevent remote proxy check-in fraud.
 * **Low-Light CLAHE (Adaptive Contrast Equalization)**
   * Resolves poor lighting at night and harsh midday shadows at highway gates.
+  * Splits the image into $8\times 8$ contextual tiles and clips the contrast at threshold $\beta$, redistributing excess pixels.
   * **Performance Boost:** Enhances face detection reliability by **34%** in extreme low-light and shaded worksites.
 * **Multi-Template Profile Matching**
   * Storing frontal and tilt yaw profile templates dynamically handles mustache changes, turbans, and angles, maintaining FRR $< 1.5\%$.
@@ -93,6 +97,7 @@
     ```
     Biometric Log Created -> Cached with AES-256 -> Sent to AWS API Gateway -> AWS 200 OK Response -> Local Database Delete
     ```
+  * **DPDP Mapping:** Maps to Section 6 (Consent), Section 8(1) (Accuracy), and Section 8(5) (Storage Limitation/Erasure).
 
 ---
 
@@ -124,6 +129,10 @@
 ### Slide 11: Datalake 3.0 Module Integration
 #### **Plug-and-Play Developer Simplicity**
 * **Decoupled Architecture:** Features a modular code layout and outputs JSON logs matching Data Lake 3.0 schemas.
+* **Module Folder Structure:**
+  * `/src/components/LivenessScanner.web.tsx` (UI module & camera rendering)
+  * `/src/services/faceService.web.ts` (Model loader & similarity comparator)
+  * `/src/services/livenessService.ts` (Active/Passive challenge math calculators)
 * **Integration Steps:**
   1. Copy modules `LivenessScanner.web.tsx`, `faceService.web.ts`, and `livenessService.ts` into Datalake codebase.
   2. Install open-source libraries (`TensorFlow.js` under permissive MIT/Apache licenses).

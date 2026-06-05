@@ -11,37 +11,6 @@ BharatVerify is an enterprise-grade, lightweight, and entirely offline facial re
 
 ---
 
-## 🔑 Note for EAS Build Account Reset
-If you hit the free-tier build limit on your current Expo account, follow these quick steps to switch to a new account and resume building:
-1. Open your terminal in the project directory (`c:\bharatverify-antigravity`).
-2. Run the logout command to clear credentials:
-   ```bash
-   npx eas-cli logout
-   ```
-3. Run the login command to sign into your new Expo account:
-   ```bash
-   npx eas-cli login
-   ```
-4. Re-configure the project under the new account:
-   ```bash
-   npx eas-cli project:init
-   ```
-5. Trigger the cloud build for Android or iOS:
-   * **Android APK (Sideloadable build):**
-     ```bash
-     npx eas-cli build -p android --profile preview
-     ```
-   * **iOS Simulator Build (No paid Apple Developer Account required):**
-     ```bash
-     npx eas-cli build -p ios --profile preview --simulator
-     ```
-   * **iOS Device Build (Requires a paid Apple Developer Account):**
-     ```bash
-     npx eas-cli build -p ios --profile preview
-     ```
-
----
-
 ## 🇮🇳 Atmanirbhar Edge-AI Vision & National Impact
 
 BharatVerify is built with a vision of **Self-Reliance (Atmanirbhar Bharat)**, delivering a fully localized technical solution that eliminates dependencies on foreign proprietary software, third-party licensing fees, or continuous cloud infrastructure connectivity.
@@ -518,6 +487,37 @@ import { LivenessScanner } from '../components/LivenessScanner';
 
 * **[Technical Documentation](./technical_documentation.md):** Deep-dive into model quantization math, liveness mathematical heuristics (EAR, Smile, Yaw equations), and Datalake 3.0 database schema.
 * **[Slide-Deck Judges Presentation](./judges_presentation.md):** High-level pitch presentation containing core business values, DPDP Act 2023 compliance audits, and ROI analysis.
+
+---
+
+## 🔧 Developer Troubleshooting: Expo EAS Account Switching
+If you hit the free-tier build limit on your current Expo account, follow these quick steps to switch to a new account and resume building:
+1. Open your terminal in the project directory (`c:\bharatverify-antigravity`).
+2. Run the logout command to clear credentials:
+   ```bash
+   npx eas-cli logout
+   ```
+3. Run the login command to sign into your new Expo account:
+   ```bash
+   npx eas-cli login
+   ```
+4. Re-configure the project under the new account:
+   ```bash
+   npx eas-cli project:init
+   ```
+5. Trigger the cloud build for Android or iOS:
+   * **Android APK (Sideloadable build):**
+     ```bash
+     npx eas-cli build -p android --profile preview
+     ```
+   * **iOS Simulator Build (No paid Apple Developer Account required):**
+     ```bash
+     npx eas-cli build -p ios --profile preview --simulator
+     ```
+   * **iOS Device Build (Requires a paid Apple Developer Account):**
+     ```bash
+     npx eas-cli build -p ios --profile preview
+     ```
 
 ---
 
