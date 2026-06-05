@@ -19,7 +19,7 @@ A mobile application package has been compiled using the **EAS (Expo Application
 
 ### 🎥 Live Biometric Demonstration Video
 Watch BharatVerify run active/passive liveness challenges, geofencing, and serverless sync:
-* **[Watch Full Demonstration Video (GitHub Release Asset)](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demo.mp4)**
+* **[Watch Full Demonstration Video (GitHub Release Asset)](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4)**
 
 ---
 

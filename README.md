@@ -20,9 +20,9 @@ BharatVerify is an enterprise-grade, lightweight, and entirely offline facial re
 ### 🎥 Live Biometric Demonstration Video
 Watch BharatVerify run the active liveness challenges (blink, smile, head turn), passive anti-spoofing filters, geofencing checks, and database synchronization in real-time:
 
-<video src="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demo.mp4" controls width="100%" poster="./assets/images/splash-icon.png"></video>
+<video src="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4" controls width="100%" poster="./assets/images/splash-icon.png"></video>
 
-*(If the video player does not load in your browser, you can download it directly here: **[Watch Demo Video](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demo.mp4)**)*
+*(If the video player does not load in your browser, you can download it directly here: **[Watch Demo Video](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4)**)*
 
 ### Android Standalone APK (.APK)
 We have compiled a standalone Android application package (`.apk`) using **Expo Application Services (EAS)**, configured under package ID `com.suryasenthilr.bharatverifyantigravity`.
