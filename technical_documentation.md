@@ -10,6 +10,16 @@
 
 This document serves as the technical specification and math whitepaper for **BharatVerify**, an edge-native offline biometric module built for the **NHAI Datalake 3.0** mobile framework.
 
+### 📘 Submission Deliverables & Documentation
+* **📥 Standalone Android APK:** **[Download Standalone APK](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)** (Native build compiled via EAS under package ID `com.suryasenthilr.bharatverifyantigravity`).
+* **🎥 Demonstration Video:** **[Watch Demo Video](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4)** (Inline player also embedded in [README.md](./README.md)).
+* **🌐 Web PWA Sandbox (Convenience Simulator):** **[Access Web Sandbox](https://bharatverify-nhai.surge.sh)** (Hosted browser companion for instant evaluation).
+* **📘 Product Documentation:** **[README.md](./README.md)** (This quick-start and installation guide).
+* **📘 Engineering Specification:** **[technical_documentation.md](./technical_documentation.md)** (This mathematical and architectural specification).
+* **💼 Slide-Deck Presentation:** **[judges_presentation.md](./judges_presentation.md)** (Pitch slides for the evaluation committee).
+
+---
+
 > [!IMPORTANT]
 > **Biometric Deliverable Format Disclaimer for Evaluators & Judges:**
 > * **Primary Deliverable (Standalone Android APK):** The **core submission** is the native Android application package (`.apk`). This represents the full production-ready, edge-native, 100% offline biometric module engineered to run inside the physical NHAI *Datalake 3.0* mobile environment. All offline SQLite storage, camera frame processors, and local database sync tasks execute directly within the mobile OS sandbox.

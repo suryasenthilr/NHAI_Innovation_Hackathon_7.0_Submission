@@ -13,6 +13,14 @@
 
 BharatVerify is an enterprise-grade, lightweight, and entirely offline facial recognition and liveness detection system designed for seamless integration into the **NHAI Datalake 3.0** mobile application. It ensures uninterrupted personnel authentication in zero-network remote highway zones, processing 100% of machine learning inference locally on standard mobile devices in **under 200ms** without sending raw biometrics to the cloud.
 
+### 📘 Submission Deliverables & Documentation
+* **📥 Standalone Android APK:** **[Download Standalone APK](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)** (Native build compiled via EAS under package ID `com.suryasenthilr.bharatverifyantigravity`).
+* **🎥 Demonstration Video:** **[Watch Demo Video](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4)** (Inline player also embedded below).
+* **🌐 Web PWA Sandbox (Convenience Simulator):** **[Access Web Sandbox](https://bharatverify-nhai.surge.sh)** (Hosted browser companion for instant evaluation).
+* **📘 Product Documentation:** **[README.md](./README.md)** (This quick-start and installation guide).
+* **📘 Engineering Specification:** **[technical_documentation.md](./technical_documentation.md)** (Mathematical and architectural specification).
+* **💼 Slide-Deck Presentation:** **[judges_presentation.md](./judges_presentation.md)** (Pitch slides for the evaluation committee).
+
 ---
 
 ## 📥 Standalone APK Installation, Web Sandbox & Demo Video

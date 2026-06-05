@@ -1,18 +1,27 @@
-# Slide-Deck Judges Presentation: BharatVerify
-## NHAI Hackathon 7.0 Pitch & Evaluation Slides
-### 🇮🇳 Made with ❤️ for Bharat | Empowering Indian National Highway Infrastructure Offline
+# 🏆 NHAI Hackathon 7.0: BharatVerify Pitch Deck
+## Edge-Native, 100% Offline Facial Verification & Liveness Module for Datalake 3.0
+### 🇮🇳 An Atmanirbhar Bharat Engineering Initiative | Zero-Network Remote Highway Security
+
+---
+
+## 🔗 Submission Deliverables & Evaluation Center
+* **📥 Standalone Android APK (Primary Production Submission):** **[Download Standalone APK](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)** (Native build compiled via EAS under package ID `com.suryasenthilr.bharatverifyantigravity`).
+* **🎥 Demonstration Video:** **[Watch Demo Video](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4)** (Inline player also embedded in [README.md](./README.md)).
+* **🌐 Web PWA Sandbox (Convenience Simulator):** **[Access Web Sandbox](https://bharatverify-nhai.surge.sh)** (Hosted browser companion for instant evaluation).
+* **📘 Product documentation:** **[README.md](./README.md)** (Full quick-start and installation guide).
+* **📘 Engineering Whitepaper:** **[technical_documentation.md](./technical_documentation.md)** (Mathematical and architectural specification).
 
 ---
 
 ### Slide 1: Title & System Overview
-#### **Decentralized, Offline-First Edge AI Biometrics for NHAI**
+#### **Decentralized, Offline-First Edge AI Biometrics**
 * **Subtitle:** 100% Offline Facial Verification & Liveness Detection Module for Datalake 3.0
 * **Target Audience:** NHAI Hackathon 7.0 Evaluation Committee
 * **Evaluation Channels:**
-  * **📥 Standalone Android APK (Primary Production Submission):** [GitHub Release APK](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk) — Built natively via EAS. Represents the complete offline mobile application module.
-  * **🎥 Live Demonstration Video:** [Watch Demo Video](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4) (Inline streaming available in README.md)
-  * **🌐 Hosted Web PWA Sandbox (Evaluation Companion Simulator):** [bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh) — Provided *strictly for evaluator convenience* to instantly test liveness filters, database registries, and telemetry sync on any laptop, tablet, or phone browser without sideloading.
-* **Important Deliverable Note:** BharatVerify is an edge-native mobile module, not just a website. The web sandbox is a companion simulator to ease the testing process.
+  * **📥 Standalone Android APK:** [GitHub Release APK](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk) — Built natively via EAS. Represents the complete offline mobile application module.
+  * **🎥 Live Demonstration Video:** [Watch Demo Video](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4) (Inline streaming available in [README.md](./README.md))
+  * **🌐 Deployed Web PWA Sandbox:** [bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh) — Provided *strictly for evaluator convenience* to instantly test liveness filters, database registries, and telemetry sync on any laptop, tablet, or phone browser without sideloading.
+* **Important Deliverable Note:** BharatVerify is a native mobile solution, not merely a website. The web sandbox is a companion simulator to ease the testing process.
 * **Key Achievements Badges:**
   * **Compressed Model Size:** 10.65 MB (47% below budget)
   * **Average Latency:** < 800ms total flow (~190ms inference loop)
@@ -22,7 +31,7 @@
 ---
 
 ### Slide 2: NHAI Operational Pain Points & Field Realities
-#### **Challenges Faced in Digitizing Highway Operations**
+#### **Empathy for the Remote Worker, Stewardship of Public Funds**
 * **Zero-Network Corridor Realities:** Over 35% of highway construction zones experience cellular blackouts, rendering online Face Recognition Systems (FRS) completely non-functional.
 * **Extreme Environmental Variables:** Dim sodium lights at toll gates, morning winter fog in North India, and direct solar glare cause standard cameras to lock out workers (high False Rejections).
 * **Ghost Workers & Contractor Fraud:** Attendance fraud and subcontracting leakage lead to severe project delays, poor quality oversight, and financial leakages.
@@ -38,7 +47,8 @@
   * **In-Memory Loader:** Compiles model weights into Base64 format, loading models in milliseconds directly in transient RAM without filesystem access delays.
   * **Sync-and-Purge Workflow:** Attendance logs are cached locally in an encrypted database and synchronized to AWS. Once a `200 OK` handshake is received, local data is completely purged.
   * **Dual-Layer Defense:** Integrates both passive texture/screen glow filters and dynamic gesture checks in a single pipeline.
-  * **Serverless Backend:** AWS Lambda, S3, and API Gateway (Serverless) that scales automatically and costs 0 INR when idle.
+
+![Local Personnel Registry Database UI](./assets/docs-images/ui_db.png)
 
 ---
 
@@ -88,13 +98,15 @@
 * **Multi-Template Profile Matching**
   * Storing frontal and tilt yaw profile templates dynamically handles mustache changes, turbans, and angles, maintaining FRR $< 1.5\%$.
 
+![Demographics & Outdoor Lighting Console UI](./assets/docs-images/ui_demographics.png)
+
 ---
 
 ### Slide 8: Security & Compliance
 #### **DPDP Act 2023 Readiness: Zero-Data Harvesting**
 * **DPDP Act 2023 Principles:** Requires strict data minimization and purposeful collection.
 * **BharatVerify Data Protection Framework:**
-  * **No Raw Images Stored:** Video frames are processed in transient RAM and instantly destroyed. Only a 128-float mathematical vector is extracted.
+  * **No Raw Images Stored:** Video frames are processed in volatile RAM buffers and instantly destroyed. Only a 128-float mathematical vector is extracted.
   * **One-Way Face Vectors:** Stored embeddings are irreversible mathematical descriptors. The original visual face cannot be reconstructed from the vector.
   * **Local Database Encryption:** SQLCipher encrypts local registry.
   * **Sync-and-Purge Lifecycle:**
@@ -151,9 +163,11 @@
      ```
 * **Performance Benchmark:** Average RAM overhead is **~58.4 MB**, ensuring smooth performance on standard devices.
 
+![Datalake 3.0 Integration Sandbox UI](./assets/docs-images/ui_sandbox.png)
+
 ---
 
-### Slide 12: Competitive Edge
+### Slide 12: Competitive Edge & Strategic Defenses
 #### **Architectural Comparison Matrix: Why BharatVerify Wins**
 
 | Architectural Dimension | Centralized Cloud APIs | Heavy Native C++ Modules | Hardware-Locked TEE Enclave | Local Python Server | Rust-WASM Native Bridge | **BharatVerify (Our Hybrid JS)** |
@@ -167,15 +181,11 @@
 | **DPDP Act Compliance** | ❌ **Non-compliant** (Transmits data). | ⚠️ **Unsecured** (Local photo logs). | ⚠️ **System-Locked** (Deep OS cache). | ❌ **Severe Risk** (Open TCP ports). | ⚠️ **Partial** (Complex encryption schema). | ⭐ **100% Compliant** (Vectors + Sync-Purge). |
 | **NHAI Server Bills** | ❌ **Heavy Cost** (~73m INR). | ⭐ **0 INR.** | ⭐ **0 INR.** | ⭐ **0 INR.** | ⭐ **0 INR.** | ⭐ **0 INR.** (Client-side GPU processing). |
 
-* **Defending Against Alternative Architectural Archetypes:**
-  * *StrongBox/TEE Enclaves:* Fail on $>60\%$ of budget devices owned by field workers due to missing chips. BharatVerify achieves **100% device inclusivity** via web sandboxing.
-  * *Heavy Client-Side Dual CNNs:* Freeze devices and cause thermal throttling ($>40^\circ\text{C}$ site heat). Our **Active-Passive Fusion** runs at a smooth **30 FPS** and keeps battery drain negligible.
-  * *Native C++ Wrappers:* Bloat binary packages ($>30\text{MB}$ splits) and crash under customized vendor distributions. We remain decoupled at a lightweight **10.65 MB** with **instant OTA updates**.
-  * *Local FastAPI Servers:* Prone to aggressive OS background process termination and open local TCP network ports (injection risk). We operate entirely inside isolated web container enclaves.
-  * *PPE/Mask Matching at Check-In:* Attempting face matches with helmets/masks blocks 68-point landmarks, raising False Rejections ($>12\%$). We separate concerns: we enforce clean face biometrics (FAR $<0.01\%$) and delegate PPE checks to stationary CCTV loops.
-  * *Complex Cloud Monoliths (PostgreSQL/pgvector):* Prone to "thundering herd" connection crashes under peak shift-start concurrency and costly hosting. We utilize **AWS Serverless S3/Lambda** (0 INR idle costs, instant scaling).
-  * *Multi-Lingual Localization:* English-only instructions alienate remote workers. We feature animated, language-agnostic iconography and localized hint displays in **Hindi, Tamil, Telugu, Marathi, Kannada, and Bengali**.
-  * *Offline Queue Backoffs:* Continuous retries during blackouts drain battery. We implement an encrypted SQLite cache queue with **exponential retry backoff**.
+* **Why Hardware-Locked TEE Enclaves Fail:** System enclaves (StrongBox) require expensive hardware (Google Titan, Samsung Knox). In Indian toll and construction sites, **over 60% of workforce devices** are low-cost smartphones that lack these enclaves, leading to massive digital exclusion.
+* **Why Heavy Client CNNs Fail:** Dual CNNs for liveness overheat budget devices ($>40^\circ\text{C}$ site heat) and cause thermal throttling, reducing camera feeds below **5 FPS**.
+* **Why Native C++ JNI Wrappers Fail:** Custom Gradle/JNI wrappers bloat size ($>25\text{MB}$) and suffer from JNI compilation fragmentation, causing fatal segmentation faults on vendor Android distributions (MIUI, ColorOS, Funtouch OS).
+* **Why Local Micro-Servers Fail:** Background servers (FastAPI/Express) are terminated aggressively by mobile OS systems to reclaim memory, and opening background TCP network ports exposes biometrics to packet-interception vulnerabilities.
+* **Why PPE Check-in Checkers Fail:** Attempting face matches with helmets/masks blocks landmarks, raising False Rejections ($>12\%$). We separate concerns: we enforce clean face biometrics (FAR $<0.01\%$) and delegate PPE checks to stationary CCTV loops.
 
 ---
 
