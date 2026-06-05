@@ -643,6 +643,10 @@ If you hit the free-tier build limit on your current Expo account, follow these 
      npx eas-cli build -p ios --profile preview
      ```
 
+## 👥 Developer & Contributors
+
+* **Surya S** - *Lead Architect & Developer* - [@suryasenthilr](https://github.com/suryasenthilr)
+
 ---
 
 ### 🇮🇳 Jai Hind | Supporting Atmanirbhar Bharat
