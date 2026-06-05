@@ -76,13 +76,116 @@ def get_base64_image(img_path):
         print(f"Warning: Image file not found: {img_path}")
         return original_path
 
+def fix_markdown_spacing(text):
+    """
+    Ensures that headers, lists, and blockquotes have a blank line before them
+    so that python-markdown compiles them correctly.
+    """
+    lines = text.split('\n')
+    new_lines = []
+    
+    list_item_pattern = re.compile(r'^\s*(\d+\.|\*|\-)\s+')
+    blockquote_pattern = re.compile(r'^\s*>\s*')
+    header_pattern = re.compile(r'^\s*#+\s+')
+    
+    for idx, line in enumerate(lines):
+        stripped = line.strip()
+        if not stripped:
+            new_lines.append(line)
+            continue
+            
+        # Ensure lists have a blank line before them
+        if list_item_pattern.match(line):
+            if idx > 0:
+                prev_line = lines[idx-1].strip()
+                if prev_line and not list_item_pattern.match(lines[idx-1]) and not blockquote_pattern.match(lines[idx-1]):
+                    new_lines.append('')
+                    
+        # Ensure headers have a blank line before them
+        elif header_pattern.match(line):
+            if idx > 0:
+                prev_line = lines[idx-1].strip()
+                if prev_line:
+                    new_lines.append('')
+                    
+        # Ensure blockquotes have a blank line before them
+        elif blockquote_pattern.match(line):
+            if idx > 0:
+                prev_line = lines[idx-1].strip()
+                if prev_line and not blockquote_pattern.match(lines[idx-1]):
+                    new_lines.append('')
+                    
+        new_lines.append(line)
+        
+    return '\n'.join(new_lines)
+
 def preprocess_markdown(text):
     """
     Extracts math blocks, mermaid blocks, and local images, replacing them
     with placeholders to prevent them from being mangled by the Markdown parser.
+    Also converts indented fenced code blocks (inside lists) into indented code blocks.
     """
-    # 1. Extract Mermaid Code Blocks
-    # Format: ```mermaid ... ```
+    # Fix Diagram 6 curly braces syntax errors
+    text = text.replace('Select {Blink, Smile, Yaw}', 'Select [Blink, Smile, Yaw]')
+    
+    # 1. Extract Fenced Code Blocks (nested vs root level)
+    lines = text.split('\n')
+    new_lines = []
+    
+    in_fenced_code = False
+    code_lines = []
+    code_indent = 0
+    code_opening_line = ""
+    
+    idx = 0
+    while idx < len(lines):
+        line = lines[idx]
+        stripped = line.strip()
+        
+        if stripped.startswith('```'):
+            if not in_fenced_code:
+                in_fenced_code = True
+                # Count leading spaces to see if it is inside a list
+                leading_spaces = len(line) - len(line.lstrip(' '))
+                code_indent = leading_spaces
+                code_lines = []
+                code_opening_line = line  # Save the opening line (e.g. ```mermaid)
+                idx += 1
+                continue
+            else:
+                in_fenced_code = False
+                if code_indent > 0:
+                    # Convert indented fenced code block to standard indented code block (8 spaces)
+                    # This is recognized by python-markdown as nested inside list items
+                    if new_lines and new_lines[-1].strip():
+                        new_lines.append('')
+                    
+                    for cl in code_lines:
+                        cl_stripped = cl[code_indent:] if cl.startswith(' ' * code_indent) else cl.lstrip(' ')
+                        new_lines.append('        ' + cl_stripped)
+                    
+                    new_lines.append('')
+                else:
+                    # Root level code block: restore the exact opening and closing lines
+                    new_lines.append(code_opening_line)
+                    for cl in code_lines:
+                        new_lines.append(cl)
+                    new_lines.append(line)
+                idx += 1
+                continue
+                
+        if in_fenced_code:
+            code_lines.append(line)
+        else:
+            new_lines.append(line)
+        idx += 1
+        
+    text = '\n'.join(new_lines)
+    
+    # Fix spacing around elements (lists, blockquotes)
+    text = fix_markdown_spacing(text)
+    
+    # 2. Extract Mermaid Blocks (which are always root level now)
     mermaid_blocks = []
     def mermaid_repl(match):
         code = match.group(1).strip()
@@ -90,11 +193,9 @@ def preprocess_markdown(text):
         mermaid_blocks.append(code)
         return f"\n{placeholder}\n"
     
-    # Matches ```mermaid\n...\n```
     text = re.sub(r'```mermaid\s*\n([\s\S]*?)\n```', mermaid_repl, text)
     
-    # 2. Extract Display Math
-    # Format: $$ ... $$
+    # 3. Extract Display Math
     display_math = []
     def display_math_repl(match):
         math_content = match.group(1).strip()
@@ -104,8 +205,7 @@ def preprocess_markdown(text):
     
     text = re.sub(r'\$\$(.*?)\$\$', display_math_repl, text, flags=re.DOTALL)
     
-    # 3. Extract Inline Math
-    # Format: $ ... $ (avoiding escaped dollars \$ and single dollars crossing lines)
+    # 4. Extract Inline Math
     inline_math = []
     def inline_math_repl(match):
         math_content = match.group(1).strip()
@@ -115,8 +215,7 @@ def preprocess_markdown(text):
     
     text = re.sub(r'(?<!\\)\$([^\$\n]+?)(?<!\\)\$', inline_math_repl, text)
     
-    # 4. Resolve Local Images to Base64
-    # Format: ![alt](path) or <img src="path">
+    # 5. Resolve Local Images to Base64
     def md_img_repl(match):
         alt = match.group(1)
         path = match.group(2)
@@ -164,13 +263,11 @@ def postprocess_html(html, mermaid_blocks, display_math, inline_math):
         
     # 3. Restore Display Math
     for idx, math in enumerate(display_math):
-        # We put it back in raw MathJax format
         math_tag = f"$${math}$$"
         html = html.replace(f"%%DISPLAY_MATH_{idx}%%", math_tag)
         
     # 4. Restore Inline Math
     for idx, math in enumerate(inline_math):
-        # We put it back in raw MathJax format
         math_tag = f"${math}$"
         html = html.replace(f"%%INLINE_MATH_{idx}%%", math_tag)
         
@@ -193,12 +290,27 @@ def compile_spec():
     text, mermaid_blocks, display_math, inline_math = preprocess_markdown(md_content)
     
     # Render Markdown to HTML body
-    md = markdown.Markdown(extensions=['tables', 'fenced_code', 'toc'])
+    md = markdown.Markdown(extensions=['tables', 'toc'])
     html_body = md.convert(text)
     toc_html = md.toc
     
     # Postprocess
     html_body = postprocess_html(html_body, mermaid_blocks, display_math, inline_math)
+    
+    # Recommendation bar (User requested specific preference text and direct links)
+    header_html = """
+    <div class="screen-only-header">
+        <div class="header-notice">
+            <strong>⚠️ Important Notice (GitHub Preference)</strong>: For the best reading and evaluation experience, <strong>we highly prefer and recommend that you read these documents directly on GitHub</strong> (or download the compiled PDF versions). The GitHub repository natively renders all interactive zoomable diagrams, full vector schemas, code block formatting, and dark mode controls.
+        </div>
+        <div class="header-links">
+            <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission" target="_blank">📂 View Full Repository on GitHub</a>
+            <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/README.md" target="_blank">📄 Read README.md on GitHub</a>
+            <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/technical_documentation.md" target="_blank">📘 Read Technical Specification on GitHub</a>
+            <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/judges_presentation.md" target="_blank">🏆 Read Pitch Slide Deck on GitHub</a>
+        </div>
+    </div>
+    """
     
     # HTML Template
     full_html = f"""<!DOCTYPE html>
@@ -310,6 +422,39 @@ window.MathJax = {{
         max-width: 900px;
         padding: 50px 60px;
         box-sizing: border-box;
+    }}
+    
+    /* Recommendation Bar Styles */
+    .screen-only-header {{
+        background-color: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 30px;
+        font-size: 0.95em;
+        color: #0369a1;
+        font-family: 'Inter', sans-serif;
+    }}
+    .header-notice {{
+        margin-bottom: 12px;
+        line-height: 1.5;
+    }}
+    .header-links {{
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }}
+    .header-links a {{
+        color: #0284c7;
+        text-decoration: none;
+        font-weight: 600;
+        border-bottom: 1px dashed #0284c7;
+        padding-bottom: 2px;
+        transition: all 0.15s ease;
+    }}
+    .header-links a:hover {{
+        color: #0369a1;
+        border-bottom-style: solid;
     }}
     
     h1, h2, h3, h4, h5, h6 {{
@@ -487,7 +632,7 @@ window.MathJax = {{
     }}
     
     @media print {{
-        .sidebar {{
+        .sidebar, .screen-only-header {{
             display: none !important;
         }}
         .main-content {{
@@ -518,6 +663,7 @@ window.MathJax = {{
         {toc_html}
     </aside>
     <main class="main-content">
+        {header_html}
         {html_body}
     </main>
 </div>
@@ -557,7 +703,7 @@ def compile_slides():
             continue
             
         # Compile slide markdown to HTML
-        slide_body = markdown.markdown(trimmed, extensions=['tables', 'fenced_code'])
+        slide_body = markdown.markdown(trimmed, extensions=['tables'])
         
         # Postprocess alerts and restore code/math
         slide_body = postprocess_html(slide_body, mermaid_blocks, display_math, inline_math)
@@ -570,6 +716,21 @@ def compile_slides():
         slides_html_list.append(slide_div)
         
     slides_content = "\n".join(slides_html_list)
+    
+    # Recommendation bar
+    header_html = """
+    <div class="screen-only-header">
+        <div class="header-notice">
+            <strong>⚠️ Important Notice (GitHub Preference)</strong>: For the best reading and evaluation experience, <strong>we highly prefer and recommend that you read these documents directly on GitHub</strong> (or download the compiled PDF versions). The GitHub repository natively renders all interactive zoomable diagrams, full vector schemas, code block formatting, and dark mode controls.
+        </div>
+        <div class="header-links">
+            <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission" target="_blank">📂 View Full Repository on GitHub</a>
+            <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/README.md" target="_blank">📄 Read README.md on GitHub</a>
+            <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/technical_documentation.md" target="_blank">📘 Read Technical Specification on GitHub</a>
+            <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/judges_presentation.md" target="_blank">🏆 Read Pitch Slide Deck on GitHub</a>
+        </div>
+    </div>
+    """
     
     # HTML Template
     full_html = f"""<!DOCTYPE html>
@@ -615,6 +776,44 @@ window.MathJax = {{
         gap: 40px;
         width: 100%;
         max-width: 1000px;
+        align-items: center;
+    }}
+    
+    /* Recommendation Bar Styles */
+    .screen-only-header {{
+        background-color: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 10px;
+        font-size: 0.9em;
+        color: #8892b0;
+        width: 100%;
+        box-sizing: border-box;
+    }}
+    .header-notice {{
+        margin-bottom: 12px;
+        line-height: 1.5;
+    }}
+    .header-notice strong {{
+        color: #ffffff;
+    }}
+    .header-links {{
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }}
+    .header-links a {{
+        color: #58a6ff;
+        text-decoration: none;
+        font-weight: 600;
+        border-bottom: 1px dashed #58a6ff;
+        padding-bottom: 2px;
+        transition: all 0.15s ease;
+    }}
+    .header-links a:hover {{
+        color: #79c0ff;
+        border-bottom-style: solid;
     }}
     
     .slide {{
@@ -824,6 +1023,9 @@ window.MathJax = {{
             padding: 0;
             background-color: #0d1117;
         }}
+        .screen-only-header {{
+            display: none !important;
+        }}
         .slide-container {{
             gap: 0;
             max-width: 100%;
@@ -848,6 +1050,7 @@ window.MathJax = {{
 </head>
 <body>
 <div class="slide-container">
+    {header_html}
     {slides_content}
 </div>
 </body>

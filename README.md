@@ -449,33 +449,33 @@ Maps the user experience state transitions, showing the flow from landing to ver
 ```mermaid
 stateDiagram-v2
     [*] --> ScreenIdle: Mount Component
-    ScreenIdle --> ScreenScanning: Click "Start Scanner"
+    ScreenIdle --> ScreenScanning: Click Start Scanner
     ScreenScanning --> RunPassiveChecks: Capture Video Frame
     
     state RunPassiveChecks {
         [*] --> TextureCheck: Compute Laplacian Grayscale Variance
-        TextureCheck --> FailCheck: Variance < 15.0 (Printed Spoof)
-        TextureCheck --> GlowCheck: Variance >= 15.0
-        GlowCheck --> FailCheck: RGB Red-to-Blue Ratio < 1.02 (Screen Replay)
-        GlowCheck --> PassPassive: Ratio >= 1.02
+        TextureCheck --> FailCheck: Variance less than 15.0
+        TextureCheck --> GlowCheck: Variance at least 15.0
+        GlowCheck --> FailCheck: RGB Ratio less than 1.02
+        GlowCheck --> PassPassive: Ratio at least 1.02
     }
     
     RunPassiveChecks --> ScreenLockout: Fails Passive Checks
     RunPassiveChecks --> SelectActiveChallenge: Passes Passive Checks
     
     state SelectActiveChallenge {
-        [*] --> RandomizeChallenge: Select {Blink, Smile, Yaw}
-        RandomizeChallenge --> ChallengeBlink: Prompt: "Blink Your Eyes"
-        RandomizeChallenge --> ChallengeSmile: Prompt: "Smile to Verify"
-        RandomizeChallenge --> ChallengeYaw: Prompt: "Turn Head Left/Right"
+        [*] --> RandomizeChallenge: Select Blink Smile or Yaw
+        RandomizeChallenge --> ChallengeBlink: Prompt Blink Your Eyes
+        RandomizeChallenge --> ChallengeSmile: Prompt Smile to Verify
+        RandomizeChallenge --> ChallengeYaw: Prompt Turn Head Left or Right
         
-        ChallengeBlink --> VerificationSuccess: EAR < 0.25 within 6s
-        ChallengeSmile --> VerificationSuccess: Ratio > 0.75 within 6s
-        ChallengeYaw --> VerificationSuccess: Yaw Ratio < 0.72 or > 1.40 within 6s
+        ChallengeBlink --> VerificationSuccess: EAR less than 0.25 within 6s
+        ChallengeSmile --> VerificationSuccess: Ratio greater than 0.75 within 6s
+        ChallengeYaw --> VerificationSuccess: Yaw Ratio out of bounds within 6s
         
-        ChallengeBlink --> Timeout: Seconds > 6.0
-        ChallengeSmile --> Timeout: Seconds > 6.0
-        ChallengeYaw --> Timeout: Seconds > 6.0
+        ChallengeBlink --> Timeout: Seconds greater than 6.0
+        ChallengeSmile --> Timeout: Seconds greater than 6.0
+        ChallengeYaw --> Timeout: Seconds greater than 6.0
         
         Timeout --> RandomizeChallenge: Try Next Challenge
     }
@@ -484,12 +484,12 @@ stateDiagram-v2
     SelectActiveChallenge --> GenerateFaceEmbedding: Success
     
     GenerateFaceEmbedding --> LocalRegistryMatch: 128-D Euclidean Vector extracted
-    LocalRegistryMatch --> ScreenAuthenticated: Distance d < 0.60 (Match Found)
-    LocalRegistryMatch --> ScreenAccessDenied: Distance d >= 0.60
+    LocalRegistryMatch --> ScreenAuthenticated: Distance less than 0.60
+    LocalRegistryMatch --> ScreenAccessDenied: Distance at least 0.60
     
     ScreenAuthenticated --> SyncStaging: Cache Record Offline in SQLite
-    SyncStaging --> SyncProcessing: Reconnect Online -> AWS POST trigger
-    SyncProcessing --> [*]: AWS 200 OK Handshake -> Local auto-purge
+    SyncStaging --> SyncProcessing: Reconnect Online then AWS POST trigger
+    SyncProcessing --> [*]: AWS 200 OK Handshake then Local auto-purge
 ```
 
 ---
