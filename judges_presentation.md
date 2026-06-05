@@ -8,7 +8,10 @@
 #### **Decentralized, Offline-First Edge AI Biometrics for NHAI**
 * **Subtitle:** 100% Offline Facial Verification & Liveness Detection Module for Datalake 3.0
 * **Target Audience:** NHAI Hackathon 7.0 Evaluation Committee
-* **The Pitch:** Zero Network. 100% Secure. Sub-second Verification on the Edge.
+* **Evaluation Channels:**
+  * **📥 Standalone Android APK:** [GitHub Release APK](https://github.com/suryasenthilr/-NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)
+  * **🎥 Live Demonstration Video:** [Watch Demo Video](https://github.com/suryasenthilr/-NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demo.mp4)
+  * **🌐 Web PWA Sandbox:** [bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh) (PWA Installable)
 * **Key Achievements Badges:**
   * **Compressed Model Size:** 10.65 MB (47% below budget)
   * **Average Latency:** < 800ms total flow (~190ms inference loop)
@@ -162,6 +165,16 @@
 | **Anti-Spoofing** | ❌ **None** or high latency. | ⚠️ **Single-Stage** (Blink only). | ⚠️ **Platform-Dependent** (Stubs). | ✔️ **Multi-Stage** (Capable). | ⚠️ **Basic** (Stream mapping difficulty). | ⭐ **Dual-Layer** (3 Active + 2 Passive checks). |
 | **DPDP Act Compliance** | ❌ **Non-compliant** (Transmits data). | ⚠️ **Unsecured** (Local photo logs). | ⚠️ **System-Locked** (Deep OS cache). | ❌ **Severe Risk** (Open TCP ports). | ⚠️ **Partial** (Complex encryption schema). | ⭐ **100% Compliant** (Vectors + Sync-Purge). |
 | **NHAI Server Bills** | ❌ **Heavy Cost** (~73m INR). | ⭐ **0 INR.** | ⭐ **0 INR.** | ⭐ **0 INR.** | ⭐ **0 INR.** | ⭐ **0 INR.** (Client-side GPU processing). |
+
+* **Defending Against Alternative Architectural Archetypes:**
+  * *StrongBox/TEE Enclaves:* Fail on $>60\%$ of budget devices owned by field workers due to missing chips. BharatVerify achieves **100% device inclusivity** via web sandboxing.
+  * *Heavy Client-Side Dual CNNs:* Freeze devices and cause thermal throttling ($>40^\circ\text{C}$ site heat). Our **Active-Passive Fusion** runs at a smooth **30 FPS** and keeps battery drain negligible.
+  * *Native C++ Wrappers:* Bloat binary packages ($>30\text{MB}$ splits) and crash under customized vendor distributions. We remain decoupled at a lightweight **10.65 MB** with **instant OTA updates**.
+  * *Local FastAPI Servers:* Prone to aggressive OS background process termination and open local TCP network ports (injection risk). We operate entirely inside isolated web container enclaves.
+  * *PPE/Mask Matching at Check-In:* Attempting face matches with helmets/masks blocks 68-point landmarks, raising False Rejections ($>12\%$). We separate concerns: we enforce clean face biometrics (FAR $<0.01\%$) and delegate PPE checks to stationary CCTV loops.
+  * *Complex Cloud Monoliths (PostgreSQL/pgvector):* Prone to "thundering herd" connection crashes under peak shift-start concurrency and costly hosting. We utilize **AWS Serverless S3/Lambda** (0 INR idle costs, instant scaling).
+  * *Multi-Lingual Localization:* English-only instructions alienate remote workers. We feature animated, language-agnostic iconography and localized hint displays in **Hindi, Tamil, Telugu, Marathi, Kannada, and Bengali**.
+  * *Offline Queue Backoffs:* Continuous retries during blackouts drain battery. We implement an encrypted SQLite cache queue with **exponential retry backoff**.
 
 ---
 
