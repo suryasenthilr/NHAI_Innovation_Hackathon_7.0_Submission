@@ -465,11 +465,11 @@ window.MathJax = {
 <h3 id="submission-deliverables-documentation">📘 Submission Deliverables &amp; Documentation</h3>
 <ul>
 <li><strong>📥 Standalone Android APK:</strong> <strong><a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk">Download Standalone APK</a></strong> (Native build compiled via EAS under package ID <code>com.suryasenthilr.bharatverifyantigravity</code>).</li>
-<li><strong>🎥 Demonstration Video:</strong> <strong><a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4">Watch Demo Video</a></strong> (Inline player also embedded in <a href="./README.md">README.md</a>).</li>
+<li><strong>🎥 Demonstration Video:</strong> <strong><a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4">Watch Demo Video</a></strong> (Inline player also embedded in <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/README.md" target="_blank">README.md</a>).</li>
 <li><strong>🌐 Web PWA Sandbox (Convenience Simulator):</strong> <strong><a href="https://bharatverify-nhai.surge.sh">Access Web Sandbox</a></strong> (Hosted browser companion for instant evaluation).</li>
-<li><strong>📘 Product Documentation:</strong> <strong><a href="./README.md">README.md</a></strong> (This quick-start and installation guide).</li>
-<li><strong>📘 Engineering Specification:</strong> <strong><a href="./technical_documentation.md">technical_documentation.md</a></strong> (This mathematical and architectural specification).</li>
-<li><strong>💼 Slide-Deck Presentation:</strong> <strong><a href="./judges_presentation.md">judges_presentation.md</a></strong> (Pitch slides for the evaluation committee).</li>
+<li><strong>📘 Product Documentation:</strong> <strong><a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/README.md" target="_blank">README.md</a></strong> (This quick-start and installation guide).</li>
+<li><strong>📘 Engineering Specification:</strong> <strong><a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/technical_documentation.md" target="_blank">technical_documentation.md</a></strong> (This mathematical and architectural specification).</li>
+<li><strong>💼 Slide-Deck Presentation:</strong> <strong><a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/judges_presentation.md" target="_blank">judges_presentation.md</a></strong> (Pitch slides for the evaluation committee).</li>
 </ul>
 <hr />
 <div class="alert-important"><strong>IMPORTANT</strong>: <p><strong>Biometric Deliverable Format Disclaimer for Evaluators &amp; Judges:</strong>
@@ -493,7 +493,7 @@ window.MathJax = {
 <p>Watch BharatVerify run active/passive liveness challenges, geofencing, and serverless sync:</p>
 <ul>
 <li><strong><a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4">Watch Full Demonstration Video (GitHub Release Asset)</a></strong></li>
-<li><strong>Local Playback Source:</strong> An inline player is embedded in the <a href="./README.md">README.md</a> using a local relative path (<code>./assets/demovideo.mp4</code>) to enable native, stutter-free browser streaming.</li>
+<li><strong>Local Playback Source:</strong> An inline player is embedded in the <a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/README.md" target="_blank">README.md</a> using a local relative path (<code>./assets/demovideo.mp4</code>) to enable native, stutter-free browser streaming.</li>
 </ul>
 <h3 id="interactive-system-interfaces-simulation-consoles">📸 Interactive System Interfaces &amp; Simulation Consoles</h3>
 <p>To ensure a seamless, high-fidelity developer evaluation experience, the application features dedicated system dashboards:</p>
@@ -535,30 +535,34 @@ window.MathJax = {
 <h3 id="core-technological-innovations-nhai-value-moats">Core Technological Innovations &amp; NHAI Value Moats</h3>
 <p>To deliver the ultimate offline biometric solution for NHAI, <strong>BharatVerify</strong> integrates four key technical innovations that solve the core vulnerabilities of standard facial recognition systems:</p>
 <ol>
-<li><strong>In-Memory Decoupled Bootstrap (Universal Sandbox vs. Heavy Native Wrappers)</strong></li>
-<li><strong>The Innovation:</strong> Rather than compiling heavy native C++ wrappers (e.g., ONNX Mobile or TFLite JNI bridges) that bloat the application bundle, BharatVerify packages optimized neural models as memory-only Base64 data arrays. We globally polyfill <code>window.fetch</code> inside the WebView to intercept model loads, decoding them directly in transient RAM.</li>
 <li>
-<p><strong>Why it Wins:</strong> Traditional compiled native wrappers bloat mobile app sizes to <strong>25MB - 50MB+</strong>, suffer from frequent Gradle build fragmentation, and require store-approved app updates for minor model tweaks. BharatVerify keeps the binary size at <strong>10.65 MB</strong>, compiles universally on both iOS and Android without C++ compilation splits, and supports <strong>instant Over-the-Air (OTA) updates</strong> for model weights.</p>
+<p><strong>In-Memory Decoupled Bootstrap (Universal Sandbox vs. Heavy Native Wrappers)</strong></p>
+<ul>
+<li><strong>The Innovation:</strong> Rather than compiling heavy native C++ wrappers (e.g., ONNX Mobile or TFLite JNI bridges) that bloat the application bundle, BharatVerify packages optimized neural models as memory-only Base64 data arrays. We globally polyfill <code>window.fetch</code> inside the WebView to intercept model loads, decoding them directly in transient RAM.</li>
+<li><strong>Why it Wins:</strong> Traditional compiled native wrappers bloat mobile app sizes to <strong>25MB - 50MB+</strong>, suffer from frequent Gradle build fragmentation, and require store-approved app updates for minor model tweaks. BharatVerify keeps the binary size at <strong>10.65 MB</strong>, compiles universally on both iOS and Android without C++ compilation splits, and supports <strong>instant Over-the-Air (OTA) updates</strong> for model weights.</li>
+</ul>
 </li>
 <li>
 <p><strong>Dual-Layered Active-Passive Fusion (Robust Protection vs. Single-Stage Gestures)</strong></p>
-</li>
+<ul>
 <li><strong>The Innovation:</strong> The pipeline fuses two passive liveness checks (Laplacian matte texture analysis and RGB spectral blue glow ratio) with three randomized active gesture challenges (blink, smile, and head turn).</li>
-<li>
-<p><strong>Why it Wins:</strong> Basic active gesture systems (like blink-only detection) can be bypassed by simply cutting eye holes out of a printed photo. Heavy CNN anti-spoofing models, on the other hand, lag and overheat budget devices. Our dual-layer fusion detects printed photo attacks and digital screen replays at the edge in <strong>under 200ms</strong>, guaranteeing zero personal biometric storage on disk under the <strong>DPDP Act 2023</strong>.</p>
+<li><strong>Why it Wins:</strong> Basic active gesture systems (like blink-only detection) can be bypassed by simply cutting eye holes out of a printed photo. Heavy CNN anti-spoofing models, on the other hand, lag and overheat budget devices. Our dual-layer fusion detects printed photo attacks and digital screen replays at the edge in <strong>under 200ms</strong>, guaranteeing zero personal biometric storage on disk under the <strong>DPDP Act 2023</strong>.</li>
+</ul>
 </li>
 <li>
 <p><strong>Edge-Native Haversine Geofencing (Offline Verification vs. Raw Coordinate Logging)</strong></p>
-</li>
+<ul>
 <li><strong>The Innovation:</strong> We calculate the great-circle distance locally on-device between the worker's current GPS location and the targeted NHAI toll/construction sector coordinates using the Haversine formula, executing before the biometric pipeline is unlocked.</li>
-<li>
-<p><strong>Why it Wins:</strong> Most systems capture coordinates but do not validate them, or rely on active network calls to mapping APIs. BharatVerify runs the geofence validation <strong>100% offline at the device border</strong>, blocking proxy attendance scams (e.g., workers sharing login credentials to check in from offsite locations) without sending location data to the cloud.</p>
+<li><strong>Why it Wins:</strong> Most systems capture coordinates but do not validate them, or rely on active network calls to mapping APIs. BharatVerify runs the geofence validation <strong>100% offline at the device border</strong>, blocking proxy attendance scams (e.g., workers sharing login credentials to check in from offsite locations) without sending location data to the cloud.</li>
+</ul>
 </li>
 <li>
 <p><strong>GPU-Accelerated Offscreen CLAHE (Adaptability vs. Raw Image Processing)</strong></p>
-</li>
+<ul>
 <li><strong>The Innovation:</strong> We execute Contrast Limited Adaptive Histogram Equalization (CLAHE) on offscreen canvas buffers using WebGL GPU acceleration.</li>
 <li><strong>Why it Wins:</strong> Standard cameras fail to detect faces under direct sunlight glare (typical of highway plazas) or dense morning winter fog in North India. Our custom CLAHE booster splits frames into localized contextual tiles, clipping contrast limits to enhance facial textures. This increases face localization and landmark mapping accuracy by <strong>34%</strong> under harsh, outdoor environmental conditions.</li>
+</ul>
+</li>
 </ol>
 <hr />
 <h2 id="2-neural-network-quantization-biometric-mathematical-proofs">2. Neural Network Quantization &amp; Biometric Mathematical Proofs</h2>
@@ -608,48 +612,44 @@ window.MathJax = {
 <p>The engine randomly generates and verifies three user actions to confirm physical presence:</p>
 <ol>
 <li><strong>Eye Blink Detection (Eye Aspect Ratio - EAR):</strong>
-   Uses the 6 2D coordinates surrounding each eye to compute vertical closure relative to horizontal width:</li>
+    Uses the 6 2D coordinates surrounding each eye to compute vertical closure relative to horizontal width:</li>
 </ol>
 <p>$$\text{EAR} = \frac{||p_2 - p_6|| + ||p_3 - p_5||}{2 \times ||p_1 - p_4||}$$</p>
-<ul>
-<li>
-<p><strong>The Threshold:</strong> Open eyes maintain a ratio of $0.26 \le \text{EAR} \le 0.30$. When eyelids close, the vertical distance drops, causing the EAR to fall below <strong><code>0.25</code></strong> for at least 350ms to register a successful blink.</p>
-</li>
-<li>
-<p><strong>Smile Verification (Smile Ratio):</strong>
-   Measures the horizontal width of the mouth (lip corners) normalized by the distance between the outer corners of the eyes:</p>
-</li>
-</ul>
+<pre><code>* **The Threshold:** Open eyes maintain a ratio of $0.26 \le \text{EAR} \le 0.30$. When eyelids close, the vertical distance drops, causing the EAR to fall below **`0.25`** for at least 350ms to register a successful blink.
+</code></pre>
+<ol>
+<li><strong>Smile Verification (Smile Ratio):</strong>
+    Measures the horizontal width of the mouth (lip corners) normalized by the distance between the outer corners of the eyes:</li>
+</ol>
 <p>$$\text{Smile Ratio} = \frac{\text{Distance}(p_{49}, p_{55})}{\text{Distance}(p_{37}, p_{46})}$$</p>
-<ul>
-<li>
-<p><strong>The Threshold:</strong> A neutral face sits at $\text{Smile Ratio} \approx 0.72$. A smile stretches the lips, increasing the ratio past <strong><code>0.75</code></strong> to pass the challenge.</p>
-</li>
-<li>
-<p><strong>Head Yaw Check (Yaw Symmetry Ratio):</strong>
-   Measures the horizontal distance symmetry of the nose tip relative to the outermost jawline boundaries:</p>
-</li>
-</ul>
+<pre><code>* **The Threshold:** A neutral face sits at $\text{Smile Ratio} \approx 0.72$. A smile stretches the lips, increasing the ratio past **`0.75`** to pass the challenge.
+</code></pre>
+<ol>
+<li><strong>Head Yaw Check (Yaw Symmetry Ratio):</strong>
+    Measures the horizontal distance symmetry of the nose tip relative to the outermost jawline boundaries:</li>
+</ol>
 <p>$$\text{Yaw Ratio} = \frac{\text{Distance}(p_{31}, p_{1})}{\text{Distance}(p_{31}, p_{17})}$$</p>
-<ul>
-<li><strong>The Threshold:</strong> A centered face has a $\text{Yaw Ratio} \approx 1.0$. A turn left shifts the ratio below <strong><code>0.72</code></strong>; a turn right shifts it above <strong><code>1.40</code></strong>.</li>
-</ul>
+<pre><code>* **The Threshold:** A centered face has a $\text{Yaw Ratio} \approx 1.0$. A turn left shifts the ratio below **`0.72`**; a turn right shifts it above **`1.40`**.
+</code></pre>
 <hr />
 <h4 id="b-passive-anti-spoofing-heuristics">B. Passive Anti-Spoofing Heuristics</h4>
 <ol>
 <li><strong>Laplacian Grayscale Texture Variance (Printed Photo Filter):</strong>
-   Defeats flat 2D printed attacks by analyzing pixel texture details. The face bounding box image $I$ is converted to grayscale, and the Laplacian operator is computed:</li>
+    Defeats flat 2D printed attacks by analyzing pixel texture details. The face bounding box image $I$ is converted to grayscale, and the Laplacian operator is computed:</li>
 </ol>
 <p>$$L(x, y) = \nabla^2 I(x, y) = \frac{\partial^2 I}{\partial x^2} + \frac{\partial^2 I}{\partial y^2}$$</p>
-<p>The texture variance $\sigma^2$ is the standard deviation squared of the Laplacian image matrix:</p>
+<pre><code>The texture variance $\sigma^2$ is the standard deviation squared of the Laplacian image matrix:
+</code></pre>
 <p>$$\sigma^2 = \frac{1}{N} \sum_{x, y} (L(x, y) - \mu)^2$$</p>
-<p>Where $N$ is the number of pixels and $\mu$ is the mean of $L$. Real human skin has micro-depth and high-contrast texture details (pores, ambient occlusion shadows), maintaining a variance $\sigma^2 \ge 15.0$. Flat printed media has a flat texture, causing $\sigma^2 < 15.0$ and triggering an immediate spoof block.</p>
+<pre><code>Where $N$ is the number of pixels and $\mu$ is the mean of $L$. Real human skin has micro-depth and high-contrast texture details (pores, ambient occlusion shadows), maintaining a variance $\sigma^2 \ge 15.0$. Flat printed media has a flat texture, causing $\sigma^2 < 15.0$ and triggering an immediate spoof block.
+</code></pre>
 <ol>
 <li><strong>Spectral Blue Glow Index (Device Replay Screen Filter):</strong>
-   Mobile screens emit a cool, blue-saturated spectral emission. Human skin flushes with warmer red channels due to blood flow. The Spectral Blue Glow index (SBGI) is computed as:</li>
+    Mobile screens emit a cool, blue-saturated spectral emission. Human skin flushes with warmer red channels due to blood flow. The Spectral Blue Glow index (SBGI) is computed as:</li>
 </ol>
 <p>$$\text{SBGI} = \frac{\mu_{\text{Red}}}{\mu_{\text{Blue}}}$$</p>
-<p>Where $\mu_{\text{Red}}$ is the average intensity of the red color channel, and $\mu_{\text{Blue}}$ is the average intensity of the blue color channel. If $\text{SBGI} < 1.02$, it implies screen replay emission and fails the check.</p>
+<pre><code>Where $\mu_{\text{Red}}$ is the average intensity of the red color channel, and $\mu_{\text{Blue}}$ is the average intensity of the blue color channel. If $\text{SBGI} < 1.02$, it implies screen replay emission and fails the check.
+</code></pre>
 <hr />
 <h3 id="key-technical-mathematical-enhancements">Key Technical Mathematical Enhancements</h3>
 <h4 id="1-local-haversine-geofencing-formula">1. Local Haversine Geofencing Formula</h4>
@@ -920,10 +920,12 @@ window.MathJax = {
 <ol>
 <li><strong>Open the Demo URL:</strong> Navigate to <a href="https://bharatverify-nhai.surge.sh">bharatverify-nhai.surge.sh</a>.</li>
 <li><strong>PWA Mobile Installation (Optional):</strong> On iOS (Safari) or Android (Chrome), click <strong>"Add to Home Screen"</strong> to install the prototype. It will place an icon on your device and launch in immersive, full-screen mobile app mode.</li>
-<li><strong>Local/Cloud Integration testing:</strong> </li>
+<li><strong>Local/Cloud Integration testing:</strong> <ul>
 <li>Open the <strong>AWS Sync Center</strong> tab inside the app.</li>
 <li>Paste <strong>your own AWS Lambda Function URL</strong> into the configuration input at the top and click <strong>Save Endpoint</strong>.</li>
 <li>Toggle the network status to <strong>Online</strong> and click <strong>Sync Logs to AWS</strong> to watch the logs appear live inside your own AWS CloudWatch/S3 console!</li>
+</ul>
+</li>
 </ol>
 <h3 id="option-2-sideloading-or-building-the-standalone-mobile-apps-android-ios">Option 2: Sideloading or Building the Standalone Mobile Apps (Android &amp; iOS)</h3>
 <p>To compile the standalone native packages using Expo Application Services (EAS) in the cloud:</p>
@@ -940,24 +942,23 @@ window.MathJax = {
 </li>
 <li>
 <p><strong>Trigger the platform-specific build:</strong></p>
-</li>
+<ul>
 <li>
 <p><strong>Android (.APK preview package for sideloading):</strong></p>
-<pre><code>npx eas build --platform android --profile preview
-</code></pre>
+<p>npx eas build --platform android --profile preview</p>
 </li>
 <li>
 <p><strong>iOS Simulator (.tar.gz for macOS iOS Simulator testing - no paid Apple Developer account required):</strong></p>
-<pre><code>npx eas build --platform ios --profile preview --simulator
-</code></pre>
+<p>npx eas build --platform ios --profile preview --simulator</p>
 </li>
 <li>
 <p><strong>iOS Device (.ipa for physical iPhones - requires a paid Apple Developer Account):</strong></p>
-<pre><code>npx eas build --platform ios --profile preview
-</code></pre>
+<p>npx eas build --platform ios --profile preview</p>
+</li>
+</ul>
+<p><em>(EAS compiles the application inside secure cloud enclaves, generating a QR code and a direct download link for the binary).</em></p>
 </li>
 </ol>
-<p><em>(EAS compiles the application inside secure cloud enclaves, generating a QR code and a direct download link for the binary).</em></p>
 <h3 id="option-3-compiling-and-self-hosting-the-web-pwa">Option 3: Compiling and Self-Hosting the Web PWA</h3>
 <p>If you want to compile the source code and host the Progressive Web App under your own domain/server:</p>
 <ol>
@@ -972,12 +973,14 @@ npm install
 <p><strong>Build the production web assets:</strong></p>
 <pre><code>npx expo export --platform web
 </code></pre>
-</li>
-</ol>
 <p><em>(This compiles all TypeScript assets, quantized models, and stylesheets into a single static directory under <code>dist/</code> using Metro bundler).</em></p>
-<ol>
-<li><strong>Deploy the assets:</strong> Upload or drag-and-drop the contents of the <code>dist/</code> folder to any static hosting provider (e.g., Surge, Netlify, Vercel, or AWS S3 website hosting).</li>
+</li>
+<li>
+<p><strong>Deploy the assets:</strong> Upload or drag-and-drop the contents of the <code>dist/</code> folder to any static hosting provider (e.g., Surge, Netlify, Vercel, or AWS S3 website hosting).</p>
+<ul>
 <li><em>Example (using Surge):</em> Run <code>npx surge dist</code> from the root directory.</li>
+</ul>
+</li>
 </ol>
 <h3 id="option-4-running-the-local-development-server">Option 4: Running the Local Development Server</h3>
 <p>To run the live source code locally and inspect telemetry/runtime logging:</p>
@@ -994,24 +997,32 @@ npm install
 </li>
 <li>
 <p>Run the prototype:</p>
-</li>
+<ul>
 <li><strong>In the browser:</strong> Press <strong><code>w</code></strong> to open the Web Simulator.</li>
 <li><strong>On a physical mobile phone:</strong> Download the "Expo Go" app on Android/iOS, and scan the terminal's QR code.</li>
+</ul>
+</li>
 </ol>
 <hr />
 <h2 id="9-edge-native-failsafes-fallback-execution-modes">9. Edge-Native Failsafes &amp; Fallback Execution Modes</h2>
 <p>To ensure continuous operations at remote national highway construction zones (which frequently face extreme weather and cellular blackouts), BharatVerify implements several fault-tolerant protocols:</p>
 <ol>
-<li><strong>Active Challenge Adaptive Cycle &amp; Timeout:</strong></li>
+<li><strong>Active Challenge Adaptive Cycle &amp; Timeout:</strong><ul>
 <li>Each active liveness challenge (eye blink, smile, head yaw) is monitored by an independent thread timer set to <strong><code>6.0 seconds</code></strong>. If a worker fails to pass (e.g. due to environmental smoke, facial dirt, or spectacles glare), the pipeline registers a timeout warning.</li>
 <li>Rather than failing the check-in immediately, the controller cycles to a different randomized challenge. If three consecutive challenges timeout, the engine falls back to a <strong>Passive-Only Liveness Filter</strong> (Laplacian texture variance + RGB spectral blue ratio) combined with haversine location validation. The check-in is permitted but logged as a <code>conditional_telemetry_warning</code> in the synced SQL log for auditor verification.</li>
-<li><strong>Dynamic WebGL-to-WASM CPU Engine Fallback:</strong></li>
+</ul>
+</li>
+<li><strong>Dynamic WebGL-to-WASM CPU Engine Fallback:</strong><ul>
 <li>Upon initialization of the TensorFlow.js backend inside the WebView system shell, the engine tests WebGL capabilities by running an offscreen canvas vector test.</li>
 <li>If the hardware GPU accelerator is locked or unsupported by the device's system browser core, the loader intercepts the exception, releases WebGL registers, and re-initializes the networks using compiled WebAssembly (WASM) CPU execution.</li>
 <li>Latency rises slightly from <strong>~190ms</strong> (WebGL) to <strong>~340ms</strong> (WASM), which remains well below the hackathon's $1.0\text{s}$ response budget.</li>
-<li><strong>Geofencing Signal Drift Failsafe:</strong></li>
+</ul>
+</li>
+<li><strong>Geofencing Signal Drift Failsafe:</strong><ul>
 <li>GPS signals can experience severe drift ($>50\text{ meters}$) under heavy cloud cover, foliage, or deep valleys.</li>
 <li>To prevent locking out workers, supervisors can access a password-protected <strong>Developer Staging Override</strong> panel inside the SQLite console tab. Toggling this bypass registers a <code>geofence_override = 1</code> audit stamp in the JSON payload, synchronizing the override transaction to S3 while preserving audit trails.</li>
+</ul>
+</li>
 </ol>
 <hr />
 <h2 id="10-competitive-codebase-architecture-analysis-strategic-engineering-defenses">10. Competitive Codebase Architecture Analysis &amp; Strategic Engineering Defenses</h2>
@@ -1081,13 +1092,15 @@ npm install
 <h3 id="c-database-staging-auto-purge-lifecycle-tests">C. Database Staging &amp; Auto-Purge Lifecycle Tests</h3>
 <ul>
 <li><strong>Test Case 8 (Offline Storage Validation):</strong> Asserts that when connection is toggled to <strong>Offline</strong>, calling <code>saveSyncLog</code> caches the record in the encrypted SQL database and sets <code>synced = 0</code>.</li>
-<li><strong>Test Case 9 (AWS Sync Synchronization):</strong> Mocks an HTTP <code>200 OK</code> handshake response from the AWS API Gateway endpoint. The database manager must automatically execute the deletion query:<pre><code>DELETE FROM SyncLog WHERE synced = 1;
+<li>
+<p><strong>Test Case 9 (AWS Sync Synchronization):</strong> Mocks an HTTP <code>200 OK</code> handshake response from the AWS API Gateway endpoint. The database manager must automatically execute the deletion query:</p>
+<pre><code>DELETE FROM SyncLog WHERE synced = 1;
 </code></pre>
-</li>
-</ul>
 <p>And assert that the local table count drops to <code>0</code>.</p>
-<ul>
-<li><strong>Test Case 10 (Failsafe Sync Retention):</strong> Mocks an HTTP <code>500 Internal Server Error</code> or network timeout. The manager must abort the delete operation, retaining the encrypted attendance record locally to prevent data loss.</li>
+</li>
+<li>
+<p><strong>Test Case 10 (Failsafe Sync Retention):</strong> Mocks an HTTP <code>500 Internal Server Error</code> or network timeout. The manager must abort the delete operation, retaining the encrypted attendance record locally to prevent data loss.</p>
+</li>
 </ul>
 <hr />
 <h3 id="jai-hind-supporting-atmanirbhar-bharat">🇮🇳 Jai Hind | Supporting Atmanirbhar Bharat</h3>

@@ -76,6 +76,68 @@ def get_base64_image(img_path):
         print(f"Warning: Image file not found: {img_path}")
         return original_path
 
+def fix_list_indentation(text):
+    """
+    Finds lines starting with 1 to 3 spaces that are NOT inside a fenced code block
+    and indents them to exactly 4 spaces so that python-markdown compiles them correctly.
+    """
+    lines = text.split('\n')
+    new_lines = []
+    in_code_block = False
+    
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith('```'):
+            in_code_block = not in_code_block
+            new_lines.append(line)
+            continue
+            
+        if in_code_block:
+            new_lines.append(line)
+            continue
+            
+        if line.startswith(' ') and stripped:
+            leading_spaces = len(line) - len(line.lstrip(' '))
+            if 0 < leading_spaces < 4:
+                line = ' ' * (4 - leading_spaces) + line
+                
+        new_lines.append(line)
+        
+    return '\n'.join(new_lines)
+
+def make_github_links(html):
+    # Regex to find code blocks containing file paths
+    pattern = re.compile(
+        r'<code>\s*(\.?/?src/[a-zA-Z0-9_\-/.]+'
+        r'|\.?/?scripts/[a-zA-Z0-9_\-/.]+'
+        r'|package\.json|eas\.json|app\.json|metro\.config\.js|tsconfig\.json'
+        r'|README\.md|technical_documentation\.md|judges_presentation\.md)\s*</code>'
+    )
+    
+    def repl(match):
+        path = match.group(1).strip()
+        clean_path = path
+        if clean_path.startswith('./'):
+            clean_path = clean_path[2:]
+        if clean_path.startswith('/'):
+            clean_path = clean_path[1:]
+            
+        url = f"https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/{clean_path}"
+        return f'<a href="{url}" target="_blank" class="github-code-link"><code>{path}</code></a>'
+        
+    return pattern.sub(repl, html)
+
+def make_href_github_links(html):
+    # Regex to find links to markdown files like href="./README.md"
+    pattern = re.compile(r'href=["\']\./([a-zA-Z0-9_\-/.]+\.md)["\']')
+    
+    def repl(match):
+        path = match.group(1)
+        url = f"https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/{path}"
+        return f'href="{url}" target="_blank"'
+        
+    return pattern.sub(repl, html)
+
 def fix_markdown_spacing(text):
     """
     Ensures that headers, lists, and blockquotes have a blank line before them
@@ -182,6 +244,9 @@ def preprocess_markdown(text):
         
     text = '\n'.join(new_lines)
     
+    # Fix 3-space list indentation to 4-space indentation for python-markdown
+    text = fix_list_indentation(text)
+    
     # Fix spacing around elements (lists, blockquotes)
     text = fix_markdown_spacing(text)
     
@@ -270,6 +335,12 @@ def postprocess_html(html, mermaid_blocks, display_math, inline_math):
     for idx, math in enumerate(inline_math):
         math_tag = f"${math}$"
         html = html.replace(f"%%INLINE_MATH_{idx}%%", math_tag)
+        
+    # 5. Convert file paths in <code> blocks to GitHub links
+    html = make_github_links(html)
+    
+    # 6. Convert relative links to markdown files to GitHub absolute links
+    html = make_href_github_links(html)
         
     return html
 
