@@ -340,6 +340,9 @@ window.MathJax = {
         pre, table, .alert-note, .alert-important, .alert-tip, .alert-warning, .alert-caution, .mermaid-container {
             page-break-inside: avoid;
         }
+        h2 {
+            page-break-before: always;
+        }
         h1, h2, h3 {
             page-break-after: avoid;
         }
@@ -472,8 +475,8 @@ window.MathJax = {
     
         <h1 id="bharatverify-deep-engineering-mathematical-specification">📘 BharatVerify: Deep Engineering &amp; Mathematical Specification</h1>
 <h2 id="nhai-hackathon-70-technical-specification-biometric-heuristics-system-diagrams-and-security-audits">NHAI Hackathon 7.0 Technical Specification - Biometric Heuristics, System Diagrams, and Security Audits</h2>
-<div class="alert-important"><strong>IMPORTANT</strong>: <p><strong>READ ON GITHUB PREFERRED:</strong> For the best reading and evaluation experience, we highly recommend reading this document directly on GitHub: <strong><a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/technical_documentation.md">Read Technical Specification on GitHub</a></strong>. The GitHub repository natively renders all interactive zoomable diagrams, full vector schemas, code block formatting, and dark mode controls.</p>
-</div>
+<div class="alert-important"><strong>IMPORTANT</strong>: <p><strong>READ ON GITHUB PREFERRED:</strong> For the best reading and evaluation experience, we highly recommend reading this document directly on GitHub: <strong><a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/technical_documentation.md">Read Technical Specification on GitHub</a></strong>. The GitHub repository natively renders all interactive zoomable diagrams, full vector schemas, code block formatting, and dark mode controls.</p></div>
+
 <p><a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk"><img alt="Download Android APK" src="https://img.shields.io/badge/Download-Android%20APK-success.svg?style=for-the-badge&amp;logo=android" /></a>
 <a href="https://bharatverify-nhai.surge.sh"><img alt="Access Web Sandbox" src="https://img.shields.io/badge/Access-Web%20Sandbox-blue.svg?style=for-the-badge&amp;logo=google-chrome" /></a></p>
 <hr />
@@ -490,9 +493,10 @@ window.MathJax = {
 </ul>
 <hr />
 <div class="alert-important"><strong>IMPORTANT</strong>: <p><strong>Biometric Deliverable Format Disclaimer for Evaluators &amp; Judges:</strong>
+
 * <strong>Primary Deliverable (Standalone Android APK):</strong> The <strong>core submission</strong> is the native Android application package (<code>.apk</code>). This represents the full production-ready, edge-native, 100% offline biometric module engineered to run inside the physical NHAI <em>Datalake 3.0</em> mobile environment. All offline SQLite storage, camera frame processors, and local database sync tasks execute directly within the mobile OS sandbox.
-* <strong>Hosted Web PWA Sandbox (Convenience Simulator):</strong> The web-deployed application at <strong><a href="https://bharatverify-nhai.surge.sh">bharatverify-nhai.surge.sh</a></strong> is a <strong>simulator sandbox</strong> provided <em>strictly for convenience</em>. It allows judges and evaluators to instantly test the camera interface, demographic matrices, and synchronization logic on any device (including iOS, Mac, and Windows) <em>without</em> performing Android sideloading or compilation. It is <strong>not</strong> a website-only project; the production module is native mobile code.</p>
-</div>
+* <strong>Hosted Web PWA Sandbox (Convenience Simulator):</strong> The web-deployed application at <strong><a href="https://bharatverify-nhai.surge.sh">bharatverify-nhai.surge.sh</a></strong> is a <strong>simulator sandbox</strong> provided <em>strictly for convenience</em>. It allows judges and evaluators to instantly test the camera interface, demographic matrices, and synchronization logic on any device (including iOS, Mac, and Windows) <em>without</em> performing Android sideloading or compilation. It is <strong>not</strong> a website-only project; the production module is native mobile code.</p></div>
+
 <h3 id="standalone-android-apk-apk-primary-production-build">Standalone Android APK (.APK) - <em>Primary Production Build</em></h3>
 <p>A mobile application package has been compiled using the <strong>EAS (Expo Application Services)</strong> build system on the <code>@sxrya</code> Expo developer registry, utilizing Android package namespace <code>com.suryasenthilr.bharatverifyantigravity</code> and EAS Project ID <code>464095aa-3fd6-4909-93e5-8cab4f62c0b5</code>.</p>
 <ul>

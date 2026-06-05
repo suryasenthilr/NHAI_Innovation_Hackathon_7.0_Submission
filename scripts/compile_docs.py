@@ -181,12 +181,82 @@ def fix_markdown_spacing(text):
         
     return '\n'.join(new_lines)
 
+def preprocess_alerts(text):
+    """
+    Finds GitHub-style alert blocks:
+    > [!IMPORTANT]
+    > block content
+    and pre-compiles their content using python-markdown, then wraps them in the alert div.
+    This ensures that nested lists and formatting inside the alert block are preserved.
+    """
+    lines = text.split('\n')
+    new_lines = []
+    in_alert = False
+    alert_type = ""
+    alert_lines = []
+    
+    idx = 0
+    while idx < len(lines):
+        line = lines[idx]
+        stripped = line.strip()
+        
+        # Check if alert starts
+        if stripped.startswith('> [!'):
+            # If we are already in an alert, close it first
+            if in_alert:
+                new_lines.append(render_alert_div(alert_type, alert_lines))
+                
+            in_alert = True
+            alert_type = stripped[4:-1].lower()
+            alert_lines = []
+            idx += 1
+            continue
+            
+        if in_alert:
+            if stripped.startswith('>'):
+                # Extract alert content (remove leading > and space)
+                content = line.replace('>', '', 1)
+                # If there's a space after >, remove it
+                if content.startswith(' '):
+                    content = content[1:]
+                alert_lines.append(content)
+                idx += 1
+            else:
+                # Alert block ends
+                new_lines.append(render_alert_div(alert_type, alert_lines))
+                in_alert = False
+                new_lines.append(line)
+                idx += 1
+        else:
+            new_lines.append(line)
+            idx += 1
+            
+    if in_alert:
+        new_lines.append(render_alert_div(alert_type, alert_lines))
+        
+    return '\n'.join(new_lines)
+
+def render_alert_div(alert_type, alert_lines):
+    alert_content = '\n'.join(alert_lines)
+    # We compile the alert content markdown to HTML separately!
+    md = markdown.Markdown(extensions=['tables'])
+    compiled_html = md.convert(alert_content)
+    
+    css_class = f"alert-{alert_type}"
+    title = alert_type.upper()
+    
+    # Wrap in our alert structure
+    return f'<div class="{css_class}"><strong>{title}</strong>: {compiled_html}</div>\n'
+
 def preprocess_markdown(text):
     """
     Extracts math blocks, mermaid blocks, and local images, replacing them
     with placeholders to prevent them from being mangled by the Markdown parser.
     Also converts indented fenced code blocks (inside lists) into indented code blocks.
     """
+    # 0. Preprocess alerts first to avoid markdown blockquote mangling
+    text = preprocess_alerts(text)
+    
     # Fix Diagram 6 curly braces syntax errors
     text = text.replace('Select {Blink, Smile, Yaw}', 'Select [Blink, Smile, Yaw]')
     
@@ -726,6 +796,9 @@ window.MathJax = {{
         }}
         pre, table, .alert-note, .alert-important, .alert-tip, .alert-warning, .alert-caution, .mermaid-container {{
             page-break-inside: avoid;
+        }}
+        h2 {{
+            page-break-before: always;
         }}
         h1, h2, h3 {{
             page-break-after: avoid;
