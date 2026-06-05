@@ -26,7 +26,8 @@ window.MathJax = {
     mermaid.initialize({ 
         startOnLoad: false, 
         theme: 'dark',
-        securityLevel: 'loose'
+        securityLevel: 'loose',
+        flowchart: { useMaxWidth: false, htmlLabels: true }
     });
 </script>
 <style>
@@ -45,7 +46,7 @@ window.MathJax = {
         color: #c9d1d9;
         width: 297mm; /* A4 Landscape width */
         height: 210mm; /* A4 Landscape height */
-        padding: 50px 70px;
+        padding: 40px 60px;
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
@@ -59,12 +60,12 @@ window.MathJax = {
         color: #f0f6fc;
         margin-top: 0;
     }
-    h1 { font-size: 2.5em; border-bottom: 2px solid #30363d; padding-bottom: 10px; margin-bottom: 20px; }
-    h2 { font-size: 2em; border-bottom: 1px solid #30363d; padding-bottom: 8px; margin-bottom: 16px; }
-    h3 { font-size: 1.8em; margin-bottom: 10px; }
-    h4 { font-size: 1.4em; color: #ff8c00; margin-top: 0; margin-bottom: 20px; }
-    p { font-size: 1.25em; line-height: 1.5; }
-    ul { font-size: 1.25em; line-height: 1.6; margin-top: 10px; }
+    h1 { font-size: 2.2em; border-bottom: 2px solid #30363d; padding-bottom: 10px; margin-bottom: 15px; }
+    h2 { font-size: 1.8em; border-bottom: 1px solid #30363d; padding-bottom: 8px; margin-bottom: 12px; }
+    h3 { font-size: 1.6em; margin-bottom: 10px; }
+    h4 { font-size: 1.3em; color: #ff8c00; margin-top: 0; margin-bottom: 15px; }
+    p { font-size: 1.15em; line-height: 1.5; }
+    ul { font-size: 1.15em; line-height: 1.5; margin-top: 5px; }
     code {
         font-family: monospace;
         background-color: rgba(110,118,129,0.4);
@@ -75,10 +76,11 @@ window.MathJax = {
     }
     pre {
         background-color: #161b22;
-        padding: 15px;
+        padding: 12px;
         border-radius: 8px;
         overflow: auto;
         border: 1px solid #30363d;
+        margin: 10px 0;
     }
     pre code {
         color: #c9d1d9;
@@ -88,11 +90,11 @@ window.MathJax = {
     table {
         border-collapse: collapse;
         width: 100%;
-        margin-top: 15px;
-        font-size: 0.9em;
+        margin-top: 10px;
+        font-size: 0.85em;
     }
     table th, table td {
-        padding: 8px 12px;
+        padding: 6px 10px;
         border: 1px solid #30363d;
     }
     table th {
@@ -103,19 +105,19 @@ window.MathJax = {
         background-color: #161b22;
     }
     img {
-        max-height: 48%;
-        max-width: 90%;
+        max-height: 42%;
+        max-width: 85%;
         display: block;
-        margin: 15px auto;
+        margin: 10px auto;
         border-radius: 8px;
         box-shadow: 0 4px 16px rgba(0,0,0,0.4);
     }
     .alert-note, .alert-important, .alert-tip {
-        padding: 12px 18px;
-        margin-bottom: 16px;
+        padding: 10px 15px;
+        margin-bottom: 12px;
         border-left: 5px solid;
         border-radius: 4px;
-        font-size: 1.1em;
+        font-size: 1.0em;
     }
     .alert-note {
         background-color: #1f2a3c;
@@ -136,8 +138,8 @@ window.MathJax = {
         background: #161b22;
         display: flex;
         justify-content: center;
-        margin: 15px 0;
-        padding: 10px;
+        margin: 10px 0;
+        padding: 8px;
         border-radius: 8px;
         border: 1px solid #30363d;
     }
@@ -370,26 +372,48 @@ window.MathJax = {
 
 <script>
     document.addEventListener('DOMContentLoaded', async () => {
-        // Custom renderer for marked to intercept mermaid code blocks
-        const renderer = new marked.Renderer();
-        const originalCode = renderer.code.bind(renderer);
-        renderer.code = function(code, language, escaped) {
-            if (language === 'mermaid') {
-                return `<div class="mermaid">${code}</div>`;
-            }
-            return originalCode(code, language, escaped);
-        };
-
-        marked.setOptions({ renderer: renderer });
-
         // Parse markdown
         let mdText = document.getElementById('markdown-src').textContent;
         
         // Resolve escapes
         mdText = mdText.replace(/\\\\/g, '\\').replace(/\\\`/g, '`').replace(/\\\$/g, '$');
         
+        // --- BULLETPROOF PREPROCESSOR ---
+        
+        // 1. Extract mermaid blocks
+        const mermaidBlocks = [];
+        mdText = mdText.replace(/```mermaid\s*
+([\s\S]*?)
+```/g, function(match, code) {
+            const placeholder = `%%MERMAID_BLOCK_${mermaidBlocks.length}%%`;
+            mermaidBlocks.push(code.trim());
+            return '\n' + placeholder + '\n';
+        });
+
+        // 2. Extract display math blocks ($$...$$)
+        const displayMathBlocks = [];
+        mdText = mdText.replace(/\$\$\s*
+([\s\S]*?)
+\$\$/g, function(match, math) {
+            const placeholder = `%%DISPLAY_MATH_${displayMathBlocks.length}%%`;
+            displayMathBlocks.push(math.trim());
+            return '\n' + placeholder + '\n';
+        });
+        mdText = mdText.replace(/\$\$([\s\S]*?)\$\$/g, function(match, math) {
+            const placeholder = `%%DISPLAY_MATH_${displayMathBlocks.length}%%`;
+            displayMathBlocks.push(math.trim());
+            return '\n' + placeholder + '\n';
+        });
+
+        // 3. Extract inline math blocks ($...$)
+        const inlineMathBlocks = [];
+        mdText = mdText.replace(/\$([^\$\s](?:[^\$]*?[^\$\s])?)\$/g, function(match, math) {
+            const placeholder = `%%INLINE_MATH_${inlineMathBlocks.length}%%`;
+            inlineMathBlocks.push(math.trim());
+            return placeholder;
+        });
+        
         // Split markdown by slide separator (---)
-        // Ensure we handle different line endings
         const rawSlides = mdText.split(/\n---\n/);
         const container = document.getElementById('slides-container');
         container.innerHTML = '';
@@ -438,7 +462,26 @@ window.MathJax = {
                 processedLines.push(`<div class="${cssClass}"><strong>${title}</strong>: ${contentHtml}</div>\n`);
             }
             
-            const parsedSlideHtml = marked.parse(processedLines.join('\n'));
+            // Parse preprocessed slide markdown
+            let parsedSlideHtml = marked.parse(processedLines.join('\n'));
+            
+            // --- RESTORE EXTRACTED BLOCKS ---
+            
+            // 4. Restore mermaid blocks
+            mermaidBlocks.forEach((code, index) => {
+                parsedSlideHtml = parsedSlideHtml.replace(`%%MERMAID_BLOCK_${index}%%`, `<div class="mermaid">${code}</div>`);
+            });
+
+            // 5. Restore display math
+            displayMathBlocks.forEach((math, index) => {
+                parsedSlideHtml = parsedSlideHtml.replace(`%%DISPLAY_MATH_${index}%%`, `$$\n${math}\n$$`);
+            });
+
+            // 6. Restore inline math
+            inlineMathBlocks.forEach((math, index) => {
+                parsedSlideHtml = parsedSlideHtml.replace(`%%INLINE_MATH_${index}%%`, `$${math}$`);
+            });
+            
             const slideDiv = document.createElement('div');
             slideDiv.className = 'slide';
             slideDiv.innerHTML = parsedSlideHtml;

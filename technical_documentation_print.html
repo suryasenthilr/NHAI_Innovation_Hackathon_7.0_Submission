@@ -27,7 +27,7 @@ window.MathJax = {
         startOnLoad: false, 
         theme: 'default',
         securityLevel: 'loose',
-        sequence: { showSequenceNumbers: true }
+        flowchart: { useMaxWidth: false, htmlLabels: true }
     });
 </script>
 <style>
@@ -867,23 +867,46 @@ To prove the production readiness of **BharatVerify** without relying on manual 
 
 <script>
     document.addEventListener('DOMContentLoaded', async () => {
-        // Custom renderer for marked to intercept mermaid code blocks
-        const renderer = new marked.Renderer();
-        const originalCode = renderer.code.bind(renderer);
-        renderer.code = function(code, language, escaped) {
-            if (language === 'mermaid') {
-                return `<div class="mermaid">${code}</div>`;
-            }
-            return originalCode(code, language, escaped);
-        };
-
-        marked.setOptions({ renderer: renderer });
-
         // Parse markdown
         let mdText = document.getElementById('markdown-src').textContent;
         
         // Resolve escapes
         mdText = mdText.replace(/\\\\/g, '\\').replace(/\\\`/g, '`').replace(/\\\$/g, '$');
+        
+        // --- BULLETPROOF PREPROCESSOR ---
+        
+        // 1. Extract mermaid blocks
+        const mermaidBlocks = [];
+        mdText = mdText.replace(/```mermaid\s*
+([\s\S]*?)
+```/g, function(match, code) {
+            const placeholder = `%%MERMAID_BLOCK_${mermaidBlocks.length}%%`;
+            mermaidBlocks.push(code.trim());
+            return '\n' + placeholder + '\n';
+        });
+
+        // 2. Extract display math blocks ($$...$$)
+        const displayMathBlocks = [];
+        mdText = mdText.replace(/\$\$\s*
+([\s\S]*?)
+\$\$/g, function(match, math) {
+            const placeholder = `%%DISPLAY_MATH_${displayMathBlocks.length}%%`;
+            displayMathBlocks.push(math.trim());
+            return '\n' + placeholder + '\n';
+        });
+        mdText = mdText.replace(/\$\$([\s\S]*?)\$\$/g, function(match, math) {
+            const placeholder = `%%DISPLAY_MATH_${displayMathBlocks.length}%%`;
+            displayMathBlocks.push(math.trim());
+            return '\n' + placeholder + '\n';
+        });
+
+        // 3. Extract inline math blocks ($...$)
+        const inlineMathBlocks = [];
+        mdText = mdText.replace(/\$([^\$\s](?:[^\$]*?[^\$\s])?)\$/g, function(match, math) {
+            const placeholder = `%%INLINE_MATH_${inlineMathBlocks.length}%%`;
+            inlineMathBlocks.push(math.trim());
+            return placeholder;
+        });
         
         // Preprocess Github alerts
         const lines = mdText.split('\n');
@@ -904,10 +927,8 @@ To prove the production readiness of **BharatVerify** without relying on manual 
             if (inAlert) {
                 if (trimmed.startsWith('>')) {
                     let content = line.substring(line.indexOf('>') + 1).trim();
-                    alertLines.append = content;
                     alertLines.push(content);
                 } else {
-                    // Close alert
                     let cssClass = "alert-" + alertType;
                     let title = alertType.toUpperCase();
                     let contentHtml = alertLines.join('<br>');
@@ -927,7 +948,26 @@ To prove the production readiness of **BharatVerify** without relying on manual 
             processedLines.push(`<div class="${cssClass}"><strong>${title}</strong>: ${contentHtml}</div>\n`);
         }
         
-        const parsedHtml = marked.parse(processedLines.join('\n'));
+        // Parse the preprocessed markdown using marked
+        let parsedHtml = marked.parse(processedLines.join('\n'));
+        
+        // --- RESTORE EXTRACTED BLOCKS ---
+        
+        // 4. Restore mermaid blocks
+        mermaidBlocks.forEach((code, index) => {
+            parsedHtml = parsedHtml.replace(`%%MERMAID_BLOCK_${index}%%`, `<div class="mermaid">${code}</div>`);
+        });
+
+        // 5. Restore display math
+        displayMathBlocks.forEach((math, index) => {
+            parsedHtml = parsedHtml.replace(`%%DISPLAY_MATH_${index}%%`, `$$\n${math}\n$$`);
+        });
+
+        // 6. Restore inline math
+        inlineMathBlocks.forEach((math, index) => {
+            parsedHtml = parsedHtml.replace(`%%INLINE_MATH_${index}%%`, `$${math}$`);
+        });
+        
         document.getElementById('content').innerHTML = parsedHtml;
 
         // Render Mermaid Diagrams
