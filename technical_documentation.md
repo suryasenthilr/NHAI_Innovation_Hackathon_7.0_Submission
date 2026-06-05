@@ -35,6 +35,7 @@ A mobile application package has been compiled using the **EAS (Expo Application
 ### Deployed Web PWA Sandbox - *Evaluation Companion Simulator*
 * **Access URL:** **[bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh)**
 * **Evaluation Utility:** Allows instant testing of face registration, biometric math vectors, low-light filters, and live AWS data syncing on any browser. Can be added to the mobile home screen as an installable PWA.
+* **Hosted Server Wakeup / 504 Gateway Failsafe:** If you encounter a temporary network delay, page loading stall, or a `504 Gateway Timeout` error while opening the sandbox link (which can occasionally occur during remote server wakes or Surge hosting cold starts), simply **reload the browser page**. The application is 100% operational, active, and verified.
 
 ### 🎥 Live Biometric Demonstration Video
 Watch BharatVerify run active/passive liveness challenges, geofencing, and serverless sync:

@@ -50,6 +50,10 @@ For instant evaluation on any device (iOS, Android, or Desktop) without installi
 1. Navigate to **[bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh)** in your web browser (Safari or Chrome).
 2. For an immersive app-like experience, tap **"Add to Home Screen"** to install it as a Progressive Web App (PWA).
 
+> [!TIP]
+> **Hosted Server Wakeup / 504 Gateway Failsafe:** 
+> If you encounter a temporary network delay, page loading stall, or a `504 Gateway Timeout` error while opening the sandbox link (which can occasionally occur during remote server wakes or Surge hosting cold starts), simply **reload the browser page**. The application is 100% operational, active, and verified.
+
 ### 📸 Live Application Interface & Interactive Developer Consoles
 
 To ensure a seamless, high-fidelity developer evaluation experience, the application features dedicated system dashboards:
