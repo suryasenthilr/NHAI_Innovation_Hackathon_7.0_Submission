@@ -701,7 +701,7 @@ window.MathJax = {{
         border-bottom-right-radius: 6px;
     }}
     
-    img {{
+    img:not(.mermaid-svg) {{
         max-width: 100%;
         height: auto;
         display: block;
@@ -812,6 +812,17 @@ window.MathJax = {{
         }}
         .diagram-header {{
             page-break-before: always;
+        }}
+        h1 + .diagram-header,
+        h2 + .diagram-header {{
+            page-break-before: avoid !important;
+        }}
+        .mermaid-container {{
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            background: transparent !important;
+            margin: 20px 0 !important;
         }}
         a {{
             text-decoration: underline;
