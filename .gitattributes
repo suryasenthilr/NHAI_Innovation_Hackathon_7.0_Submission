@@ -1,2 +1,0 @@
-# Ignore documentation compiling scripts in language statistics
-scripts/compile_docs.py linguist-documentation
