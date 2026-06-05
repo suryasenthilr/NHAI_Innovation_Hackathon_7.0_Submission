@@ -197,6 +197,18 @@ window.MathJax = {{
 </script>
 
 <script>
+    // Global error handler to print diagnostic panels inside the browser
+    window.addEventListener('error', function(e) {{
+        document.getElementById('content').innerHTML = 
+            '<div style="color:red;padding:20px;border:2px solid red;background:#fff5f5;border-radius:8px;font-family:sans-serif;">' +
+            '<h3>⚠️ JavaScript Compilation Error</h3>' +
+            '<strong>Error Message:</strong> ' + e.message + '<br>' +
+            '<strong>Filename:</strong> ' + e.filename + '<br>' +
+            '<strong>Line:</strong> ' + e.lineno + ':' + e.colno + '<br>' +
+            '<strong>Stack Trace:</strong> <pre style="background:#fdf0f0;padding:10px;border:1px solid #f5c2c2;">' + (e.error ? e.error.stack : '') + '</pre>' +
+            '</div>';
+    }});
+
     document.addEventListener('DOMContentLoaded', async () => {{
         // Parse markdown
         let mdText = document.getElementById('markdown-src').textContent;
@@ -298,11 +310,19 @@ window.MathJax = {{
         document.getElementById('content').innerHTML = parsedHtml;
 
         // Render Mermaid Diagrams
-        await mermaid.run();
+        try {{
+            await mermaid.run();
+        }} catch (e) {{
+            console.error("Mermaid rendering failed:", e);
+        }}
         
         // Render LaTeX equations
-        if (window.MathJax) {{
-            MathJax.typesetPromise();
+        try {{
+            if (window.MathJax) {{
+                MathJax.typesetPromise();
+            }}
+        }} catch (e) {{
+            console.error("MathJax rendering failed:", e);
         }}
     }});
 </script>
@@ -489,7 +509,7 @@ window.MathJax = {{
 </style>
 </head>
 <body>
-<div id="slides-container">Loading presentation slides...</div>
+<div id="content">Loading presentation slides...</div>
 
 <!-- RAW MARKDOWN DATA -->
 <script type="text/markdown" id="markdown-src">
@@ -497,6 +517,18 @@ window.MathJax = {{
 </script>
 
 <script>
+    // Global error handler to print diagnostic panels inside the browser
+    window.addEventListener('error', function(e) {{
+        document.getElementById('content').innerHTML = 
+            '<div style="color:red;padding:20px;border:2px solid red;background:#fff5f5;border-radius:8px;font-family:sans-serif;">' +
+            '<h3>⚠️ JavaScript Compilation Error</h3>' +
+            '<strong>Error Message:</strong> ' + e.message + '<br>' +
+            '<strong>Filename:</strong> ' + e.filename + '<br>' +
+            '<strong>Line:</strong> ' + e.lineno + ':' + e.colno + '<br>' +
+            '<strong>Stack Trace:</strong> <pre style="background:#fdf0f0;padding:10px;border:1px solid #f5c2c2;">' + (e.error ? e.error.stack : '') + '</pre>' +
+            '</div>';
+    }});
+
     document.addEventListener('DOMContentLoaded', async () => {{
         // Parse markdown
         let mdText = document.getElementById('markdown-src').textContent;
@@ -537,7 +569,7 @@ window.MathJax = {{
         
         // Split markdown by slide separator (---)
         const rawSlides = mdText.split(/\\n---\\n/);
-        const container = document.getElementById('slides-container');
+        const container = document.getElementById('content');
         container.innerHTML = '';
         
         for (let rawSlide of rawSlides) {{
@@ -611,11 +643,19 @@ window.MathJax = {{
         }}
 
         // Render Mermaid Diagrams
-        await mermaid.run();
+        try {{
+            await mermaid.run();
+        }} catch (e) {{
+            console.error("Mermaid rendering failed:", e);
+        }}
         
         // Render LaTeX equations
-        if (window.MathJax) {{
-            MathJax.typesetPromise();
+        try {{
+            if (window.MathJax) {{
+                MathJax.typesetPromise();
+            }}
+        }} catch (e) {{
+            console.error("MathJax rendering failed:", e);
         }}
     }});
 </script>
