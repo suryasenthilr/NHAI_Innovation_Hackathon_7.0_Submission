@@ -1,5 +1,9 @@
 # 🏆 NHAI Hackathon 7.0: BharatVerify Pitch Deck
 ## Edge-Native, 100% Offline Facial Verification & Liveness Module for Datalake 3.0
+
+> [!IMPORTANT]
+> **READ ON GITHUB PREFERRED:** For the best reading and evaluation experience, we highly recommend viewing these slides directly on GitHub: **[Read Pitch Slide Deck on GitHub](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/judges_presentation.md)**.
+
 ### 🇮🇳 An Atmanirbhar Bharat Engineering Initiative | Zero-Network Remote Highway Security
 
 ---

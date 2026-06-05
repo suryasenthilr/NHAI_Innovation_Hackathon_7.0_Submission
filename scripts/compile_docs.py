@@ -263,12 +263,13 @@ def preprocess_markdown(text):
     # 3. Extract Display Math
     display_math = []
     def display_math_repl(match):
-        math_content = match.group(1).strip()
+        indent = match.group(1) or ''
+        math_content = match.group(2).strip()
         placeholder = f"%%DISPLAY_MATH_{len(display_math)}%%"
         display_math.append(math_content)
-        return f"\n{placeholder}\n"
+        return f"\n{indent}{placeholder}\n"
     
-    text = re.sub(r'\$\$(.*?)\$\$', display_math_repl, text, flags=re.DOTALL)
+    text = re.sub(r'([ ]*)\$\$(.*?)\$\$', display_math_repl, text, flags=re.DOTALL)
     
     # 4. Extract Inline Math
     inline_math = []
@@ -425,6 +426,15 @@ window.MathJax = {{
         background-color: var(--bg-color);
         margin: 0;
         padding: 0;
+    }}
+    
+    a {{
+        color: #0284c7;
+        text-decoration: underline;
+    }}
+    
+    a:hover {{
+        color: #0369a1;
     }}
     
     .container {{
@@ -721,8 +731,14 @@ window.MathJax = {{
             page-break-after: avoid;
         }}
         a {{
-            text-decoration: none;
-            color: #000;
+            text-decoration: underline;
+            color: #0284c7 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }}
+        .mermaid-svg {{
+            max-height: 180mm;
+            width: auto;
         }}
     }}
 </style>
@@ -839,6 +855,15 @@ window.MathJax = {{
         flex-direction: column;
         align-items: center;
         box-sizing: border-box;
+    }}
+    
+    a {{
+        color: #58a6ff;
+        text-decoration: underline;
+    }}
+    
+    a:hover {{
+        color: #79c0ff;
     }}
     
     .slide-container {{
@@ -1115,6 +1140,16 @@ window.MathJax = {{
         }}
         table {{
             font-size: 0.72em;
+        }}
+        a {{
+            text-decoration: underline;
+            color: #58a6ff !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }}
+        .mermaid-svg {{
+            max-height: 120mm;
+            width: auto;
         }}
     }}
 </style>

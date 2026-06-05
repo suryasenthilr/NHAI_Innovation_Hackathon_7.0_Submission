@@ -41,6 +41,15 @@ window.MathJax = {
         padding: 0;
     }
     
+    a {
+        color: #0284c7;
+        text-decoration: underline;
+    }
+    
+    a:hover {
+        color: #0369a1;
+    }
+    
     .container {
         display: flex;
         min-height: 100vh;
@@ -335,8 +344,14 @@ window.MathJax = {
             page-break-after: avoid;
         }
         a {
-            text-decoration: none;
-            color: #000;
+            text-decoration: underline;
+            color: #0284c7 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        .mermaid-svg {
+            max-height: 180mm;
+            width: auto;
         }
     }
 </style>
@@ -457,6 +472,8 @@ window.MathJax = {
     
         <h1 id="bharatverify-deep-engineering-mathematical-specification">📘 BharatVerify: Deep Engineering &amp; Mathematical Specification</h1>
 <h2 id="nhai-hackathon-70-technical-specification-biometric-heuristics-system-diagrams-and-security-audits">NHAI Hackathon 7.0 Technical Specification - Biometric Heuristics, System Diagrams, and Security Audits</h2>
+<div class="alert-important"><strong>IMPORTANT</strong>: <p><strong>READ ON GITHUB PREFERRED:</strong> For the best reading and evaluation experience, we highly recommend reading this document directly on GitHub: <strong><a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/technical_documentation.md">Read Technical Specification on GitHub</a></strong>. The GitHub repository natively renders all interactive zoomable diagrams, full vector schemas, code block formatting, and dark mode controls.</p>
+</div>
 <p><a href="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk"><img alt="Download Android APK" src="https://img.shields.io/badge/Download-Android%20APK-success.svg?style=for-the-badge&amp;logo=android" /></a>
 <a href="https://bharatverify-nhai.surge.sh"><img alt="Access Web Sandbox" src="https://img.shields.io/badge/Access-Web%20Sandbox-blue.svg?style=for-the-badge&amp;logo=google-chrome" /></a></p>
 <hr />
@@ -611,45 +628,49 @@ window.MathJax = {
 <h4 id="a-active-liveness-challenges">A. Active Liveness Challenges</h4>
 <p>The engine randomly generates and verifies three user actions to confirm physical presence:</p>
 <ol>
-<li><strong>Eye Blink Detection (Eye Aspect Ratio - EAR):</strong>
-    Uses the 6 2D coordinates surrounding each eye to compute vertical closure relative to horizontal width:</li>
-</ol>
+<li>
+<p><strong>Eye Blink Detection (Eye Aspect Ratio - EAR):</strong>
+    Uses the 6 2D coordinates surrounding each eye to compute vertical closure relative to horizontal width:</p>
 <p>$$\text{EAR} = \frac{||p_2 - p_6|| + ||p_3 - p_5||}{2 \times ||p_1 - p_4||}$$</p>
-<pre><code>* **The Threshold:** Open eyes maintain a ratio of $0.26 \le \text{EAR} \le 0.30$. When eyelids close, the vertical distance drops, causing the EAR to fall below **`0.25`** for at least 350ms to register a successful blink.
-</code></pre>
-<ol>
-<li><strong>Smile Verification (Smile Ratio):</strong>
-    Measures the horizontal width of the mouth (lip corners) normalized by the distance between the outer corners of the eyes:</li>
-</ol>
+<ul>
+<li><strong>The Threshold:</strong> Open eyes maintain a ratio of $0.26 \le \text{EAR} \le 0.30$. When eyelids close, the vertical distance drops, causing the EAR to fall below <strong><code>0.25</code></strong> for at least 350ms to register a successful blink.</li>
+</ul>
+</li>
+<li>
+<p><strong>Smile Verification (Smile Ratio):</strong>
+    Measures the horizontal width of the mouth (lip corners) normalized by the distance between the outer corners of the eyes:</p>
 <p>$$\text{Smile Ratio} = \frac{\text{Distance}(p_{49}, p_{55})}{\text{Distance}(p_{37}, p_{46})}$$</p>
-<pre><code>* **The Threshold:** A neutral face sits at $\text{Smile Ratio} \approx 0.72$. A smile stretches the lips, increasing the ratio past **`0.75`** to pass the challenge.
-</code></pre>
-<ol>
-<li><strong>Head Yaw Check (Yaw Symmetry Ratio):</strong>
-    Measures the horizontal distance symmetry of the nose tip relative to the outermost jawline boundaries:</li>
-</ol>
+<ul>
+<li><strong>The Threshold:</strong> A neutral face sits at $\text{Smile Ratio} \approx 0.72$. A smile stretches the lips, increasing the ratio past <strong><code>0.75</code></strong> to pass the challenge.</li>
+</ul>
+</li>
+<li>
+<p><strong>Head Yaw Check (Yaw Symmetry Ratio):</strong>
+    Measures the horizontal distance symmetry of the nose tip relative to the outermost jawline boundaries:</p>
 <p>$$\text{Yaw Ratio} = \frac{\text{Distance}(p_{31}, p_{1})}{\text{Distance}(p_{31}, p_{17})}$$</p>
-<pre><code>* **The Threshold:** A centered face has a $\text{Yaw Ratio} \approx 1.0$. A turn left shifts the ratio below **`0.72`**; a turn right shifts it above **`1.40`**.
-</code></pre>
+<ul>
+<li><strong>The Threshold:</strong> A centered face has a $\text{Yaw Ratio} \approx 1.0$. A turn left shifts the ratio below <strong><code>0.72</code></strong>; a turn right shifts it above <strong><code>1.40</code></strong>.</li>
+</ul>
+</li>
+</ol>
 <hr />
 <h4 id="b-passive-anti-spoofing-heuristics">B. Passive Anti-Spoofing Heuristics</h4>
 <ol>
-<li><strong>Laplacian Grayscale Texture Variance (Printed Photo Filter):</strong>
-    Defeats flat 2D printed attacks by analyzing pixel texture details. The face bounding box image $I$ is converted to grayscale, and the Laplacian operator is computed:</li>
-</ol>
+<li>
+<p><strong>Laplacian Grayscale Texture Variance (Printed Photo Filter):</strong>
+    Defeats flat 2D printed attacks by analyzing pixel texture details. The face bounding box image $I$ is converted to grayscale, and the Laplacian operator is computed:</p>
 <p>$$L(x, y) = \nabla^2 I(x, y) = \frac{\partial^2 I}{\partial x^2} + \frac{\partial^2 I}{\partial y^2}$$</p>
-<pre><code>The texture variance $\sigma^2$ is the standard deviation squared of the Laplacian image matrix:
-</code></pre>
+<p>The texture variance $\sigma^2$ is the standard deviation squared of the Laplacian image matrix:</p>
 <p>$$\sigma^2 = \frac{1}{N} \sum_{x, y} (L(x, y) - \mu)^2$$</p>
-<pre><code>Where $N$ is the number of pixels and $\mu$ is the mean of $L$. Real human skin has micro-depth and high-contrast texture details (pores, ambient occlusion shadows), maintaining a variance $\sigma^2 \ge 15.0$. Flat printed media has a flat texture, causing $\sigma^2 < 15.0$ and triggering an immediate spoof block.
-</code></pre>
-<ol>
-<li><strong>Spectral Blue Glow Index (Device Replay Screen Filter):</strong>
-    Mobile screens emit a cool, blue-saturated spectral emission. Human skin flushes with warmer red channels due to blood flow. The Spectral Blue Glow index (SBGI) is computed as:</li>
-</ol>
+<p>Where $N$ is the number of pixels and $\mu$ is the mean of $L$. Real human skin has micro-depth and high-contrast texture details (pores, ambient occlusion shadows), maintaining a variance $\sigma^2 \ge 15.0$. Flat printed media has a flat texture, causing $\sigma^2 < 15.0$ and triggering an immediate spoof block.</p>
+</li>
+<li>
+<p><strong>Spectral Blue Glow Index (Device Replay Screen Filter):</strong>
+    Mobile screens emit a cool, blue-saturated spectral emission. Human skin flushes with warmer red channels due to blood flow. The Spectral Blue Glow index (SBGI) is computed as:</p>
 <p>$$\text{SBGI} = \frac{\mu_{\text{Red}}}{\mu_{\text{Blue}}}$$</p>
-<pre><code>Where $\mu_{\text{Red}}$ is the average intensity of the red color channel, and $\mu_{\text{Blue}}$ is the average intensity of the blue color channel. If $\text{SBGI} < 1.02$, it implies screen replay emission and fails the check.
-</code></pre>
+<p>Where $\mu_{\text{Red}}$ is the average intensity of the red color channel, and $\mu_{\text{Blue}}$ is the average intensity of the blue color channel. If $\text{SBGI} < 1.02$, it implies screen replay emission and fails the check.</p>
+</li>
+</ol>
 <hr />
 <h3 id="key-technical-mathematical-enhancements">Key Technical Mathematical Enhancements</h3>
 <h4 id="1-local-haversine-geofencing-formula">1. Local Haversine Geofencing Formula</h4>

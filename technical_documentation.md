@@ -1,6 +1,9 @@
 # 📘 BharatVerify: Deep Engineering & Mathematical Specification
 ## NHAI Hackathon 7.0 Technical Specification - Biometric Heuristics, System Diagrams, and Security Audits
 
+> [!IMPORTANT]
+> **READ ON GITHUB PREFERRED:** For the best reading and evaluation experience, we highly recommend reading this document directly on GitHub: **[Read Technical Specification on GitHub](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/blob/master/technical_documentation.md)**. The GitHub repository natively renders all interactive zoomable diagrams, full vector schemas, code block formatting, and dark mode controls.
+
 [![Download Android APK](https://img.shields.io/badge/Download-Android%20APK-success.svg?style=for-the-badge&logo=android)](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)
 [![Access Web Sandbox](https://img.shields.io/badge/Access-Web%20Sandbox-blue.svg?style=for-the-badge&logo=google-chrome)](https://bharatverify-nhai.surge.sh)
 
