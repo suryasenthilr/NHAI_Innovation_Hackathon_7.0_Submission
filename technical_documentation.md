@@ -10,16 +10,35 @@
 
 This document serves as the technical specification and math whitepaper for **BharatVerify**, an edge-native offline biometric module built for the **NHAI Datalake 3.0** mobile framework.
 
-### Standalone Android APK (.APK)
+> [!IMPORTANT]
+> **Biometric Deliverable Format Disclaimer for Evaluators & Judges:**
+> * **Primary Deliverable (Standalone Android APK):** The **core submission** is the native Android application package (`.apk`). This represents the full production-ready, edge-native, 100% offline biometric module engineered to run inside the physical NHAI *Datalake 3.0* mobile environment. All offline SQLite storage, camera frame processors, and local database sync tasks execute directly within the mobile OS sandbox.
+> * **Hosted Web PWA Sandbox (Convenience Simulator):** The web-deployed application at **[bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh)** is a **simulator sandbox** provided *strictly for convenience*. It allows judges and evaluators to instantly test the camera interface, demographic matrices, and synchronization logic on any device (including iOS, Mac, and Windows) *without* performing Android sideloading or compilation. It is **not** a website-only project; the production module is native mobile code.
+
+### Standalone Android APK (.APK) - *Primary Production Build*
 A mobile application package has been compiled using the **EAS (Expo Application Services)** build system on the `@sxrya` Expo developer registry, utilizing Android package namespace `com.suryasenthilr.bharatverifyantigravity` and EAS Project ID `464095aa-3fd6-4909-93e5-8cab4f62c0b5`.
 
 * **GitHub Release Artifact Download:** Click the **Download Android APK** badge above, or visit the official **[GitHub Releases Page](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)** to download the standalone `.apk`.
 * **Sideloading Instructions:** Copy the compiled `.apk` binary file to a physical Android device running Android 8.0+. When opening the file, bypass the developer security warning (**"Play Protect: Unrecognized App"**) by clicking **"Install Anyway"**.
 * **Offline Testing:** Once installed, launch **BharatVerify**, grant camera permissions, and complete a test registration/verification. The app runs 100% offline at the device border.
 
+### Deployed Web PWA Sandbox - *Evaluation Companion Simulator*
+* **Access URL:** **[bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh)**
+* **Evaluation Utility:** Allows instant testing of face registration, biometric math vectors, low-light filters, and live AWS data syncing on any browser. Can be added to the mobile home screen as an installable PWA.
+
 ### 🎥 Live Biometric Demonstration Video
 Watch BharatVerify run active/passive liveness challenges, geofencing, and serverless sync:
 * **[Watch Full Demonstration Video (GitHub Release Asset)](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4)**
+* **Local Playback Source:** An inline player is embedded in the [README.md](./README.md) using a local relative path (`./assets/demovideo.mp4`) to enable native, stutter-free browser streaming.
+
+### 📸 Interactive System Interfaces & Simulation Consoles
+
+To ensure a seamless, high-fidelity developer evaluation experience, the application features dedicated system dashboards:
+
+| Local Personnel Registry Database | Demographics & Outdoor Lighting Console | Datalake 3.0 Integration Sandbox |
+| :---: | :---: | :---: |
+| ![Local Personnel Registry Database](./assets/docs-images/ui_db.png) | ![Demographics & Outdoor Lighting Console](./assets/docs-images/ui_demographics.png) | ![Datalake 3.0 Integration Sandbox](./assets/docs-images/ui_sandbox.png) |
+| Registers facial templates dynamically, showing extracted 128-float biometric vectors and developer diagnostic logs in real-time. | Simulates sunlight, low light, and harsh shadows locally to test model calibration against the Indian Demographic Training Matrix. | Provides a modular sandbox environment with code installation steps and telemetry indicators for native integration. |
 
 ---
 

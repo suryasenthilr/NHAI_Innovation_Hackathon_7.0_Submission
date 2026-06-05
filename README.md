@@ -17,14 +17,19 @@ BharatVerify is an enterprise-grade, lightweight, and entirely offline facial re
 
 ## 📥 Standalone APK Installation, Web Sandbox & Demo Video
 
+> [!IMPORTANT]
+> **Biometric Deliverable Format Disclaimer for Evaluators & Judges:**
+> * **Primary Deliverable (Standalone Android APK):** The **core submission** is the native Android application package (`.apk`). This represents the full production-ready, edge-native, 100% offline biometric module engineered to run inside the physical NHAI *Datalake 3.0* mobile environment. All offline SQLite storage, camera frame processors, and local database sync tasks execute directly within the mobile OS sandbox.
+> * **Hosted Web PWA Sandbox (Convenience Simulator):** The web-deployed application at **[bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh)** is a **simulator sandbox** provided *strictly for convenience*. It allows judges and evaluators to instantly test the camera interface, demographic matrices, and synchronization logic on any device (including iOS, Mac, and Windows) *without* performing Android sideloading or compilation. It is **not** a website-only project; the production module is native mobile code.
+
 ### 🎥 Live Biometric Demonstration Video
 Watch BharatVerify run the active liveness challenges (blink, smile, head turn), passive anti-spoofing filters, geofencing checks, and database synchronization in real-time:
 
-<video src="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4" controls width="100%" poster="./assets/images/splash-icon.png"></video>
+<video src="./assets/demovideo.mp4" controls width="100%" poster="./assets/images/splash-icon.png"></video>
 
 *(If the video player does not load in your browser, you can download it directly here: **[Watch Demo Video](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4)**)*
 
-### Android Standalone APK (.APK)
+### Android Standalone APK (.APK) - *Primary Production Build*
 We have compiled a standalone Android application package (`.apk`) using **Expo Application Services (EAS)**, configured under package ID `com.suryasenthilr.bharatverifyantigravity`.
 
 1. **Download the APK:** Click the **Download Android APK** badge at the top, or download it directly from our **[GitHub Releases Page](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)**.
@@ -32,10 +37,20 @@ We have compiled a standalone Android application package (`.apk`) using **Expo 
    * *Note:* Since this is a sideloaded developer-preview build, Android might display a **"Blocked by Play Protect"** warning. Click **"Install Anyway"** to proceed.
 3. **Open and Scan:** Launch the installed **BharatVerify** app from your home screen. Provide the requested camera permissions. You can register your face template and immediately test offline liveness verification.
 
-### Deployed Web PWA Sandbox
+### Deployed Web PWA Sandbox - *Evaluation Companion Simulator*
 For instant evaluation on any device (iOS, Android, or Desktop) without installing the APK:
 1. Navigate to **[bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh)** in your web browser (Safari or Chrome).
 2. For an immersive app-like experience, tap **"Add to Home Screen"** to install it as a Progressive Web App (PWA).
+
+### 📸 Live Application Interface & Interactive Developer Consoles
+
+To ensure a seamless, high-fidelity developer evaluation experience, the application features dedicated system dashboards:
+
+| Local Personnel Registry Database | Demographics & Outdoor Lighting Console | Datalake 3.0 Integration Sandbox |
+| :---: | :---: | :---: |
+| ![Local Personnel Registry Database](./assets/docs-images/ui_db.png) | ![Demographics & Outdoor Lighting Console](./assets/docs-images/ui_demographics.png) | ![Datalake 3.0 Integration Sandbox](./assets/docs-images/ui_sandbox.png) |
+| Registers facial templates dynamically, showing extracted 128-float biometric vectors and developer diagnostic logs in real-time. | Simulates sunlight, low light, and harsh shadows locally to test model calibration against the Indian Demographic Training Matrix. | Provides a modular sandbox environment with code installation steps and telemetry indicators for native integration. |
+
 
 ---
 

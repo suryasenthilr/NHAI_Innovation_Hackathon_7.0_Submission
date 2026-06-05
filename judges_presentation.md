@@ -9,9 +9,10 @@
 * **Subtitle:** 100% Offline Facial Verification & Liveness Detection Module for Datalake 3.0
 * **Target Audience:** NHAI Hackathon 7.0 Evaluation Committee
 * **Evaluation Channels:**
-  * **📥 Standalone Android APK:** [GitHub Release APK](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)
-  * **🎥 Live Demonstration Video:** [Watch Demo Video](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4)
-  * **🌐 Web PWA Sandbox:** [bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh) (PWA Installable)
+  * **📥 Standalone Android APK (Primary Production Submission):** [GitHub Release APK](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk) — Built natively via EAS. Represents the complete offline mobile application module.
+  * **🎥 Live Demonstration Video:** [Watch Demo Video](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4) (Inline streaming available in README.md)
+  * **🌐 Hosted Web PWA Sandbox (Evaluation Companion Simulator):** [bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh) — Provided *strictly for evaluator convenience* to instantly test liveness filters, database registries, and telemetry sync on any laptop, tablet, or phone browser without sideloading.
+* **Important Deliverable Note:** BharatVerify is an edge-native mobile module, not just a website. The web sandbox is a companion simulator to ease the testing process.
 * **Key Achievements Badges:**
   * **Compressed Model Size:** 10.65 MB (47% below budget)
   * **Average Latency:** < 800ms total flow (~190ms inference loop)
@@ -183,9 +184,8 @@
 * **Fully Compliant:** DPDP Act 2023 ready.
 * **Zero Cost:** No licensing fees, no cloud API bills.
 * **Edge-Native Performance:** Under 800ms authentication in zero-network areas.
-* **Fully Functional & Deployed:**
-  * **Live PWA Sandbox:** [bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh)
-  * **Developer AWS Endpoint Configurator:** Live self-serve testing for judges.
+* **Primary native deliverable:** Sideloadable Android APK (`v1.0.0` release).
+* **Hosted PWA Sandbox simulator:** For instant testing on any platform [bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh).
 * **Conclusion:** The most complete, cost-efficient, secure, and production-ready submission for NHAI Datalake 3.0.
 
 ---
