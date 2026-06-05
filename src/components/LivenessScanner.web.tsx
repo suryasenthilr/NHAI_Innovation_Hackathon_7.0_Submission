@@ -360,23 +360,19 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
         if (hasValidFace) {
           const { detection, landmarks, descriptor } = faceData;
           const box = detection.box;
-          
-          // Apply horizontal mirroring offset since video is mirrored in UI
-          const mirroredX = canvas.width - box.x - box.width;
 
-          // 2. Draw Face Bounding Box
+          // 2. Draw Face Bounding Box (Canvas is mirrored in CSS to match video, so draw unmirrored raw coords)
           ctx.strokeStyle = scannerStateRef.current === 'success' ? '#10B981' : 
                            isSpoofingWarning ? '#EF4444' : '#10B981';
           ctx.lineWidth = 3;
-          ctx.strokeRect(mirroredX, box.y, box.width, box.height);
+          ctx.strokeRect(box.x, box.y, box.width, box.height);
 
           // 3. Draw Landmarks (Facial Mesh)
           const landmarkPoints = landmarks.positions;
           ctx.fillStyle = scannerStateRef.current === 'success' ? '#10B981' : '#3B82F6';
           
-          // Mirror landmarks for drawing
           const drawPoints = landmarkPoints.map(p => ({
-            x: canvas.width - p.x,
+            x: p.x,
             y: p.y
           }));
 
@@ -716,6 +712,18 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
   };
 
   const resetScanner = () => {
+    setVerifiedUser(null);
+    setMatchScore(0);
+    setChallengeProgress(0);
+    setLivenessDetails({
+      blinkPassed: false,
+      smilePassed: false,
+      headPassed: false
+    });
+    setCurrentChallengeIndex(0);
+    setSpoofIndicator(0);
+    setIsSpoofingWarning(false);
+    
     if (activeStreamRef.current) {
       stopCamera();
     }
@@ -803,6 +811,8 @@ export const LivenessScanner: React.FC<LivenessScannerProps> = ({
                 left: 0,
                 width: '100%',
                 height: '100%',
+                objectFit: 'cover',
+                transform: 'scaleX(-1)', // Mirror canvas to match video
                 pointerEvents: 'none',
                 zIndex: 10 // Force canvas overlays on top of video/dark overlay
               }}
@@ -1134,6 +1144,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
+    zIndex: 100, // Show on top of canvas (10) and video (1)
   },
   resultTitle: {
     color: '#10B981',

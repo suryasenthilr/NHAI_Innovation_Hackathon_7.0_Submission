@@ -449,7 +449,10 @@ export default function HomeScreen() {
               <View style={styles.phoneMenu}>
                 <TouchableOpacity 
                   style={[styles.phoneMenuBtn, !isRegisterMode && styles.phoneMenuBtnActive]}
-                  onPress={() => setIsRegisterMode(false)}
+                  onPress={() => {
+                    setIsRegisterMode(false);
+                    setCapturedEmbedding(null);
+                  }}
                 >
                   <Lock size={12} color={!isRegisterMode ? '#F59E0B' : '#94A3B8'} />
                   <Text style={[styles.phoneMenuText, !isRegisterMode && styles.textGold]}>Authenticate</Text>
@@ -457,7 +460,10 @@ export default function HomeScreen() {
 
                 <TouchableOpacity 
                   style={[styles.phoneMenuBtn, isRegisterMode && styles.phoneMenuBtnActive]}
-                  onPress={() => setIsRegisterMode(true)}
+                  onPress={() => {
+                    setIsRegisterMode(true);
+                    setCapturedEmbedding(null);
+                  }}
                 >
                   <UserPlus size={12} color={isRegisterMode ? '#F59E0B' : '#94A3B8'} />
                   <Text style={[styles.phoneMenuText, isRegisterMode && styles.textGold]}>Register</Text>
@@ -469,6 +475,7 @@ export default function HomeScreen() {
                 {!isRegisterMode ? (
                   /* Authentication Camera viewport */
                   <LivenessScanner 
+                    key="authenticate-mode"
                     onTelemetryUpdate={setTelemetry}
                     onLogAdded={loadLogs}
                     isSpoofSimulationActive={isSpoofingActive}
@@ -477,6 +484,7 @@ export default function HomeScreen() {
                 ) : !capturedEmbedding ? (
                   /* Face Capture Stage */
                   <LivenessScanner 
+                    key="register-mode"
                     onTelemetryUpdate={setTelemetry}
                     onLogAdded={loadLogs}
                     isSpoofSimulationActive={isSpoofingActive}
