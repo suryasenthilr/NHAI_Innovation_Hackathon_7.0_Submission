@@ -467,19 +467,31 @@ If you want to test the responsive mobile application instantly on a computer or
    * Paste **your own AWS Lambda Function URL** into the configuration input at the top and click **Save Endpoint**.
    * Toggle the network status to **Online** and click **Sync Logs to AWS** to watch the logs appear live inside your own AWS CloudWatch/S3 console!
 
-### Option 2: Sideloading or Building the Standalone Mobile App (.APK)
-To test or build the native package directly on an Android physical device:
-* **Option A: Compile it yourself using EAS Build:**
-  1. Login or create a free Expo account:
+### Option 2: Sideloading or Building the Standalone Mobile Apps (Android & iOS)
+To compile the standalone native packages using Expo Application Services (EAS) in the cloud:
+
+1. **Login or create a free Expo account:**
+   ```bash
+   npx expo login
+   ```
+2. **Initialize and configure the project:**
+   ```bash
+   npx eas build:configure
+   ```
+3. **Trigger the platform-specific build:**
+   * **Android (.APK preview package for sideloading):**
      ```bash
-     npx expo login
-     ```
-  2. Configure and run the build:
-     ```bash
-     npx eas build:configure
      npx eas build --platform android --profile preview
      ```
-     *(This compiles the native `.apk` using Expo Application Services (EAS) in the cloud, generating a secure download link).*
+   * **iOS Simulator (.tar.gz for macOS iOS Simulator testing - no paid Apple Developer account required):**
+     ```bash
+     npx eas build --platform ios --profile preview --simulator
+     ```
+   * **iOS Device (.ipa for physical iPhones - requires a paid Apple Developer Account):**
+     ```bash
+     npx eas build --platform ios --profile preview
+     ```
+   *(EAS compiles the application inside secure cloud enclaves, generating a QR code and a direct download link for the binary).*
 
 ### Option 3: Compiling and Self-Hosting the Web PWA
 If you want to compile the source code and host the Progressive Web App under your own domain/server:

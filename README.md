@@ -26,10 +26,19 @@ If you hit the free-tier build limit on your current Expo account, follow these 
    ```bash
    npx eas-cli project:init
    ```
-5. Trigger the cloud APK preview build:
-   ```bash
-   npx eas-cli build -p android --profile preview
-   ```
+5. Trigger the cloud build for Android or iOS:
+   * **Android APK (Sideloadable build):**
+     ```bash
+     npx eas-cli build -p android --profile preview
+     ```
+   * **iOS Simulator Build (No paid Apple Developer Account required):**
+     ```bash
+     npx eas-cli build -p ios --profile preview --simulator
+     ```
+   * **iOS Device Build (Requires a paid Apple Developer Account):**
+     ```bash
+     npx eas-cli build -p ios --profile preview
+     ```
 
 ---
 
