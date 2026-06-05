@@ -540,6 +540,71 @@ If you want to test the responsive mobile application instantly on a computer or
    * Paste **your own AWS Lambda Function URL** into the configuration input at the top and click **Save Endpoint**.
    * Toggle the network status to **Online** and click **Sync Logs to AWS** to watch the logs appear live inside your own AWS CloudWatch/S3 console!
 
+#### ☁️ AWS Lambda Serverless Backend Setup (CORS-Compliant Lambda)
+To configure a custom, free-tier AWS endpoint to ingest and process biometric log streams in under 3 minutes:
+1. **Create an AWS Lambda Function:**
+   * Open the **AWS Lambda Console** and click **Create function**.
+   * Select **Author from scratch**, set the runtime to **Node.js 20.x** (or similar), and name it (e.g., `BharatVerifySyncProcessor`).
+2. **Deploy the Handler Script:**
+   * Paste the following code into the editor to process the SQLite client sync payload and handle CORS:
+     ```javascript
+     export const handler = async (event) => {
+       // Handle CORS preflight options request
+       if (event.requestContext && event.requestContext.http.method === 'OPTIONS') {
+         return {
+           statusCode: 200,
+           headers: {
+             'Access-Control-Allow-Origin': '*',
+             'Access-Control-Allow-Headers': 'Content-Type',
+             'Access-Control-Allow-Methods': 'POST, OPTIONS'
+           },
+           body: ''
+         };
+       }
+
+       try {
+         const logs = JSON.parse(event.body || '[]');
+         console.log(`[Sync Gate] Received ${logs.length} biometric audit logs from client device.`);
+         console.log('Logs Payload:', JSON.stringify(logs, null, 2));
+
+         // Here you can insert custom database hooks to save records to AWS DynamoDB/RDS or S3 buckets.
+
+         return {
+           statusCode: 200,
+           headers: {
+             'Access-Control-Allow-Origin': '*',
+             'Access-Control-Allow-Headers': 'Content-Type',
+             'Access-Control-Allow-Methods': 'POST, OPTIONS'
+           },
+           body: JSON.stringify({
+             status: 'SUCCESS',
+             message: 'Biometric transaction sync successful',
+             processedCount: logs.length
+           })
+         };
+       } catch (error) {
+         console.error('Payload parsing error:', error);
+         return {
+           statusCode: 400,
+           headers: { 'Access-Control-Allow-Origin': '*' },
+           body: JSON.stringify({ status: 'ERROR', message: 'Invalid JSON payload' })
+         };
+       }
+     };
+     ```
+   * Click **Deploy**.
+3. **Enable Function URL Endpoint:**
+   * Navigate to the function's **Configuration** tab -> click **Function URL** in the sidebar -> click **Create Function URL**.
+   * Set **Auth type** to **NONE** (to allow direct mobile sync requests).
+   * Expand **Configure cross-origin resource sharing (CORS)** and configure:
+     * Set **Allow origin** to `*`
+     * Set **Allow headers** to `content-type`
+     * Set **Allow methods** to `POST, OPTIONS`
+   * Click **Save**.
+4. **Link the URL:**
+   * Copy the generated HTTPS URL and paste it into the **AWS Sync Center** input box inside the app, save, and sync.
+
+
 ### Option 2: Sideloading or Building the Standalone Mobile Apps (Android & iOS)
 To compile the standalone native packages using Expo Application Services (EAS) in the cloud:
 

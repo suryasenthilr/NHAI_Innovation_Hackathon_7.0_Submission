@@ -590,6 +590,72 @@ import { LivenessScanner } from '../components/LivenessScanner';
    * Paste **your own AWS Lambda/API Gateway URL** in the developer input box and click Save.
    * Switch the connection toggle to **Online**, and click **Sync Logs to AWS**. You will immediately watch the local SQLite payload sync to your own S3/CloudWatch logs!
 
+#### ☁️ How to Set Up Your AWS Serverless Sync Endpoint (CORS-Compliant Lambda)
+To set up a custom, free-tier AWS endpoint for testing live synchronization in under 3 minutes:
+1. **Create an AWS Lambda Function:**
+   * Go to the **AWS Lambda Console** and click **Create function**.
+   * Choose **Author from scratch**, set the runtime to **Node.js 20.x** (or similar), and name it (e.g., `BharatVerifySync`).
+2. **Deploy the Handler Code:**
+   * Replace the code in the default `index.mjs` editor with the following CORS-compliant serverless handler:
+     ```javascript
+     export const handler = async (event) => {
+       // Handle CORS preflight options request
+       if (event.requestContext && event.requestContext.http.method === 'OPTIONS') {
+         return {
+           statusCode: 200,
+           headers: {
+             'Access-Control-Allow-Origin': '*',
+             'Access-Control-Allow-Headers': 'Content-Type',
+             'Access-Control-Allow-Methods': 'POST, OPTIONS'
+           },
+           body: ''
+         };
+       }
+
+       try {
+         const logs = JSON.parse(event.body || '[]');
+         console.log(`Received ${logs.length} synced logs from client device.`);
+         console.log('Logs Payload:', JSON.stringify(logs, null, 2));
+
+         // Here you can insert custom code to write these records into AWS DynamoDB or archive to AWS S3.
+
+         return {
+           statusCode: 200,
+           headers: {
+             'Access-Control-Allow-Origin': '*',
+             'Access-Control-Allow-Headers': 'Content-Type',
+             'Access-Control-Allow-Methods': 'POST, OPTIONS'
+           },
+           body: JSON.stringify({
+             status: 'SUCCESS',
+             message: 'Biometric transaction sync successful',
+             processedCount: logs.length
+           })
+         };
+       } catch (error) {
+         console.error('Payload parsing error:', error);
+         return {
+           statusCode: 400,
+           headers: { 'Access-Control-Allow-Origin': '*' },
+           body: JSON.stringify({ status: 'ERROR', message: 'Invalid JSON payload' })
+         };
+       }
+     };
+     ```
+   * Click **Deploy**.
+3. **Enable Function URL (Direct HTTPS Endpoint):**
+   * Go to the function's **Configuration** tab -> select **Function URL** from the sidebar -> click **Create Function URL**.
+   * Set **Auth type** to **NONE** (allowing client devices to sync without AWS IAM overhead).
+   * Expand **Configure cross-origin resource sharing (CORS)** and configure the CORS policy:
+     * Set **Allow origin** to `*`
+     * Set **Allow headers** to `content-type`
+     * Set **Allow methods** to `POST, OPTIONS`
+   * Click **Save**.
+4. **Sync with BharatVerify:**
+   * Copy the generated **Function URL** (e.g., `https://xxxx.lambda-url.region.on.aws/`).
+   * Paste it into the **AWS Sync Center** configuration panel inside the app, click **Save Endpoint**, toggle to **Online**, and click **Sync Logs to AWS**. You will see the local SQLite database logs sync and auto-purge immediately!
+
+
 ### Option 2: Running the Development Server Locally
 1. Clone the repository and install dependencies:
    ```bash
