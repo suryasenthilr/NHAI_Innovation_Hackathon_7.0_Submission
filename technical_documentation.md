@@ -16,7 +16,7 @@ This document serves as the technical specification and math whitepaper for **Bh
 ### 📘 Submission Deliverables & Documentation
 * **📥 Standalone Android APK:** **[Download Standalone APK](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)** (Native build compiled via EAS under package ID `com.suryasenthilr.bharatverifyantigravity`).
 * **🎥 Demonstration Video:** **[Watch Demo Video](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4)** (Inline player also embedded in [README.md](./README.md)).
-* **🌐 Web PWA Sandbox (Convenience Simulator):** **[Access Web Sandbox](https://bharatverify-nhai.surge.sh)** (Hosted browser companion for instant evaluation).
+* **🌐 Deployed Mobile Simulator (Hosted on Surge):** **[Access Mobile Simulator](https://bharatverify-nhai.surge.sh)** (The exact same edge-native scanner module hosted on Surge for instant evaluation on any device browser without sideloading).
 * **📘 Product Documentation:** **[README.md](./README.md)** (This quick-start and installation guide).
 * **📘 Engineering Specification:** **[technical_documentation.md](./technical_documentation.md)** (This mathematical and architectural specification).
 * **💼 Slide-Deck Presentation:** **[judges_presentation.md](./judges_presentation.md)** (Pitch slides for the evaluation committee).
@@ -27,7 +27,7 @@ This document serves as the technical specification and math whitepaper for **Bh
 > **Biometric Deliverable Format Disclaimer for Evaluators & Judges:**
 > 
 > * **Primary Deliverable (Standalone Android APK):** The **core submission** is the native Android application package (`.apk`). This represents the full production-ready, edge-native, 100% offline biometric module engineered to run inside the physical NHAI *Datalake 3.0* mobile environment. All offline SQLite storage, camera frame processors, and local database sync tasks execute directly within the mobile OS sandbox.
-> * **Hosted Web PWA Sandbox (Convenience Simulator):** The web-deployed application at **[bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh)** is a **simulator sandbox** provided *strictly for convenience*. It allows judges and evaluators to instantly test the camera interface, demographic matrices, and synchronization logic on any device (including iOS, Mac, and Windows) *without* performing Android sideloading or compilation. It is **not** a website-only project; the production module is native mobile code.
+> * **Hosted Mobile Simulator (On Surge):** The deployment at **[bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh)** is the exact same offline mobile scanner module hosted on Surge as a simulator. This is provided strictly for evaluation convenience, allowing judges to test the camera interface, liveness challenges, and face similarity matrices on any device (including iOS, Mac, and Windows) without sideloading the Android APK. The production module is native mobile code, not a web application.
 
 ### Standalone Android APK (.APK) - *Primary Production Build*
 A mobile application package has been compiled using the **EAS (Expo Application Services)** build system on the `@sxrya` Expo developer registry, utilizing Android package namespace `com.suryasenthilr.bharatverifyantigravity` and EAS Project ID `464095aa-3fd6-4909-93e5-8cab4f62c0b5`.

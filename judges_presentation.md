@@ -11,7 +11,7 @@
 ## 🔗 Submission Deliverables & Evaluation Center
 * **📥 Standalone Android APK (Primary Production Submission):** **[Download Standalone APK](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)** (Native build compiled via EAS under package ID `com.suryasenthilr.bharatverifyantigravity`).
 * **🎥 Demonstration Video:** **[Watch Demo Video](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4)** (Inline player also embedded in [README.md](./README.md)).
-* **🌐 Web PWA Sandbox (Convenience Simulator):** **[Access Web Sandbox](https://bharatverify-nhai.surge.sh)** (Hosted browser companion for instant evaluation).
+* **🌐 Deployed Mobile Simulator (Hosted on Surge):** **[Access Mobile Simulator](https://bharatverify-nhai.surge.sh)** (The exact same edge-native scanner module hosted on Surge for instant evaluation on any device browser without sideloading).
 * **📘 Product Documentation:** **[README.md](./README.md)** (Full quick-start and installation guide).
 * **📘 Engineering Whitepaper:** **[technical_documentation.md](./technical_documentation.md)** (Mathematical and architectural specification).
 * **💼 Pitch Slide Deck:** **[judges_presentation.md](./judges_presentation.md)** (Pitch slides for the evaluation committee).
@@ -25,7 +25,7 @@
 * **Evaluation Channels:**
   * **📥 Standalone Android APK:** [GitHub Release APK](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk) — Built natively via EAS. Represents the complete offline mobile application module.
   * **🎥 Live Demonstration Video:** [Watch Demo Video](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4) (Inline streaming available in [README.md](./README.md))
-  * **🌐 Deployed Web PWA Sandbox:** [bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh) — Provided *strictly for evaluator convenience* to instantly test liveness filters, database registries, and telemetry sync on any laptop, tablet, or phone browser without sideloading.
+  * **🌐 Deployed Mobile Simulator (On Surge):** [bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh) — The exact same offline mobile scanner module hosted on Surge as a simulator. Provided strictly for evaluator convenience to instantly test liveness, registries, and telemetry on any browser without sideloading.
 * **Important Deliverable Note:** BharatVerify is a native mobile solution, not merely a website. The web sandbox is a companion simulator to ease the testing process.
 * **Key Achievements Badges:**
   * **Compressed Model Size:** 10.65 MB (47% below budget)
@@ -223,7 +223,7 @@
 * **Zero Cost:** No licensing fees, no cloud API bills.
 * **Edge-Native Performance:** Under 800ms authentication in zero-network areas.
 * **Primary native deliverable:** Sideloadable Android APK (`v1.0.0` release).
-* **Hosted PWA Sandbox simulator:** For instant testing on any platform [bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh).
+* **Hosted Mobile Simulator (On Surge):** For instant evaluation of the exact same offline module on any browser [bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh).
 * **Conclusion:** The most complete, cost-efficient, secure, and production-ready submission for NHAI Datalake 3.0.
 
 ---

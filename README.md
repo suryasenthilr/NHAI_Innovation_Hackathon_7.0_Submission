@@ -16,7 +16,7 @@ BharatVerify is an enterprise-grade, lightweight, and entirely offline facial re
 ### 📘 Submission Deliverables & Documentation
 * **📥 Standalone Android APK:** **[Download Standalone APK](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)** (Native build compiled via EAS under package ID `com.suryasenthilr.bharatverifyantigravity`).
 * **🎥 Demonstration Video:** **[Watch Demo Video](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demovideo.mp4)** (Inline player also embedded below).
-* **🌐 Web PWA Sandbox (Convenience Simulator):** **[Access Web Sandbox](https://bharatverify-nhai.surge.sh)** (Hosted browser companion for instant evaluation).
+* **🌐 Deployed Mobile Simulator (Hosted on Surge):** **[Access Mobile Simulator](https://bharatverify-nhai.surge.sh)** (The exact same edge-native scanner module hosted on Surge for instant evaluation on any device browser without sideloading).
 * **📘 Product Documentation:** **[README.md](./README.md)** (This quick-start and installation guide).
 * **📘 Engineering Specification:** **[technical_documentation.md](./technical_documentation.md)** (Mathematical and architectural specification).
 * **💼 Slide-Deck Presentation:** **[judges_presentation.md](./judges_presentation.md)** (Pitch slides for the evaluation committee).
@@ -29,7 +29,7 @@ BharatVerify is an enterprise-grade, lightweight, and entirely offline facial re
 > **Biometric Deliverable Format Disclaimer for Evaluators & Judges:**
 > 
 > * **Primary Deliverable (Standalone Android APK):** The **core submission** is the native Android application package (`.apk`). This represents the full production-ready, edge-native, 100% offline biometric module engineered to run inside the physical NHAI *Datalake 3.0* mobile environment. All offline SQLite storage, camera frame processors, and local database sync tasks execute directly within the mobile OS sandbox.
-> * **Hosted Web PWA Sandbox (Convenience Simulator):** The web-deployed application at **[bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh)** is a **simulator sandbox** provided *strictly for convenience*. It allows judges and evaluators to instantly test the camera interface, demographic matrices, and synchronization logic on any device (including iOS, Mac, and Windows) *without* performing Android sideloading or compilation. It is **not** a website-only project; the production module is native mobile code.
+> * **Hosted Mobile Simulator (On Surge):** The deployment at **[bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh)** is the exact same offline mobile scanner module hosted on Surge as a simulator. This is provided strictly for evaluation convenience, allowing judges to test the camera interface, liveness challenges, and face similarity matrices on any device (including iOS, Mac, and Windows) without sideloading the Android APK. The production module is native mobile code, not a web application.
 
 ### 🎥 Live Biometric Demonstration Video
 Watch BharatVerify run the active liveness challenges (blink, smile, head turn), passive anti-spoofing filters, geofencing checks, and database synchronization in real-time:
