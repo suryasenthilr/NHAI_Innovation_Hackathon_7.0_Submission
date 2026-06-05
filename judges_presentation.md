@@ -9,8 +9,8 @@
 * **Subtitle:** 100% Offline Facial Verification & Liveness Detection Module for Datalake 3.0
 * **Target Audience:** NHAI Hackathon 7.0 Evaluation Committee
 * **Evaluation Channels:**
-  * **📥 Standalone Android APK:** [GitHub Release APK](https://github.com/suryasenthilr/-NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)
-  * **🎥 Live Demonstration Video:** [Watch Demo Video](https://github.com/suryasenthilr/-NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demo.mp4)
+  * **📥 Standalone Android APK:** [GitHub Release APK](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)
+  * **🎥 Live Demonstration Video:** [Watch Demo Video](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demo.mp4)
   * **🌐 Web PWA Sandbox:** [bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh) (PWA Installable)
 * **Key Achievements Badges:**
   * **Compressed Model Size:** 10.65 MB (47% below budget)

@@ -1,7 +1,7 @@
 # 📘 BharatVerify: Deep Engineering & Mathematical Specification
 ## NHAI Hackathon 7.0 Technical Specification - Biometric Heuristics, System Diagrams, and Security Audits
 
-[![Download Android APK](https://img.shields.io/badge/Download-Android%20APK-success.svg?style=for-the-badge&logo=android)](https://github.com/suryasenthilr/-NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)
+[![Download Android APK](https://img.shields.io/badge/Download-Android%20APK-success.svg?style=for-the-badge&logo=android)](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)
 [![Access Web Sandbox](https://img.shields.io/badge/Access-Web%20Sandbox-blue.svg?style=for-the-badge&logo=google-chrome)](https://bharatverify-nhai.surge.sh)
 
 ---
@@ -13,13 +13,13 @@ This document serves as the technical specification and math whitepaper for **Bh
 ### Standalone Android APK (.APK)
 A mobile application package has been compiled using the **EAS (Expo Application Services)** build system on the `@sxrya` Expo developer registry, utilizing Android package namespace `com.suryasenthilr.bharatverifyantigravity` and EAS Project ID `464095aa-3fd6-4909-93e5-8cab4f62c0b5`.
 
-* **GitHub Release Artifact Download:** Click the **Download Android APK** badge above, or visit the official **[GitHub Releases Page](https://github.com/suryasenthilr/-NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)** to download the standalone `.apk`.
+* **GitHub Release Artifact Download:** Click the **Download Android APK** badge above, or visit the official **[GitHub Releases Page](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)** to download the standalone `.apk`.
 * **Sideloading Instructions:** Copy the compiled `.apk` binary file to a physical Android device running Android 8.0+. When opening the file, bypass the developer security warning (**"Play Protect: Unrecognized App"**) by clicking **"Install Anyway"**.
 * **Offline Testing:** Once installed, launch **BharatVerify**, grant camera permissions, and complete a test registration/verification. The app runs 100% offline at the device border.
 
 ### 🎥 Live Biometric Demonstration Video
 Watch BharatVerify run active/passive liveness challenges, geofencing, and serverless sync:
-* **[Watch Full Demonstration Video (GitHub Release Asset)](https://github.com/suryasenthilr/-NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demo.mp4)**
+* **[Watch Full Demonstration Video (GitHub Release Asset)](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demo.mp4)**
 
 ---
 
@@ -536,8 +536,8 @@ To compile the standalone native packages using Expo Application Services (EAS) 
 If you want to compile the source code and host the Progressive Web App under your own domain/server:
 1. **Clone the repository & install dependencies:**
    ```bash
-   git clone https://github.com/suryasenthilr/-NHAI_Innovation_Hackathon_7.0_Submission.git
-   cd -NHAI_Innovation_Hackathon_7.0_Submission
+   git clone https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission.git
+   cd NHAI_Innovation_Hackathon_7.0_Submission
    npm install
    ```
 2. **Build the production web assets:**

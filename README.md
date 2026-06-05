@@ -1,7 +1,7 @@
 # 🇮🇳 BharatVerify: Atmanirbhar Edge-AI Offline Face Verification & Liveness Suite
 ## NHAI Hackathon 7.0 Submission - Unified Mobile & Web-Sandbox Deliverable Portal
 
-[![Download Android APK](https://img.shields.io/badge/Download-Android%20APK-success.svg?style=for-the-badge&logo=android)](https://github.com/suryasenthilr/-NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)
+[![Download Android APK](https://img.shields.io/badge/Download-Android%20APK-success.svg?style=for-the-badge&logo=android)](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)
 [![Access Web Sandbox](https://img.shields.io/badge/Access-Web%20Sandbox-blue.svg?style=for-the-badge&logo=google-chrome)](https://bharatverify-nhai.surge.sh)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -20,14 +20,14 @@ BharatVerify is an enterprise-grade, lightweight, and entirely offline facial re
 ### 🎥 Live Biometric Demonstration Video
 Watch BharatVerify run the active liveness challenges (blink, smile, head turn), passive anti-spoofing filters, geofencing checks, and database synchronization in real-time:
 
-<video src="https://github.com/suryasenthilr/-NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demo.mp4" controls width="100%" poster="./assets/images/splash-icon.png"></video>
+<video src="https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demo.mp4" controls width="100%" poster="./assets/images/splash-icon.png"></video>
 
-*(If the video player does not load in your browser, you can download it directly here: **[Watch Demo Video](https://github.com/suryasenthilr/-NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demo.mp4)**)*
+*(If the video player does not load in your browser, you can download it directly here: **[Watch Demo Video](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/demo.mp4)**)*
 
 ### Android Standalone APK (.APK)
 We have compiled a standalone Android application package (`.apk`) using **Expo Application Services (EAS)**, configured under package ID `com.suryasenthilr.bharatverifyantigravity`.
 
-1. **Download the APK:** Click the **Download Android APK** badge at the top, or download it directly from our **[GitHub Releases Page](https://github.com/suryasenthilr/-NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)**.
+1. **Download the APK:** Click the **Download Android APK** badge at the top, or download it directly from our **[GitHub Releases Page](https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission/releases/download/v1.0.0/BharatVerify.apk)**.
 2. **Install on Device:** Transfer the `.apk` file to a physical Android device (Android 8.0+) or download it directly on the phone. Click the file to install.
    * *Note:* Since this is a sideloaded developer-preview build, Android might display a **"Blocked by Play Protect"** warning. Click **"Install Anyway"** to proceed.
 3. **Open and Scan:** Launch the installed **BharatVerify** app from your home screen. Provide the requested camera permissions. You can register your face template and immediately test offline liveness verification.
@@ -565,8 +565,8 @@ import { LivenessScanner } from '../components/LivenessScanner';
 ### Option 2: Running the Development Server Locally
 1. Clone the repository and install dependencies:
    ```bash
-   git clone https://github.com/suryasenthilr/-NHAI_Innovation_Hackathon_7.0_Submission.git
-   cd -NHAI_Innovation_Hackathon_7.0_Submission
+   git clone https://github.com/suryasenthilr/NHAI_Innovation_Hackathon_7.0_Submission.git
+   cd NHAI_Innovation_Hackathon_7.0_Submission
    npm install
    ```
 2. Launch the local dev compiler:
