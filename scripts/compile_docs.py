@@ -1372,6 +1372,5 @@ window.MathJax = {{
     print(f"Successfully generated static slides HTML at: {html_path}")
 
 if __name__ == '__main__':
-    compile_spec(theme='light')
-    compile_spec(theme='dark')
+    compile_spec()
     compile_slides()
