@@ -238,8 +238,9 @@ def preprocess_alerts(text):
 
 def render_alert_div(alert_type, alert_lines):
     alert_content = '\n'.join(alert_lines)
+    alert_content = fix_markdown_spacing(alert_content)
     # We compile the alert content markdown to HTML separately!
-    md = markdown.Markdown(extensions=['tables'])
+    md = markdown.Markdown(extensions=['tables', 'fenced_code'])
     compiled_html = md.convert(alert_content)
     
     css_class = f"alert-{alert_type}"
@@ -412,6 +413,9 @@ def postprocess_html(html, mermaid_blocks, display_math, inline_math):
     
     # 6. Convert relative links to markdown files to GitHub absolute links
     html = make_href_github_links(html)
+    
+    # 7. Tag Diagram headings with class="diagram-header"
+    html = re.sub(r'<h3([^>]*)>(Diagram \d+[\s\S]*?)</h3>', r'<h3 class="diagram-header" \1>\2</h3>', html)
         
     return html
 
@@ -432,7 +436,7 @@ def compile_spec():
     text, mermaid_blocks, display_math, inline_math = preprocess_markdown(md_content)
     
     # Render Markdown to HTML body
-    md = markdown.Markdown(extensions=['tables', 'toc'])
+    md = markdown.Markdown(extensions=['tables', 'toc', 'fenced_code'])
     html_body = md.convert(text)
     toc_html = md.toc
     
@@ -800,8 +804,14 @@ window.MathJax = {{
         h2 {{
             page-break-before: always;
         }}
+        h1 + h2 {{
+            page-break-before: avoid;
+        }}
         h1, h2, h3 {{
             page-break-after: avoid;
+        }}
+        .diagram-header {{
+            page-break-before: always;
         }}
         a {{
             text-decoration: underline;
@@ -863,7 +873,7 @@ def compile_slides():
             continue
             
         # Compile slide markdown to HTML
-        slide_body = markdown.markdown(trimmed, extensions=['tables'])
+        slide_body = markdown.markdown(trimmed, extensions=['tables', 'fenced_code'])
         
         # Postprocess alerts and restore code/math
         slide_body = postprocess_html(slide_body, mermaid_blocks, display_math, inline_math)
@@ -994,7 +1004,7 @@ window.MathJax = {{
         width: 100%;
         aspect-ratio: 297 / 210; /* A4 Landscape Ratio */
         box-sizing: border-box;
-        padding: 40px 60px;
+        padding: 25px 45px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -1044,20 +1054,20 @@ window.MathJax = {{
         font-weight: 600;
     }}
     
-    h1 {{ font-size: 1.9em; border-bottom: 2px solid #30363d; padding-bottom: 8px; }}
-    h2 {{ font-size: 1.5em; border-bottom: 1px solid #30363d; padding-bottom: 6px; }}
-    h3 {{ font-size: 1.3em; color: #ff9f43; }}
-    h4 {{ font-size: 1.15em; color: #00d2d3; margin-top: 10px; }}
+    h1 {{ font-size: 1.7em; border-bottom: 2px solid #30363d; padding-bottom: 6px; margin-bottom: 12px; }}
+    h2 {{ font-size: 1.35em; border-bottom: 1px solid #30363d; padding-bottom: 4px; margin-bottom: 10px; }}
+    h3 {{ font-size: 1.15em; color: #ff9f43; margin-bottom: 8px; }}
+    h4 {{ font-size: 1.05em; color: #00d2d3; margin-top: 6px; margin-bottom: 8px; }}
     
     p, li {{
-        font-size: 1.02em;
-        line-height: 1.5;
+        font-size: 0.95em;
+        line-height: 1.45;
         color: #8892b0;
     }}
     
-    p {{ margin-top: 0; margin-bottom: 12px; }}
-    ul {{ margin-top: 0; margin-bottom: 12px; padding-left: 20px; }}
-    li {{ margin-bottom: 5px; color: #c9d1d9; }}
+    p {{ margin-top: 0; margin-bottom: 8px; }}
+    ul {{ margin-top: 0; margin-bottom: 8px; padding-left: 20px; }}
+    li {{ margin-bottom: 4px; color: #c9d1d9; }}
     li strong {{ color: #ffffff; }}
     
     code {{
@@ -1112,10 +1122,10 @@ window.MathJax = {{
     }}
     
     img {{
-        max-height: 170mm;
+        max-height: 110mm;
         max-width: 90%;
         display: block;
-        margin: 10px auto;
+        margin: 8px auto;
         border-radius: 8px;
         box-shadow: 0 5px 25px rgba(0,0,0,0.4);
     }}
@@ -1206,7 +1216,7 @@ window.MathJax = {{
             border: none;
             box-shadow: none;
             margin: 0;
-            padding: 40px 60px;
+            padding: 25px 45px;
             page-break-after: always;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;

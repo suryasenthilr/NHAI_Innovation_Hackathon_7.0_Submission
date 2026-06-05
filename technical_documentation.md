@@ -25,6 +25,7 @@ This document serves as the technical specification and math whitepaper for **Bh
 
 > [!IMPORTANT]
 > **Biometric Deliverable Format Disclaimer for Evaluators & Judges:**
+> 
 > * **Primary Deliverable (Standalone Android APK):** The **core submission** is the native Android application package (`.apk`). This represents the full production-ready, edge-native, 100% offline biometric module engineered to run inside the physical NHAI *Datalake 3.0* mobile environment. All offline SQLite storage, camera frame processors, and local database sync tasks execute directly within the mobile OS sandbox.
 > * **Hosted Web PWA Sandbox (Convenience Simulator):** The web-deployed application at **[bharatverify-nhai.surge.sh](https://bharatverify-nhai.surge.sh)** is a **simulator sandbox** provided *strictly for convenience*. It allows judges and evaluators to instantly test the camera interface, demographic matrices, and synchronization logic on any device (including iOS, Mac, and Windows) *without* performing Android sideloading or compilation. It is **not** a website-only project; the production module is native mobile code.
 

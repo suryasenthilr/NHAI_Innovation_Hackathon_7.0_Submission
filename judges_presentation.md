@@ -47,10 +47,17 @@
 #### **Decentralized Zero-Trust Biometrics**
 * **Core Concept:** BharatVerify moves the entire biometric pipeline—face detection, landmark mapping, liveness verification, and similarity matching—directly to the user's mobile device CPU/GPU.
 * **Core Technical Pillars:**
-  * **WebGL & WASM Acceleration:** Delivers GPU-like parallelized tensor execution on mid-range devices inside WebViews, achieving sub-200ms processing.
-  * **In-Memory Loader:** Compiles model weights into Base64 format, loading models in milliseconds directly in transient RAM without filesystem access delays.
-  * **Sync-and-Purge Workflow:** Attendance logs are cached locally in an encrypted database and synchronized to AWS. Once a `200 OK` handshake is received, local data is completely purged.
-  * **Dual-Layer Defense:** Integrates both passive texture/screen glow filters and dynamic gesture checks in a single pipeline.
+  * **WebGL & WASM Acceleration:** GPU-like parallelized tensor execution on mid-range devices inside WebViews, achieving sub-200ms processing.
+  * **In-Memory Decoupled Bootstrap:** Compiles model weights into Base64 arrays, loading models in milliseconds directly in transient RAM.
+  * **Sync-and-Purge Workflow:** Attendance logs are cached in a local secure database and synchronized to AWS, then instantly purged.
+  * **Dual-Layer Defense:** Fuses active gesture checks with passive anti-spoofing filters.
+
+---
+
+### Slide 3 (Contd.): Local Personnel Registry Console
+#### **Offline Biometric Enrollment & Developer Diagnostics**
+* **Registry Dashboard:** Shows the active personnel database running 100% locally on-device.
+* **Real-time Vector Extraction:** Displays extracted 128-float face embeddings and active developer diagnostic logs.
 
 ![Local Personnel Registry Database UI](./assets/docs-images/ui_db.png)
 
@@ -99,7 +106,13 @@
   * Resolves poor lighting at night and harsh midday shadows at highway gates.
   * Splits the image into $8\times 8$ contextual tiles and clips the contrast at threshold $\beta$, redistributing excess pixels.
   * **Performance Boost:** Enhances face detection reliability by **34%** in extreme low-light and shaded worksites.
-* **Multi-Template Profile Matching**
+
+---
+
+### Slide 7 (Contd.): Environmental Adaptability Console
+#### **Visual Simulation & Multi-Template Profile Matching**
+* **Demographics & Outdoor Lighting Console:** Features a live simulator to test how the algorithm behaves under low-light, harsh shadows, and direct solar glare.
+* **Multi-Template Profile Matching:**
   * Storing frontal and tilt yaw profile templates dynamically handles mustache changes, turbans, and angles, maintaining FRR $< 1.5\%$.
 
 ![Demographics & Outdoor Lighting Console UI](./assets/docs-images/ui_demographics.png)
@@ -154,9 +167,8 @@
   * `/src/services/faceService.web.ts` (Model loader & similarity comparator)
   * `/src/services/livenessService.ts` (Active/Passive challenge math calculators)
 * **Integration Steps:**
-  1. Copy modules `LivenessScanner.web.tsx`, `faceService.web.ts`, and `livenessService.ts` into Datalake codebase.
-  2. Install open-source libraries (`TensorFlow.js` under permissive MIT/Apache licenses).
-  3. Mount the component:
+  1. Copy modules into Datalake codebase and install open-source libraries (`TensorFlow.js`).
+  2. Mount the component in your React Native WebView shell:
      ```typescript
      import { LivenessScanner } from '../components/LivenessScanner';
      
@@ -165,6 +177,12 @@
        onFaceCaptured={(embedding) => handleOfflineAuth(embedding)}
      />
      ```
+
+---
+
+### Slide 11 (Contd.): Datalake 3.0 Integration Sandbox
+#### **Visual Simulation Console & Performance Benchmarks**
+* **Visual Sandbox Utility:** The integration sandbox allows developers to instantly mock API handshakes, verify geofencing metrics, and inspect telemetry values without deploying to production.
 * **Performance Benchmark:** Average RAM overhead is **~58.4 MB**, ensuring smooth performance on standard devices.
 
 ![Datalake 3.0 Integration Sandbox UI](./assets/docs-images/ui_sandbox.png)
@@ -184,6 +202,11 @@
 | **Anti-Spoofing** | ❌ **None** or high latency. | ⚠️ **Single-Stage** (Blink only). | ⚠️ **Platform-Dependent** (Stubs). | ✔️ **Multi-Stage** (Capable). | ⚠️ **Basic** (Stream mapping difficulty). | ⭐ **Dual-Layer** (3 Active + 2 Passive checks). |
 | **DPDP Act Compliance** | ❌ **Non-compliant** (Transmits data). | ⚠️ **Unsecured** (Local photo logs). | ⚠️ **System-Locked** (Deep OS cache). | ❌ **Severe Risk** (Open TCP ports). | ⚠️ **Partial** (Complex encryption schema). | ⭐ **100% Compliant** (Vectors + Sync-Purge). |
 | **NHAI Server Bills** | ❌ **Heavy Cost** (~73m INR). | ⭐ **0 INR.** | ⭐ **0 INR.** | ⭐ **0 INR.** | ⭐ **0 INR.** | ⭐ **0 INR.** (Client-side GPU processing). |
+
+---
+
+### Slide 12 (Contd.): Architectural Defenses
+#### **Why Alternative Architectures Fail in Indian Field Conditions**
 
 * **Why Hardware-Locked TEE Enclaves Fail:** System enclaves (StrongBox) require expensive hardware (Google Titan, Samsung Knox). In Indian toll and construction sites, **over 60% of workforce devices** are low-cost smartphones that lack these enclaves, leading to massive digital exclusion.
 * **Why Heavy Client CNNs Fail:** Dual CNNs for liveness overheat budget devices ($>40^\circ\text{C}$ site heat) and cause thermal throttling, reducing camera feeds below **5 FPS**.
